@@ -73,6 +73,13 @@ The browser never receives a token in the login JSON, Pinia state, SSR payload,
 or browser storage. Both applications mark authentication responses private
 and non-cacheable.
 
+The SSR sign-in form uses POST and keeps its fields and buttons disabled until
+client mounting completes. This prevents an early native form submission from
+putting credentials in a GET query string. Controls also remain disabled while
+a sign-in request is pending. With JavaScript disabled, the form stays disabled
+and visibly explains the requirement. The API still accepts only same-origin
+JSON login requests.
+
 The adapter calls fixed backend paths with a five-second timeout and no
 automatic retries. Backend 401 responses clear the cookie. Transport faults
 and 5xx responses preserve it, return a safe 503 message, and omit internal
@@ -106,7 +113,7 @@ npm run test:e2e
 ```
 
 The browser suite starts its own production servers on ports 4310 and 4311.
-It exercises bad credentials, repeated submit events, private cookie behavior,
-cross-origin writes, SSR reload and cookie cleanup, session isolation, and
-logout. Test artifacts are ignored by Git. GitHub Actions runs the same browser
-suite after both application jobs pass.
+It exercises disabled JavaScript, delayed hydration, bad credentials, repeated
+submit events, private cookie behavior, cross-origin writes, SSR reload and
+cookie cleanup, session isolation, and logout. Test artifacts are ignored by
+Git. GitHub Actions runs the same browser suite after both application jobs pass.

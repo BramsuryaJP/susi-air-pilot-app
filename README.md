@@ -8,10 +8,18 @@ branch for each feature.
 
 Authentication, flight hours, documents, schedules, and final brand styling
 are on `main`, together with health and deployment checks. Hosting targets
-two separate Vercel Hobby projects. The repository includes a serverless startup
-regression check and explicit NestJS runtime configuration. Successful live
-verification remains pending; a completed build alone does not establish that
-the deployed application works.
+two separate Vercel Hobby projects. The repository includes serverless startup
+and pre-hydration sign-in regression checks, plus explicit NestJS runtime
+configuration. Live verification results are recorded with the deployment PR.
+
+## Hosted demonstration
+
+- Frontend: [Susi Air Pilot App](https://susi-air-pilot-app-self.vercel.app)
+- Backend: [public health endpoint](https://susi-air-pilot-api.vercel.app/health)
+- Demo sign-in: `johndoe` / `susiairtest`
+
+Both projects use the personal Vercel Hobby workspace. No database or paid
+hosting resource is required. The account is seeded demonstration data.
 
 See [authentication](docs/authentication.md) for the account and session boundary,
 [flight hours](docs/flight-hours.md) for rolling calculations,
@@ -129,7 +137,7 @@ commit messages, and interface copy use English.
 ## Remaining submission work
 
 - Track upstream fixes for the assessed dependency advisories.
-- Deploy both applications and record the actual verified URLs.
+- Complete the production verification checklist after deployment updates.
 - Grant reviewers access to this private repository if needed.
 
 With more time, prioritize supported upstream security patches and hosted

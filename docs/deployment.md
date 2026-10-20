@@ -8,9 +8,18 @@ demonstration needs no database, paid compute, custom domain, persistent disk,
 or paid trial. Do not add a payment method or enable a paid plan for this test.
 Grant provider repository access only to this repository when that choice exists.
 
-Deployment is in progress. The first API deployment completed its build but
-failed at runtime. The fixes below have a local regression test; live verification
-must finish before either URL is recorded as ready for review.
+The assigned public deployment addresses are:
+
+| Application | URL |
+| --- | --- |
+| Nuxt frontend | <https://susi-air-pilot-app-self.vercel.app> |
+| NestJS API health | <https://susi-air-pilot-api.vercel.app/health> |
+
+The production API was verified on 20 October 2026 at commit `5522052`:
+health, anonymous rejection, demo login, profile, flight totals, document states,
+May/June schedules, and DTO validation passed. Frontend production verification
+is recorded with the deployment PR after the sign-in hydration fix is released.
+A completed provider build alone does not establish functional correctness.
 
 ## Backend: Vercel Hobby
 
@@ -110,7 +119,7 @@ in an isolated checkout, not a checkout used by a development server. It checks
 SSR function/runtime configuration, private route headers, shipped package
 metadata, local brand assets, and packaged fixture data.
 
-Before recording live URLs, verify the following against the deployed apps:
+Before marking a deployment ready for review, verify the following against the deployed apps:
 
 - Backend health is public and pilot endpoints reject anonymous requests.
 - The demo account `johndoe` / `susiairtest` can sign in through the frontend.
@@ -122,8 +131,8 @@ Before recording live URLs, verify the following against the deployed apps:
   HTML and API responses are not cached publicly.
 - Mobile layout and keyboard navigation work at the actual deployment URL.
 
-Then replace the pending status above with the actual verified frontend and
-backend URLs, deployed commit, and verification date. Assess the documented
+Record the deployed commit, verification date, and results in the deployment PR.
+Re-run live verification after deployment changes. Assess the documented
 [dependency findings](dependency-audit.md) separately from passing behavior
 checks. With more time, address upstream patches, add persistent user management
 and distributed rate limiting if this evolves beyond the seeded single-user
