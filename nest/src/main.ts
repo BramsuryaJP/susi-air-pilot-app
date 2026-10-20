@@ -9,4 +9,5 @@ async function bootstrap() {
   app.enableShutdownHooks();
   await app.listen(config.get('port', { infer: true }));
 }
-await bootstrap();
+// Serverless adapters must finish importing before starting the captured listener.
+void bootstrap();

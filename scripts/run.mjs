@@ -40,5 +40,8 @@ for (const app of project ? [project] : Object.keys(checks)) {
   }
   if (task === 'check') {
     run(process.execPath, ['scripts/smoke.mjs', app]);
+    if (app === 'nest') {
+      run(process.execPath, ['scripts/smoke-serverless.mjs']);
+    }
   }
 }
