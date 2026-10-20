@@ -1,0 +1,22 @@
+# Local recruitment brief; the supplied JSON fixtures are versioned.
+/Brief*.pdf
+
+# Dependencies and generated output.
+node_modules/
+.nuxt/
+.output/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Local configuration and machine-specific files.
+.env
+.env.*
+!.env.example
+!.env.*.example
+.DS_Store
+*.log
+
+# Test artifacts.
+playwright-report/
+test-results/
