@@ -1,0 +1,23 @@
+{
+  "name": "susi-air-pilot-app",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Susi Air pilot app technical test",
+  "type": "module",
+  "packageManager": "npm@11.21.1",
+  "engines": {
+    "node": "^22.22.3",
+    "npm": "^11.21.1"
+  },
+  "scripts": {
+    "setup": "node scripts/run.mjs setup",
+    "dev:nuxt": "npm --prefix nuxt run dev",
+    "dev:nest": "npm --prefix nest run start:dev",
+    "build": "node scripts/run.mjs build",
+    "lint": "node scripts/run.mjs lint",
+    "typecheck": "node scripts/run.mjs typecheck",
+    "test": "node scripts/run.mjs test",
+    "check": "node scripts/run.mjs check",
+    "smoke": "node scripts/smoke.mjs"
+  }
+}
