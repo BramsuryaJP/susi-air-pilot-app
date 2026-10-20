@@ -3,6 +3,69 @@ import { expect, test } from '@playwright/test';
 const origin = 'http://127.0.0.1:4311';
 const credentials = { username: 'johndoe', password: 'susiairtest' };
 
+test('the SSR sign-in form cannot submit credentials before hydration', async ({
+  browser,
+  baseURL,
+}) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    baseURL,
+  });
+  try {
+    const page = await context.newPage();
+    await page.goto('/login');
+    await expect(page.locator('form')).toHaveAttribute('method', 'post');
+    await expect(page.getByLabel('Username')).toBeDisabled();
+    await expect(page.getByLabel('Password', { exact: true })).toBeDisabled();
+    await expect(
+      page.getByRole('button', { name: 'Sign in', exact: true }),
+    ).toBeDisabled();
+    await expect(
+      page.getByText('Enable JavaScript to sign in.'),
+    ).toBeVisible();
+    await expect(page).toHaveURL('/login');
+  } finally {
+    await context.close();
+  }
+});
+
+test('sign-in controls become interactive only after delayed client hydration', async ({
+  page,
+}) => {
+  let release: () => void = () => {};
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route('**/_nuxt/*.js', async (route) => {
+    await held;
+    await route.continue();
+  });
+  try {
+    await page.goto('/login', { waitUntil: 'commit' });
+    await expect(page.getByLabel('Username')).toBeDisabled();
+    await expect(
+      page.getByRole('button', { name: 'Sign in', exact: true }),
+    ).toBeDisabled();
+    release();
+    await expect(page.getByLabel('Username')).toBeEnabled();
+    await page.getByLabel('Username').fill(credentials.username);
+    await page
+      .getByLabel('Password', { exact: true })
+      .fill(credentials.password);
+    await page
+      .getByRole('button', { name: 'Show password', exact: true })
+      .click();
+    await expect(page.getByLabel('Password', { exact: true })).toHaveAttribute(
+      'type',
+      'text',
+    );
+    await expect(page).toHaveURL('/login');
+  } finally {
+    release();
+    await page.unrouteAll({ behavior: 'wait' });
+  }
+});
+
 test('sign-in handles errors, prevents duplicate submits, survives SSR reload, and signs out', async ({
   page,
   context,

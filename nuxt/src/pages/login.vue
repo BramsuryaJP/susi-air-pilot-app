@@ -3,12 +3,17 @@ useHead({ title: 'Sign in | Susi Air' });
 const session = useSessionStore();
 const username = ref('');
 const password = ref('');
+const ready = ref(false);
 const pending = ref(false);
 const errorMessage = ref('');
 const revealPassword = ref(false);
 
+onMounted(() => {
+  ready.value = true;
+});
+
 async function signIn() {
-  if (pending.value) return;
+  if (!ready.value || pending.value) return;
   pending.value = true;
   errorMessage.value = '';
   try {
@@ -50,9 +55,17 @@ async function signIn() {
         <h1 id="sign-in-title">Ready for<br >your next flight.</h1>
         <p>Sign in to your pilot workspace.</p>
       </div>
-      <form class="sign-in-form" :aria-busy="pending" @submit.prevent="signIn">
+      <form
+        class="sign-in-form"
+        method="post"
+        action="/api/auth/login"
+        :aria-busy="!ready || pending"
+        @submit.prevent="signIn"
+      >
         <h2>Welcome back</h2>
-        <p class="muted">Enter your pilot account details.</p>
+        <p class="muted" role="status">
+          {{ ready ? 'Enter your pilot account details.' : 'Enable JavaScript to sign in.' }}
+        </p>
         <div
           v-if="errorMessage"
           id="sign-in-error"
@@ -65,6 +78,7 @@ async function signIn() {
         <input
           id="username"
           v-model="username"
+          :disabled="!ready || pending"
           name="username"
           autocomplete="username"
           required
@@ -79,6 +93,7 @@ async function signIn() {
           <input
             id="password"
             v-model="password"
+            :disabled="!ready || pending"
             name="password"
             :type="revealPassword ? 'text' : 'password'"
             autocomplete="current-password"
@@ -90,6 +105,7 @@ async function signIn() {
           <button
             type="button"
             class="password-toggle"
+            :disabled="!ready || pending"
             :aria-label="revealPassword ? 'Hide password' : 'Show password'"
             :aria-pressed="revealPassword"
             @click="revealPassword = !revealPassword"
@@ -97,7 +113,7 @@ async function signIn() {
             {{ revealPassword ? 'Hide' : 'Show' }}
           </button>
         </div>
-        <button class="primary-button" type="submit" :disabled="pending">
+        <button class="primary-button" type="submit" :disabled="!ready || pending">
           {{ pending ? 'Signing in' : 'Sign in' }}
         </button>
       </form>
