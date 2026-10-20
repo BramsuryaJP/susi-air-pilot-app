@@ -2,7 +2,7 @@
 import type { FlightSummary } from '../../../shared/types/flight-hours';
 
 const props = defineProps<{ summary: FlightSummary }>();
-const left = 44;
+const left = 90;
 const right = 574;
 const top = 28;
 const bottom = 218;
@@ -35,7 +35,7 @@ const formatDate = (date: string) =>
 <template>
   <figure class="trend-figure">
     <svg
-      viewBox="0 0 600 270"
+      viewBox="0 0 600 300"
       role="img"
       aria-label="Rolling flight hours for seven days before and after today"
       data-testid="flight-chart"
@@ -63,7 +63,7 @@ const formatDate = (date: string) =>
       <text
         class="limit-label"
         :x="right"
-        :y="y(summary.limit) - 8"
+        :y="y(summary.limit) - 14"
         text-anchor="end"
       >
         Limit {{ summary.limit }}h
@@ -97,16 +97,14 @@ const formatDate = (date: string) =>
           v-if="index % 2 === 0"
           class="date-label"
           :x="x(index)"
-          :y="bottom + 24"
+          :y="bottom + 48"
           text-anchor="middle"
         >
           {{ point.date.slice(8) }}
         </text>
       </g>
-      <text class="today-label" :x="x(7)" :y="bottom + 44" text-anchor="middle">
-        Today, {{ formatDate(summary.today) }}
-      </text>
     </svg>
+    <p class="today-label">Today, {{ formatDate(summary.today) }}</p>
     <figcaption>
       <span><i class="actual-key" aria-hidden="true" />Recorded</span>
       <span><i class="planned-key" aria-hidden="true" />Planned</span>
@@ -149,22 +147,22 @@ svg {
   font-size: 16px;
 }
 .chart-grid {
-  stroke: #e8ebef;
+  stroke: var(--border);
   text {
-    fill: #606b7a;
+    fill: var(--muted);
     stroke: none;
   }
 }
 .today-line {
-  stroke: #aeb7c4;
+  stroke: var(--input-border);
   stroke-dasharray: 4 4;
 }
 .limit-line {
-  stroke: #e63757;
+  stroke: var(--red);
   stroke-width: 1.5;
 }
 .limit-label {
-  fill: #bd2442;
+  fill: var(--danger-text);
   font-size: 14px;
 }
 .actual-line,
@@ -175,10 +173,10 @@ svg {
   stroke-linecap: round;
 }
 .actual-line {
-  stroke: #22c5e8;
+  stroke: var(--cyan);
 }
 .planned-line {
-  stroke: #0e2138;
+  stroke: var(--navy);
   stroke-dasharray: 6 5;
 }
 circle {
@@ -187,24 +185,26 @@ circle {
   stroke-width: 1.5;
 }
 .planned-point {
-  fill: #0e2138;
+  fill: var(--navy);
 }
 .overflow-point {
-  fill: #e63757;
+  fill: var(--red);
 }
 .date-label {
-  fill: #606b7a;
+  fill: var(--muted);
 }
 .today-label {
-  fill: #0e2138;
-  font-size: 15px;
+  color: var(--navy);
+  font-size: 0.8rem;
   font-weight: 700;
+  text-align: center;
+  margin: 0 0 0.75rem;
 }
 figcaption {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  color: #606b7a;
+  color: var(--muted);
   font-size: 0.8rem;
   span {
     display: inline-flex;
@@ -217,20 +217,21 @@ figcaption {
 }
 i {
   width: 1.2rem;
-  border-top: 3px solid #22c5e8;
+  border-top: 3px solid var(--cyan);
 }
 .planned-key {
-  border-color: #0e2138;
+  border-color: var(--navy);
   border-top-style: dashed;
 }
 .projection-note {
-  color: #606b7a;
+  color: var(--muted);
   font-size: 0.8rem;
   margin: 1rem 0;
 }
 .chart-values {
   font-size: 0.85rem;
   summary {
+    min-height: 44px;
     cursor: pointer;
     padding: 0.4rem 0;
   }
@@ -244,10 +245,14 @@ table {
   th,
   td {
     padding: 0.5rem 0.25rem;
-    border-bottom: 1px solid #e8ebef;
+    border-bottom: 1px solid var(--border);
   }
   tbody th {
     font-weight: 400;
   }
+}
+@media (max-width: 640px) {
+  svg { font-size: 30px; }
+  .limit-label { font-size: 28px; }
 }
 </style>

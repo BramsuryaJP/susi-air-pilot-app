@@ -141,8 +141,8 @@ watch(
   margin-bottom: 1rem;
   h2 {
     margin: 0;
-    font-size: 1.4rem;
-    letter-spacing: -0.035em;
+    font-size: 1.2rem;
+    letter-spacing: -0.025em;
   }
   > span {
     font-size: 0.8rem;
@@ -154,16 +154,17 @@ watch(
   gap: 0.75rem;
 }
 .limit-card {
-  background: #fff;
-  border: 1px solid #e8ebef;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 1.1rem;
+  box-shadow: var(--card-shadow);
   font-variant-numeric: tabular-nums;
   h3 {
     margin: 0 0 0.8rem;
     font-size: 0.85rem;
     font-weight: 600;
-    color: #606b7a;
+    color: var(--muted);
   }
 }
 .card-value {
@@ -173,45 +174,46 @@ watch(
   gap: 0 0.2rem;
   margin-bottom: 0.8rem;
   strong {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
+    font-weight: 800;
     letter-spacing: -0.04em;
   }
   > span {
     white-space: nowrap;
     font-size: 0.8rem;
-    color: #606b7a;
+    color: var(--muted);
   }
 }
 .limit-meter {
   height: 5px;
-  background: #e8ebef;
+  background: var(--border);
   border-radius: 4px;
   overflow: hidden;
   > span {
     display: block;
     height: 100%;
-    background: #0e2138;
+    background: var(--navy);
     border-radius: inherit;
   }
 }
 .card-note {
   margin: 0.6rem 0 0;
   font-size: 0.75rem;
-  color: #606b7a;
+  color: var(--muted);
 }
 .over-limit {
   .limit-meter > span {
-    background: #e63757;
+    background: var(--red);
   }
   .card-note {
-    color: #bd2442;
+    color: var(--danger-text);
     font-weight: 600;
   }
 }
 .trend-panel {
   min-height: 300px;
-  background: #fff;
-  border: 1px solid #e8ebef;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: clamp(1rem, 3vw, 1.5rem);
   margin-top: 1rem;
@@ -229,21 +231,21 @@ watch(
 }
 .range-toggle {
   display: flex;
-  border: 1px solid #e8ebef;
+  border: 1px solid var(--border);
   padding: 3px;
   border-radius: 999px;
   gap: 2px;
   button {
     border: 0;
-    min-width: 40px;
-    min-height: 40px;
+    min-width: 44px;
+    min-height: 44px;
     padding: 0.4rem 0.6rem;
     background: transparent;
-    color: #606b7a;
+    color: var(--muted);
     border-radius: 999px;
     font-size: 0.8rem;
     &[aria-pressed='true'] {
-      background: #0e2138;
+      background: var(--navy);
       color: #fff;
       font-weight: 700;
     }
@@ -253,12 +255,12 @@ watch(
   min-height: 260px;
   display: grid;
   place-items: center;
-  color: #606b7a;
+  color: var(--muted);
 }
 .flight-error {
   padding: 2rem 0;
   p {
-    color: #a01935;
+    color: var(--danger-text);
   }
 }
 @media (max-width: 640px) {

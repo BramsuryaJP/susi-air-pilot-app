@@ -7,6 +7,7 @@ const showNavigation = computed(() => route.path !== '/login' && !error.value);
 
 <template>
   <div class="app-shell" :class="{ 'with-navigation': showNavigation }">
+    <a v-if="!error" class="skip-link" href="#main-content">Skip to content</a>
     <slot /><AppNavigation v-if="showNavigation" />
   </div>
 </template>

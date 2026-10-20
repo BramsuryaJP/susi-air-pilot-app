@@ -125,8 +125,8 @@ function dayLabel(date: string): string {
 <style scoped lang="scss">
 .calendar-card {
   padding: 0.75rem 0.4rem;
-  background: white;
-  border: 1px solid #e8ebef;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
 }
 .calendar-grid {
@@ -135,7 +135,7 @@ function dayLabel(date: string): string {
   border-spacing: 3px;
   th {
     padding: 0.5rem 0 0.8rem;
-    color: #606b7a;
+    color: var(--muted);
     font-size: 0.8rem;
     font-weight: 500;
   }
@@ -152,16 +152,16 @@ function dayLabel(date: string): string {
   position: relative;
   padding: 0.5rem;
   border-radius: 8px;
-  color: #0e2138;
-  background: #f5f6f8;
+  color: var(--navy);
+  background: var(--background);
   text-decoration: none;
   font-variant-numeric: tabular-nums;
   &[aria-current='date'] {
-    outline: 2px solid #e63757;
+    outline: 2px solid var(--red);
     outline-offset: -2px;
   }
   &:focus-visible {
-    outline: 3px solid #0e2138;
+    outline: 3px solid var(--navy);
     outline-offset: 1px;
     z-index: 1;
   }
@@ -184,25 +184,25 @@ function dayLabel(date: string): string {
   place-items: center;
   border-radius: 0 8px 0 6px;
   background: #ffffffec;
-  color: #0e2138;
+  color: var(--navy);
   font-size: 0.7rem;
   font-weight: 700;
 }
 .calendar-key {
   padding: 0.5rem 0.5rem 0;
   margin: 0.25rem 0 0;
-  color: #606b7a;
+  color: var(--muted);
   font-size: 0.75rem;
 }
 .empty-month {
   margin: 1rem 0 0;
-  color: #606b7a;
+  color: var(--muted-on-background);
   font-size: 0.9rem;
 }
 .legend-panel {
   margin-top: 1.5rem;
-  background: white;
-  border: 1px solid #e8ebef;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 1.25rem;
   h2 {
@@ -222,12 +222,12 @@ function dayLabel(date: string): string {
     align-items: flex-start;
     gap: 0.6rem;
     font-size: 0.8rem;
-    color: #606b7a;
+    color: var(--muted);
   }
   strong {
     display: block;
     font-size: 0.75rem;
-    color: #0e2138;
+    color: var(--navy);
   }
 }
 .legend-swatch {

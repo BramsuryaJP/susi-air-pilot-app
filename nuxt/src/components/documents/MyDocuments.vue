@@ -129,8 +129,8 @@ watch(
   gap: 0.75rem 1rem;
   h2 {
     margin: 0;
-    font-size: 1.4rem;
-    letter-spacing: -0.035em;
+    font-size: 1.2rem;
+    letter-spacing: -0.025em;
   }
 }
 .documents-refresh {
@@ -145,10 +145,11 @@ watch(
   list-style: none;
   padding: 0;
   margin: 0;
-  background: #fff;
-  border: 1px solid #e8ebef;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
   overflow: hidden;
+  box-shadow: var(--card-shadow);
   li {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -156,7 +157,7 @@ watch(
     gap: 0.8rem 1.5rem;
     padding: 1.2rem 1.5rem;
     + li {
-      border-top: 1px solid #e8ebef;
+      border-top: 1px solid var(--border);
     }
   }
 }
@@ -174,10 +175,10 @@ watch(
     gap: 0.25rem 1rem;
     margin: 0;
     font-size: 0.8rem;
-    color: #606b7a;
+    color: var(--muted);
   }
   time {
-    color: #0e2138;
+    color: var(--navy);
     font-variant-numeric: tabular-nums;
   }
 }
@@ -196,30 +197,33 @@ watch(
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: currentColor;
+  background: var(--status-color, currentColor);
 }
 .expiry-safe {
-  color: #107654;
-  background: #e7f7f1;
+  --status-color: var(--success);
+  color: var(--success-text);
+  background: var(--success-surface);
 }
 .expiry-soon {
-  color: #8a5500;
-  background: #fff5df;
+  --status-color: var(--warning);
+  color: var(--warning-text);
+  background: var(--warning-surface);
 }
 .expiry-expired {
-  color: #b51c3b;
-  background: #fff0f2;
+  --status-color: var(--red);
+  color: var(--danger-text);
+  background: var(--danger-surface);
 }
 .documents-message {
-  background: #fff;
-  border: 1px solid #e8ebef;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 1.5rem;
   margin: 1rem 0 0;
-  color: #606b7a;
+  color: var(--muted);
 }
 #documents-error {
-  color: #a01935;
+  color: var(--danger-text);
 }
 @media (max-width: 480px) {
   .documents-list li {
