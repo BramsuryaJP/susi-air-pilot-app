@@ -14,6 +14,12 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/': { headers: { 'Cache-Control': 'private, no-store', Vary: 'Cookie' } },
+    '/schedule': {
+      headers: { 'Cache-Control': 'private, no-store', Vary: 'Cookie' },
+    },
+    '/duty/**': {
+      headers: { 'Cache-Control': 'private, no-store', Vary: 'Cookie' },
+    },
     '/login': { headers: { 'Cache-Control': 'private, no-store' } },
     '/api/auth/**': {
       headers: { 'Cache-Control': 'private, no-store', Vary: 'Cookie' },

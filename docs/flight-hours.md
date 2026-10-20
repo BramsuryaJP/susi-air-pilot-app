@@ -72,5 +72,5 @@ the daily endpoint, an accessible data table, and mobile/desktop layouts. Run
 `npm run check`, then `npm run test:e2e` after installing the test browser as
 described in the authentication guide.
 
-Documents, schedules, bottom navigation, final brand artwork, and typography
-remain separate milestones.
+Documents and schedules are implemented in their own modules. Final brand
+artwork and typography remain a separate styling milestone.

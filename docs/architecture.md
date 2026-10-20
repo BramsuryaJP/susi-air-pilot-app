@@ -20,6 +20,7 @@
 │   │   ├── modules/auth/
 │   │   ├── modules/documents/
 │   │   ├── modules/flight-hours/
+│   │   ├── modules/schedules/
 │   │   ├── modules/pilot/
 │   │   ├── app.module.ts
 │   │   └── main.ts
@@ -37,10 +38,11 @@ without a monorepo build framework or root dependencies.
 Nuxt's `srcDir` contains Vue application code. `serverDir` explicitly retains
 Nitro handlers at `nuxt/server`, outside the browser application source.
 The root component composes a layout and the file-based router. The current
-pages render sign-in and the authenticated profile with flight-hour cards, chart, and document expiry list.
+pages render sign-in and the authenticated profile with flight-hour cards, chart, and document expiry list. The Schedule route renders the monthly duty calendar
+and links to a protected date-detail placeholder.
 See `docs/flight-hours.md` and `docs/documents.md` for calculation and rendering policies.
 
-Nest's root module composes authentication, pilot, flight-hours, and documents modules. The starter
+Nest's root module composes authentication, pilot, flight-hours, documents, and schedules modules. The starter
 welcome module was removed when the global authentication guard was added.
 See `docs/authentication.md` for the implemented session boundary.
 
@@ -49,10 +51,10 @@ The default date is **2026-05-15**, as required by the brief. Real date parsing
 is anchored to UTC and rejects rollover dates such as 2026-02-29. Shutdown
 hooks allow the process to close its resources on termination.
 
-## Feature boundaries to add incrementally
+## Feature boundaries
 
-Authentication, pilot profile, flight hours, and documents are implemented. Remaining feature boundaries
-are added as needed, without empty placeholder directories:
+Authentication, pilot profile, flight hours, documents, and schedules are implemented.
+Each module is introduced with its behavior rather than an empty placeholder directory:
 
 | Area | Responsibility |
 | --- | --- |
