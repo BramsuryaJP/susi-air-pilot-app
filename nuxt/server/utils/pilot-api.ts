@@ -6,14 +6,20 @@ import { clearPilotSession } from './auth-session';
 
 export async function pilotApi<T>(
   event: H3Event,
-  path: '/auth/login' | '/pilot/me',
-  options: { method: 'GET' | 'POST'; body?: LoginInput; token?: string },
+  path: '/auth/login' | '/pilot/me' | '/flight-hours' | '/flight-hours/summary',
+  options: {
+    method: 'GET' | 'POST';
+    body?: LoginInput;
+    token?: string;
+    query?: Record<string, string>;
+  },
 ): Promise<T> {
   try {
     return await ofetch<T>(path, {
       baseURL: useRuntimeConfig(event).apiBase,
       method: options.method,
       body: options.body,
+      query: options.query,
       headers: options.token
         ? { Authorization: `Bearer ${options.token}` }
         : undefined,
@@ -38,16 +44,24 @@ export async function pilotApi<T>(
     if (status === 400)
       throw createError({
         statusCode: 400,
-        message: 'Check your username and password.',
+        message:
+          path === '/auth/login'
+            ? 'Check your username and password.'
+            : 'Choose a valid date or flight-hour range.',
       });
     if (status === 429)
       throw createError({
         statusCode: 429,
-        message: 'Too many sign-in attempts. Try again in a minute.',
+        message:
+          path === '/auth/login'
+            ? 'Too many sign-in attempts. Try again in a minute.'
+            : 'Too many requests. Try again in a minute.',
       });
     throw createError({
       statusCode: 503,
-      message: 'The sign-in service is unavailable. Please try again.',
+      message: path.startsWith('/flight-hours')
+        ? 'Flight hours are unavailable. Please try again.'
+        : 'The sign-in service is unavailable. Please try again.',
     });
   }
 }

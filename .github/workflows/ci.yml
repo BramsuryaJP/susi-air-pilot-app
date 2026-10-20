@@ -39,8 +39,8 @@ jobs:
       - name: Run application checks
         run: npm run check -- ${{ matrix.app }}
 
-  authentication:
-    name: Authentication browser tests
+  browser:
+    name: Browser journey tests
     needs: check
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -66,5 +66,5 @@ jobs:
         run: npx --no-install playwright install --with-deps chromium
       - name: Build both applications
         run: npm run build
-      - name: Exercise authentication in the browser
+      - name: Exercise authentication and flight hours in the browser
         run: npm run test:e2e

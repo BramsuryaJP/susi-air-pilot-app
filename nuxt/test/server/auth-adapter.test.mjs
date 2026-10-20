@@ -11,8 +11,10 @@ test(
   async (t) => {
     let mode = 'healthy';
     let upstreamCalls = 0;
+    let lastUpstreamUrl;
     const upstream = createServer((request, response) => {
       upstreamCalls++;
+      lastUpstreamUrl = request.url;
       request.resume();
       if (mode === 'disconnected') {
         request.socket.destroy();
@@ -127,11 +129,46 @@ test(
         },
       );
       await t.test(
+        'flight-hour reads forward only validated query fields and the private cookie token',
+        async () => {
+          mode = 'healthy';
+          const before = upstreamCalls;
+          const anonymous = await fetch(
+            `${base}/api/flight-hours/summary?range=1w`,
+          );
+          assert.equal(anonymous.status, 401);
+          assert.equal(upstreamCalls, before);
+          const invalid = await fetch(
+            `${base}/api/flight-hours/summary?range=1w&target=https://untrusted.example`,
+            { headers: { Cookie: cookie } },
+          );
+          assert.equal(invalid.status, 400);
+          assert.equal(upstreamCalls, before);
+          const valid = await fetch(
+            `${base}/api/flight-hours/summary?range=1w`,
+            {
+              headers: {
+                Cookie: cookie,
+                Authorization: 'Bearer untrusted-browser-value',
+              },
+            },
+          );
+          assert.equal(valid.status, 200);
+          assert.equal(lastUpstreamUrl, '/flight-hours/summary?range=1w');
+          assert.match(valid.headers.get('cache-control'), /no-store/);
+        },
+      );
+      await t.test(
         'upstream faults preserve the cookie and hide private diagnostics',
         async () => {
-          for (const failure of ['unavailable', 'disconnected']) {
+          for (const [failure, path] of ['unavailable', 'disconnected'].flatMap(
+            (mode) =>
+              ['/api/auth/session', '/api/flight-hours/summary?range=1w'].map(
+                (path) => [mode, path],
+              ),
+          )) {
             mode = failure;
-            const result = await fetch(`${base}/api/auth/session`, {
+            const result = await fetch(`${base}${path}`, {
               headers: { Cookie: cookie },
               signal: AbortSignal.timeout(7000),
             });
@@ -170,12 +207,17 @@ test(
         'an invalid upstream session clears the browser cookie',
         async () => {
           mode = 'unauthorized';
-          const result = await fetch(`${base}/api/auth/session`, {
-            headers: { Cookie: cookie },
-          });
-          assert.equal(result.status, 401);
-          assert.match(result.headers.get('set-cookie'), /Max-Age=0/i);
-          assert.match(result.headers.get('cache-control'), /no-store/);
+          for (const path of [
+            '/api/auth/session',
+            '/api/flight-hours/summary?range=1w',
+          ]) {
+            const result = await fetch(`${base}${path}`, {
+              headers: { Cookie: cookie },
+            });
+            assert.equal(result.status, 401);
+            assert.match(result.headers.get('set-cookie'), /Max-Age=0/i);
+            assert.match(result.headers.get('cache-control'), /no-store/);
+          }
         },
       );
     } finally {

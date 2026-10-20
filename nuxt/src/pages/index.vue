@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import HoursToLimit from '../components/flight-hours/HoursToLimit.vue';
 useHead({ title: 'Pilot workspace | Susi Air' });
 const session = useSessionStore();
 const pending = ref(false);
@@ -60,5 +61,6 @@ async function signOut() {
         </div>
       </dl>
     </section>
+    <HoursToLimit />
   </main>
 </template>

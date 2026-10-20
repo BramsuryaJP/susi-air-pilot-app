@@ -6,6 +6,7 @@ import { loadAppConfig } from './config/app.config.js';
 import { loadAuthConfig } from './config/auth.config.js';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter.js';
 import { AuthModule } from './modules/auth/auth.module.js';
+import { FlightHoursModule } from './modules/flight-hours/flight-hours.module.js';
 import { PilotModule } from './modules/pilot/pilot.module.js';
 
 @Module({
@@ -17,6 +18,7 @@ import { PilotModule } from './modules/pilot/pilot.module.js';
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 60 }]),
     AuthModule,
     PilotModule,
+    FlightHoursModule,
   ],
   providers: [
     {

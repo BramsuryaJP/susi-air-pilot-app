@@ -1,4 +1,10 @@
-import { createError, deleteCookie, getHeader, setResponseHeader } from 'h3';
+import {
+  createError,
+  deleteCookie,
+  getCookie,
+  getHeader,
+  setResponseHeader,
+} from 'h3';
 import type { H3Event } from 'h3';
 
 export const SESSION_COOKIE = 'pilot_session';
@@ -56,4 +62,14 @@ export function clearPilotSession(event: H3Event): void {
 export function privateResponse(event: H3Event): void {
   setResponseHeader(event, 'Cache-Control', 'private, no-store');
   setResponseHeader(event, 'Vary', 'Cookie');
+}
+
+export function pilotSessionToken(event: H3Event): string {
+  const token = getCookie(event, SESSION_COOKIE);
+  if (!token)
+    throw createError({
+      statusCode: 401,
+      message: 'Please sign in to continue.',
+    });
+  return token;
 }
