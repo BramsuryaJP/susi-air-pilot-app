@@ -99,11 +99,13 @@ jobs:
         run: npm run build -- nuxt
         env:
           NITRO_PRESET: vercel
-      - name: Build and prune the Render backend
+      - name: Build and prune the backend
         run: |
           npm run build -- nest
           npm prune --prefix nest --omit=dev --ignore-scripts --no-fund
       - name: Exercise the pruned backend
-        run: node scripts/smoke.mjs nest
+        run: |
+          node scripts/smoke.mjs nest
+          node scripts/smoke-serverless.mjs
       - name: Check shipped runtime dependencies and deployment output
         run: npm run check:deployment

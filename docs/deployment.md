@@ -2,37 +2,59 @@
 
 ## Target and status
 
-Use **Vercel Hobby** for the Nuxt frontend and **Render Free** for Nest. This
-personal recruitment demonstration needs no database, paid compute, custom
-domain, persistent disk, or paid trial. Use each provider's assigned HTTPS
-subdomain. Account setup and GitHub repository access must be completed by the
-repository owner. Grant access only to this repository when that choice exists.
-Do not add a payment method or enable a paid plan for this test.
+Use **Vercel Hobby** for two independently deployed projects, with `nest` and
+`nuxt` as their respective root directories. This personal recruitment
+demonstration needs no database, paid compute, custom domain, persistent disk,
+or paid trial. Do not add a payment method or enable a paid plan for this test.
+Grant provider repository access only to this repository when that choice exists.
 
-The repository contains deployment configuration. Live URLs are not yet
-provisioned or verified; none are claimed here.
+Deployment is in progress. The first API deployment completed its build but
+failed at runtime. The fixes below have a local regression test; live verification
+must finish before either URL is recorded as ready for review.
 
-## Backend: Render Free
+## Backend: Vercel Hobby
 
-1. Sign in to [Render](https://dashboard.render.com) with the personal account
-   that can access `BramsuryaJP/susi-air-pilot-app`.
-2. After this branch is reviewed and merged, create a Blueprint from `main` and
-   the repository-root `render.yaml`. Confirm that the service plan is **Free**.
-3. The Blueprint selects `nest` as the root directory, Node 22.22.3, npm
-   11.21.1, Singapore, and the fixed business date `2026-05-15`. It installs
-   locked build dependencies, builds Nest, and prunes development packages.
-   The production entry is `node dist/main.js`. Render supplies `PORT`.
-4. Let Render generate `JWT_SECRET`. Do not copy it into Git, frontend
-   configuration, screenshots, logs, or the README. Keep the value stable across
-   restarts so existing sessions survive. Rotating it invalidates active tokens.
-5. Wait for `GET /health` to return `200` with `{"status":"ok"}`. The response
-   is non-cacheable and exposes no pilot, secret, or environment details.
-   `/pilot/me`, documents, flight hours, and schedules still require a token.
-6. Copy the actual backend HTTPS origin for the frontend's `NUXT_API_BASE`.
+1. Import this repository into the personal Hobby workspace as a separate
+   `susi-air-pilot-api` project. Select **nest** as its root directory.
+   `nest/vercel.json` explicitly selects **NestJS**. Auto-detection can suggest
+   Vite because Vitest uses it as a development dependency.
+2. Keep the default NestJS build settings. The install command uses npm
+   11.21.1 with locked dependencies and includes development build tools.
+   Application engines select Node 22; functions run in Singapore (`sin1`).
+3. Set private `JWT_SECRET` to a securely generated value with at least 32
+   non-padding characters. Keep it stable across deployments. Set
+   `BUSINESS_DATE=2026-05-15` for both Production and the Preview environment
+   being tested. Do not put the secret in Git, the frontend, screenshots, or logs.
+4. The non-secret runtime flag
+   `NODE_OPTIONS=--experimental-require-module` is versioned in the backend
+   configuration. [Vercel disables require(ESM) by default](https://vercel.com/docs/functions/runtimes/node-js/advanced-node-configuration).
+   The CommonJS throttler package requires the ESM Nest 12 package; without
+   this flag, the function exits with `ERR_REQUIRE_ESM` before handling requests.
+5. Keep the bootstrap invocation free of top-level `await`. Vercel captures
+   `listen()` during module import and starts the captured listener afterward.
+   Waiting for that listener at module scope prevents import from finishing.
+   `node scripts/smoke-serverless.mjs` reproduces this lifecycle and checks
+   health, anonymous rejection, login, and profile retrieval on the built app.
+   It simulates listener capture locally; it does not replace a live cloud test.
+6. Wait for the deployed `GET /health` to return `200` with `{"status":"ok"}`
+   and `Cache-Control: no-store`. Pilot data still requires a token. Copy the
+   actual API HTTPS origin into the frontend's private `NUXT_API_BASE`.
 
-Automatic deploys are disabled in the Blueprint. Publish reviewed commits
-manually after their checks pass. This prevents a merged commit from deploying
-before validation finishes and avoids consuming free build minutes needlessly.
+[NestJS on Vercel](https://vercel.com/docs/frameworks/backend/nestjs) runs as
+one function. Fixture data is read at startup and needs no writable filesystem.
+In-memory rate limits are per function instance, not shared across instances.
+Publish reviewed commits after checks pass and review Git deployment settings
+to avoid unnecessary preview builds against the free allowance.
+
+## Alternative backend: Render Free
+
+`render.yaml` remains available for a standard Node server with `nest` as its
+root, a build followed by production pruning, `node dist/main.js` as its start
+command, `/health`, and automatic deploys disabled. It is optional, not a second
+API required by the application. On this account, both Blueprint and manual Free
+service creation requested a payment card and a temporary USD 1 authorization.
+No card was submitted and no Render service was provisioned. Use Vercel for the
+current no-payment-method deployment.
 
 ## Frontend: Vercel Hobby
 
@@ -47,7 +69,7 @@ before validation finishes and avoids consuming free build minutes needlessly.
 
    | Variable | Value |
    | --- | --- |
-   | `NUXT_API_BASE` | Actual Render HTTPS origin, without a trailing slash |
+   | `NUXT_API_BASE` | Actual NestJS API HTTPS origin, without a trailing slash |
    | `NUXT_APP_ORIGIN` | Exact stable frontend HTTPS origin, without a path |
 
    Set variables for the deployment environment being tested. If the stable
@@ -64,26 +86,25 @@ before validation finishes and avoids consuming free build minutes needlessly.
 
 ## Free-tier behavior
 
-[Render Free](https://render.com/docs/free) sleeps after 15 minutes without
-traffic and normally needs about one minute to wake. Open the backend health
-URL and wait for `200` before reviewing the frontend. The adapter deliberately
-keeps its five-second timeout and does not automatically retry login writes.
-A request made while the backend is waking can return a temporary service
-error; retry after the health endpoint is ready. Do not add artificial
-keep-alive traffic to defeat the free plan's sleep behavior.
-
-Render supplies 750 free instance hours per workspace per month. It also has
-bandwidth and build-minute limits; without a payment method, exhausting those
-limits can suspend service or new builds rather than add paid capacity.
 [Vercel Hobby](https://vercel.com/docs/plans/hobby) is intended for personal,
-non-commercial projects and has its own usage limits. This deployment is a
-personal technical-test demonstration, not a production airline system.
+non-commercial projects and has usage limits. This is a personal technical-test
+demonstration, not a production airline system. Both projects consume the same
+workspace allowance. Functions may cold-start; the frontend retains its five-second
+API timeout and does not retry login writes automatically. Do not add keep-alive
+traffic or enable paid capacity to work around a free-tier limit.
+
+If Render is used later, [its Free plan](https://render.com/docs/free) sleeps
+after 15 minutes without traffic and can take about one minute to wake. It has
+750 free instance hours per workspace per month and separate bandwidth/build
+limits. Open its health endpoint before reviewing the frontend after idle time.
+The account's card-verification gate must be resolved separately if choosing it.
 
 ## Verification and review
 
 `npm run check` and `npm run test:e2e` remain the application regression checks.
 The additional CI deployment job builds the actual Vercel output, builds and
-prunes Nest, exercises the pruned backend, and runs `npm run check:deployment`.
+prunes Nest, exercises both standalone and captured-listener startup on the
+pruned backend, and runs `npm run check:deployment`.
 That command requires a Vercel build and pruned backend dependencies; run it
 in an isolated checkout, not a checkout used by a development server. It checks
 SSR function/runtime configuration, private route headers, shipped package

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nestjs",
+  "installCommand": "npx --yes npm@11.21.1 ci --include=dev --no-fund",
+  "regions": ["sin1"],
+  "env": {
+    "NODE_OPTIONS": "--experimental-require-module"
+  }
+}

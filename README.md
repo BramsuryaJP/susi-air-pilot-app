@@ -7,16 +7,18 @@ branch for each feature.
 ## Current milestone
 
 Authentication, flight hours, documents, schedules, and final brand styling
-are on `main`. The `chore/deployment` branch adds the free-hosting configuration,
-backend health check, runtime artifact checks, and deployment guide. Live URLs
-remain pending account connection and verification.
+are on `main`, together with health and deployment checks. Hosting targets
+two separate Vercel Hobby projects. The repository includes a serverless startup
+regression check and explicit NestJS runtime configuration. Successful live
+verification remains pending; a completed build alone does not establish that
+the deployed application works.
 
 See [authentication](docs/authentication.md) for the account and session boundary,
 [flight hours](docs/flight-hours.md) for rolling calculations,
 [documents](docs/documents.md) for expiry rules, and
 [schedules](docs/schedules.md) for the monthly API and calendar behavior, and
 [interface](docs/interface.md) for branding, asset sources, and accessibility.
-See [free deployment](docs/deployment.md) for Vercel Hobby and Render Free setup,
+See [free deployment](docs/deployment.md) for Vercel Hobby setup and the Render fallback,
 provider limits, required variables, and the verification checklist.
 
 ## Requirements
@@ -92,7 +94,8 @@ npm run check
 This runs frontend lint, type checks, a production build, and adapter tests; backend lint,
 type checks, unit tests, HTTP end-to-end tests, and a production build; then
 starts each built application on a temporary port and checks its HTTP response.
-The smoke checks stop their own servers afterward.
+The backend also exercises a captured-listener serverless adapter. The smoke
+checks stop their own servers afterward.
 
 To check just one application:
 
@@ -133,4 +136,4 @@ With more time, prioritize supported upstream security patches and hosted
 performance measurements. A real multi-user product would also need persistent
 accounts, credential lifecycle management, and distributed rate limiting.
 
-No deployment or submission email has been sent.
+Deployment is in progress. No submission email has been sent.
