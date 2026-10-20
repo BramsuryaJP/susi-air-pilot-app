@@ -1,75 +1,23 @@
-# Nuxt Minimal Starter
+# Nuxt frontend
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Nuxt 3 application with TypeScript, Pinia, and SCSS.
 
-## Setup
-
-Make sure to install dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
+```sh
+npm ci
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+Development runs on <http://localhost:3001>. The Vue source is in `src/`;
+server-only Nitro handlers belong in `server/`. Put the backend base URL in
+`NUXT_API_BASE` when the API adapter is added. It is private runtime config.
 
-Build the application for production:
-
-```bash
-# npm
+```sh
+npm run lint
+npm run typecheck
 npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+node .output/server/index.mjs
 ```
 
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Set `PORT` when running the production server on a custom port. The root
+README documents the pinned Node/npm versions and the complete validation
+workflow. No fixture data belongs in the frontend bundle.

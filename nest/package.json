@@ -8,13 +8,13 @@
   "type": "module",
   "scripts": {
     "build": "nest build",
-    "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "oxlint --type-aware src/ test/",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
+    "@nestjs/config": "^12.0.1",
     "@nestjs/core": "^12.0.1",
     "@nestjs/platform-express": "^12.0.1",
     "reflect-metadata": "^0.2.2",
@@ -30,7 +31,6 @@
   },
   "devDependencies": {
     "@nestjs/cli": "^12.0.0",
-    "@nestjs/mau": "^0.2.6",
     "@nestjs/schematics": "^12.0.0",
     "@nestjs/testing": "^12.0.1",
     "@types/express": "^5.0.0",
