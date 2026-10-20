@@ -11,7 +11,8 @@ export async function pilotApi<T>(
     | '/pilot/me'
     | '/flight-hours'
     | '/flight-hours/summary'
-    | '/documents',
+    | '/documents'
+    | '/schedules',
   options: {
     method: 'GET' | 'POST';
     body?: LoginInput;
@@ -52,7 +53,9 @@ export async function pilotApi<T>(
         message:
           path === '/auth/login'
             ? 'Check your username and password.'
-            : 'Choose a valid date or flight-hour range.',
+            : path === '/schedules'
+              ? 'Choose a valid schedule year and month.'
+              : 'Choose a valid date or flight-hour range.',
       });
     if (status === 429)
       throw createError({
@@ -68,7 +71,9 @@ export async function pilotApi<T>(
         ? 'Flight hours are unavailable. Please try again.'
         : path === '/documents'
           ? 'Documents are unavailable. Please try again.'
-          : 'The sign-in service is unavailable. Please try again.',
+          : path === '/schedules'
+            ? 'Schedules are unavailable. Please try again.'
+            : 'The sign-in service is unavailable. Please try again.',
     });
   }
 }

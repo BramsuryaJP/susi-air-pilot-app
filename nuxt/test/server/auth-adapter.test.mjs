@@ -47,12 +47,20 @@ test(
           JSON.stringify(
             request.url === '/documents'
               ? { today: '2026-05-15', warningDays: 30, documents: [] }
-              : {
-                  name: 'Contract Pilot',
-                  totalFlightHours: 12,
-                  avatarUrl: '/pilot-avatar.svg',
-                  today: '2026-05-15',
-                },
+              : request.url?.startsWith('/schedules?')
+                ? {
+                    today: '2026-05-15',
+                    year: 2026,
+                    month: 5,
+                    legend: [],
+                    schedules: [],
+                  }
+                : {
+                    name: 'Contract Pilot',
+                    totalFlightHours: 12,
+                    avatarUrl: '/pilot-avatar.svg',
+                    today: '2026-05-15',
+                  },
           ),
         );
       }
@@ -190,6 +198,47 @@ test(
         },
       );
       await t.test(
+        'schedule reads validate a bounded month and forward only the private token and allowed parameters',
+        async () => {
+          mode = 'healthy';
+          const before = upstreamCalls;
+          const anonymous = await fetch(
+            `${base}/api/schedules?year=2026&month=05`,
+          );
+          assert.equal(anonymous.status, 401);
+          for (const query of [
+            'year=2026&month=13',
+            'year=2026&month=5&extra=x',
+            'year=2026&month=5&month=6',
+          ]) {
+            const invalid = await fetch(`${base}/api/schedules?${query}`, {
+              headers: { Cookie: cookie },
+            });
+            assert.equal(invalid.status, 400);
+          }
+          assert.equal(upstreamCalls, before);
+          const response = await fetch(
+            `${base}/api/schedules?year=2026&month=05`,
+            {
+              headers: {
+                Cookie: cookie,
+                Authorization: 'Bearer untrusted-browser-value',
+              },
+            },
+          );
+          assert.equal(response.status, 200);
+          assert.equal(lastUpstreamUrl, '/schedules?year=2026&month=05');
+          assert.deepEqual(await response.json(), {
+            today: '2026-05-15',
+            year: 2026,
+            month: 5,
+            legend: [],
+            schedules: [],
+          });
+          assert.match(response.headers.get('cache-control'), /no-store/);
+        },
+      );
+      await t.test(
         'upstream faults preserve the cookie and hide private diagnostics',
         async () => {
           for (const [failure, path] of ['unavailable', 'disconnected'].flatMap(
@@ -198,6 +247,7 @@ test(
                 '/api/auth/session',
                 '/api/flight-hours/summary?range=1w',
                 '/api/documents',
+                '/api/schedules?year=2026&month=5',
               ].map((path) => [mode, path]),
           )) {
             mode = failure;
@@ -251,6 +301,7 @@ test(
             '/api/auth/session',
             '/api/flight-hours/summary?range=1w',
             '/api/documents',
+            '/api/schedules?year=2026&month=5',
           ]) {
             const result = await fetch(`${base}${path}`, {
               headers: { Cookie: cookie },

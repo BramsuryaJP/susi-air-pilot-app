@@ -11,7 +11,8 @@
     "typecheck": "nuxt typecheck",
     "test:e2e": "playwright test",
     "test:server": "node --test test/server/*.test.mjs",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test": "node --test test/unit/*.test.mjs"
   },
   "dependencies": {
     "@pinia/nuxt": "0.11.3",

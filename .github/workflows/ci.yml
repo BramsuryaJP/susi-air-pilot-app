@@ -66,5 +66,5 @@ jobs:
         run: npx --no-install playwright install --with-deps chromium
       - name: Build both applications
         run: npm run build
-      - name: Exercise authentication, flight hours, and documents in the browser
+      - name: Exercise all pilot journeys in the browser
         run: npm run test:e2e

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const [task, project] = process.argv.slice(2);
 const checks = {
-  nuxt: ['lint', 'typecheck', 'build', 'test:server'],
+  nuxt: ['lint', 'typecheck', 'test', 'build', 'test:server'],
   nest: ['lint', 'typecheck', 'test', 'test:e2e', 'build'],
 };
 const tasks = new Set(['setup', 'check', 'build', 'lint', 'typecheck', 'test']);
@@ -36,7 +36,6 @@ for (const app of project ? [project] : Object.keys(checks)) {
   }
   const commands = task === 'check' ? checks[app] : [task];
   for (const command of commands) {
-    if (command === 'test' && app === 'nuxt') continue;
     npm(['--prefix', app, 'run', command]);
   }
   if (task === 'check') {
