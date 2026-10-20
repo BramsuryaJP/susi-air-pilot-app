@@ -84,6 +84,12 @@ for (const name of target ? [target] : Object.keys(apps)) {
     }
     assert.ok(ready, `${name} production startup timed out: ${logs}`);
     if (name === 'nest') {
+      const health = await fetch(`http://127.0.0.1:${port}/health`, {
+        signal: AbortSignal.timeout(2000),
+      });
+      assert.equal(health.status, 200);
+      assert.deepEqual(await health.json(), { status: 'ok' });
+      assert.equal(health.headers.get('cache-control'), 'no-store');
       const login = await fetch(`http://127.0.0.1:${port}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

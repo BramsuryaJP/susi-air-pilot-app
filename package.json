@@ -19,6 +19,7 @@
     "test": "node scripts/run.mjs test",
     "test:e2e": "npm --prefix nuxt run test:e2e",
     "check": "node scripts/run.mjs check",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "check:deployment": "node scripts/check-deployment.mjs"
   }
 }

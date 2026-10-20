@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module.js';
 import { FlightHoursModule } from './modules/flight-hours/flight-hours.module.js';
 import { DocumentsModule } from './modules/documents/documents.module.js';
 import { SchedulesModule } from './modules/schedules/schedules.module.js';
+import { HealthModule } from './modules/health/health.module.js';
 import { PilotModule } from './modules/pilot/pilot.module.js';
 
 @Module({
@@ -19,6 +20,7 @@ import { PilotModule } from './modules/pilot/pilot.module.js';
     }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 60 }]),
     AuthModule,
+    HealthModule,
     PilotModule,
     FlightHoursModule,
     DocumentsModule,
