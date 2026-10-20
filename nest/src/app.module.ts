@@ -7,6 +7,7 @@ import { loadAuthConfig } from './config/auth.config.js';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { FlightHoursModule } from './modules/flight-hours/flight-hours.module.js';
+import { DocumentsModule } from './modules/documents/documents.module.js';
 import { PilotModule } from './modules/pilot/pilot.module.js';
 
 @Module({
@@ -19,6 +20,7 @@ import { PilotModule } from './modules/pilot/pilot.module.js';
     AuthModule,
     PilotModule,
     FlightHoursModule,
+    DocumentsModule,
   ],
   providers: [
     {

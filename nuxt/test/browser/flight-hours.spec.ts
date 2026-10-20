@@ -1,7 +1,9 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './support/pilot-test';
 
 test('flight-hour dashboard uses real summaries, keeps the latest range, and supports retry', async ({
   page,
+  context,
+  pilotState,
 }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 844 });
   for (const path of [
@@ -12,11 +14,7 @@ test('flight-hour dashboard uses real summaries, keeps the latest range, and sup
     expect(unauthenticated.status()).toBe(401);
     expect(unauthenticated.headers()['cache-control']).toContain('no-store');
   }
-  const login = await page.request.post('/api/auth/login', {
-    headers: { Origin: 'http://127.0.0.1:4311' },
-    data: { username: 'johndoe', password: 'susiairtest' },
-  });
-  expect(login.status()).toBe(200);
+  await context.addCookies(pilotState.cookies);
   let hydrationReads = 0;
   page.on('request', (request) => {
     if (new URL(request.url()).pathname === '/api/flight-hours/summary')

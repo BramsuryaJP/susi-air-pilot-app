@@ -44,12 +44,16 @@ test(
         );
         assert.equal(request.headers.cookie, undefined);
         response.end(
-          JSON.stringify({
-            name: 'Contract Pilot',
-            totalFlightHours: 12,
-            avatarUrl: '/pilot-avatar.svg',
-            today: '2026-05-15',
-          }),
+          JSON.stringify(
+            request.url === '/documents'
+              ? { today: '2026-05-15', warningDays: 30, documents: [] }
+              : {
+                  name: 'Contract Pilot',
+                  totalFlightHours: 12,
+                  avatarUrl: '/pilot-avatar.svg',
+                  today: '2026-05-15',
+                },
+          ),
         );
       }
     });
@@ -159,13 +163,42 @@ test(
         },
       );
       await t.test(
+        'document reads keep tokens private and do not forward browser clock overrides',
+        async () => {
+          mode = 'healthy';
+          const before = upstreamCalls;
+          const anonymous = await fetch(`${base}/api/documents`);
+          assert.equal(anonymous.status, 401);
+          assert.equal(upstreamCalls, before);
+          const response = await fetch(
+            `${base}/api/documents?today=2099-01-01&warningDays=0`,
+            {
+              headers: {
+                Cookie: cookie,
+                Authorization: 'Bearer untrusted-browser-value',
+              },
+            },
+          );
+          assert.equal(response.status, 200);
+          assert.equal(lastUpstreamUrl, '/documents');
+          assert.deepEqual(await response.json(), {
+            today: '2026-05-15',
+            warningDays: 30,
+            documents: [],
+          });
+          assert.match(response.headers.get('cache-control'), /no-store/);
+        },
+      );
+      await t.test(
         'upstream faults preserve the cookie and hide private diagnostics',
         async () => {
           for (const [failure, path] of ['unavailable', 'disconnected'].flatMap(
             (mode) =>
-              ['/api/auth/session', '/api/flight-hours/summary?range=1w'].map(
-                (path) => [mode, path],
-              ),
+              [
+                '/api/auth/session',
+                '/api/flight-hours/summary?range=1w',
+                '/api/documents',
+              ].map((path) => [mode, path]),
           )) {
             mode = failure;
             const result = await fetch(`${base}${path}`, {
@@ -201,6 +234,13 @@ test(
           assert.equal(result.status, 429);
           assert.equal(upstreamCalls, before + 1);
           assert.equal(result.headers.get('set-cookie'), null);
+          const documentCalls = upstreamCalls;
+          const documents = await fetch(`${base}/api/documents`, {
+            headers: { Cookie: cookie },
+          });
+          assert.equal(documents.status, 429);
+          assert.equal(upstreamCalls, documentCalls + 1);
+          assert.equal(documents.headers.get('set-cookie'), null);
         },
       );
       await t.test(
@@ -210,6 +250,7 @@ test(
           for (const path of [
             '/api/auth/session',
             '/api/flight-hours/summary?range=1w',
+            '/api/documents',
           ]) {
             const result = await fetch(`${base}${path}`, {
               headers: { Cookie: cookie },
