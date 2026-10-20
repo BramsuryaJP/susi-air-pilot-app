@@ -17,7 +17,8 @@
 ├── nest/
 │   ├── src/
 │   │   ├── config/
-│   │   ├── modules/welcome/
+│   │   ├── modules/auth/
+│   │   ├── modules/pilot/
 │   │   ├── app.module.ts
 │   │   └── main.ts
 │   ├── test/
@@ -34,12 +35,11 @@ without a monorepo build framework or root dependencies.
 Nuxt's `srcDir` contains Vue application code. `serverDir` explicitly retains
 Nitro handlers at `nuxt/server`, outside the browser application source.
 The root component composes a layout and the file-based router. The current
-page still renders the official welcome component.
+pages now render sign-in and the authenticated profile shell.
 
-Nest's root module composes modules. Its temporary `welcome` module isolates
-the official starter's controller, service, and unit test without changing the
-`GET /` response. It will be removed when the authenticated API is introduced;
-it is not a permanent unguarded endpoint.
+Nest's root module composes authentication and pilot modules. The starter
+welcome module was removed when the global authentication guard was added.
+See `docs/authentication.md` for the implemented session boundary.
 
 Configuration validates the port and the date-only business clock at startup.
 The default date is **2026-05-15**, as required by the brief. Real date parsing
@@ -48,7 +48,8 @@ hooks allow the process to close its resources on termination.
 
 ## Feature boundaries to add incrementally
 
-These are planned boundaries, not implemented features or empty directories:
+Authentication and pilot profile are implemented. Remaining feature boundaries
+are added as needed, without empty placeholder directories:
 
 | Area | Responsibility |
 | --- | --- |
@@ -89,8 +90,8 @@ root inputs remain available for comparison.
 - Inspect production bundle sizes and browser behavior before claiming an
   optimization. Inventory and build checks do not prove visual quality.
 
-Pinia is registered but no artificial store is introduced before a feature
-needs it. Vue Router is aligned with the version family used by Nuxt 3, rather
+Pinia now holds the request-scoped session profile. Vue Router is aligned with
+the version family used by Nuxt 3, rather
 than retaining the starter's additional major-version router dependency.
 
 ## Verification
