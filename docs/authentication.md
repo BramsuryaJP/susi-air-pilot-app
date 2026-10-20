@@ -9,21 +9,23 @@ It is a deliberately public demonstration account, not a production credential.
 
 The dashboard, documents, flight-hour summaries, and schedule are separate
 features. The authenticated landing screen currently displays the seeded
-pilot profile. Its avatar is a neutral local placeholder. Final brand artwork
-and typography belong to the interface styling milestone.
+pilot profile. Its avatar is a neutral local placeholder. Brand artwork and
+local typography are described in the interface guide.
 
 ## API boundary
 
 | Endpoint | Behavior |
 | --- | --- |
+| Nest `GET /health` | Minimal public deployment health response |
 | Nest `POST /auth/login` | Validates credentials and returns a bearer token |
 | Nest `GET /pilot/me` | Returns the seeded profile after token verification |
 | Nuxt `POST /api/auth/login` | Exchanges credentials and sets the HttpOnly cookie |
 | Nuxt `GET /api/auth/session` | Forwards the cookie token privately to Nest |
 | Nuxt `POST /api/auth/logout` | Clears the browser session cookie |
 
-Only the Nest login endpoint is marked public. A global guard protects every
-other registered Nest endpoint. The starter welcome endpoint has been removed.
+The Nest login endpoint and minimal deployment health endpoint are marked
+public. A global guard protects every registered pilot-data endpoint. The
+starter welcome endpoint has been removed.
 DTO validation rejects unknown properties, non-string fields, and excessive
 credential lengths. A global exception filter gives errors the shape:
 

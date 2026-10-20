@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: susi-air-pilot-api
+    runtime: node
+    plan: free
+    region: singapore
+    branch: main
+    rootDir: nest
+    buildCommand: npx --yes npm@11.21.1 ci --include=dev --no-fund && npx --yes npm@11.21.1 run build && npx --yes npm@11.21.1 prune --omit=dev --ignore-scripts
+    startCommand: node dist/main.js
+    healthCheckPath: /health
+    autoDeployTrigger: 'off'
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.3
+      - key: NODE_ENV
+        value: production
+      - key: BUSINESS_DATE
+        value: '2026-05-15'
+      - key: JWT_SECRET
+        generateValue: true

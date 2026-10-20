@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nuxtjs",
+  "installCommand": "npx --yes npm@11.21.1 ci --include=dev --no-fund",
+  "buildCommand": "NITRO_PRESET=vercel npx --yes npm@11.21.1 run build",
+  "regions": [
+    "sin1"
+  ]
+}

@@ -68,3 +68,42 @@ jobs:
         run: npm run build
       - name: Exercise all pilot journeys in the browser
         run: npm run test:e2e
+
+  deployment:
+    name: Deployment artifact checks
+    needs: check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            nuxt/package-lock.json
+            nest/package-lock.json
+      - name: Use the project npm version
+        run: npm install --global npm@11.21.1
+      - name: Install cloud build dependencies in production mode
+        run: |
+          npm ci --prefix nuxt --include=dev --no-fund
+          npm ci --prefix nest --include=dev --no-fund
+        env:
+          NODE_ENV: production
+      - name: Build the Vercel frontend
+        run: npm run build -- nuxt
+        env:
+          NITRO_PRESET: vercel
+      - name: Build and prune the Render backend
+        run: |
+          npm run build -- nest
+          npm prune --prefix nest --omit=dev --ignore-scripts --no-fund
+      - name: Exercise the pruned backend
+        run: node scripts/smoke.mjs nest
+      - name: Check shipped runtime dependencies and deployment output
+        run: npm run check:deployment

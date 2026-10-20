@@ -6,15 +6,18 @@ branch for each feature.
 
 ## Current milestone
 
-Authentication, flight hours, documents, and schedules are on `main`. The
-`style/pilot-interface` branch completes the brand styling, local typography,
-and responsive interface. Deployment remains before test submission.
+Authentication, flight hours, documents, schedules, and final brand styling
+are on `main`. The `chore/deployment` branch adds the free-hosting configuration,
+backend health check, runtime artifact checks, and deployment guide. Live URLs
+remain pending account connection and verification.
 
 See [authentication](docs/authentication.md) for the account and session boundary,
 [flight hours](docs/flight-hours.md) for rolling calculations,
 [documents](docs/documents.md) for expiry rules, and
 [schedules](docs/schedules.md) for the monthly API and calendar behavior, and
 [interface](docs/interface.md) for branding, asset sources, and accessibility.
+See [free deployment](docs/deployment.md) for Vercel Hobby and Render Free setup,
+provider limits, required variables, and the verification checklist.
 
 ## Requirements
 
@@ -122,8 +125,12 @@ commit messages, and interface copy use English.
 
 ## Remaining submission work
 
-- Resolve or explicitly assess outstanding dependency advisories.
+- Track upstream fixes for the assessed dependency advisories.
 - Deploy both applications and record the actual verified URLs.
 - Grant reviewers access to this private repository if needed.
+
+With more time, prioritize supported upstream security patches and hosted
+performance measurements. A real multi-user product would also need persistent
+accounts, credential lifecycle management, and distributed rate limiting.
 
 No deployment or submission email has been sent.

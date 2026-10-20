@@ -30,5 +30,10 @@
     "sass": "^1.105.2",
     "typescript": "~5.9.3",
     "vue-tsc": "^3.3.13"
+  },
+  "packageManager": "npm@11.21.1",
+  "engines": {
+    "node": "^22.22.3",
+    "npm": "^11.21.1"
   }
 }
