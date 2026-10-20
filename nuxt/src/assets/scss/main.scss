@@ -3,6 +3,251 @@ html {
   text-size-adjust: 100%;
 }
 
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  color: #0e2138;
+  background: #f5f6f8;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+button,
+input {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+.muted,
+dt {
+  color: #606b7a;
+}
+.brand-name {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+}
+.brand-dot {
+  color: #e63757;
+}
+.brand-header,
+.workspace-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.brand-header > span:last-child {
+  color: #606b7a;
+  font-size: 0.85rem;
+}
+.sign-in-shell {
+  width: min(100% - 3rem, 1060px);
+  margin: auto;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0 1rem;
+}
+.sign-in-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(2rem, 7vw, 6rem);
+  flex: 1;
+  padding: 3rem 0;
+}
+.intro-rule {
+  display: block;
+  width: 3rem;
+  height: 4px;
+  background: #e63757;
+  margin-bottom: 2rem;
+}
+.intro h1 {
+  font-size: clamp(2.4rem, 4vw, 3.7rem);
+  line-height: 1.12;
+  letter-spacing: -0.055em;
+  margin-bottom: 1.5rem;
+}
+.intro p {
+  color: #606b7a;
+  max-width: 30ch;
+}
+.sign-in-form {
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px #0e213808;
+  border: 1px solid #e8ebef;
+}
+.sign-in-form h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.035em;
+}
+.sign-in-form > .muted {
+  font-size: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+input {
+  width: 100%;
+  border: 1px solid #aeb7c4;
+  background: white;
+  color: #0e2138;
+  border-radius: 10px;
+  min-height: 48px;
+  padding: 0.75rem;
+}
+.sign-in-form > input {
+  margin-bottom: 1.25rem;
+}
+.password-field {
+  position: relative;
+  margin-bottom: 1.75rem;
+}
+.password-field input {
+  padding-right: 4.2rem;
+}
+.password-toggle {
+  position: absolute;
+  inset: 0 0 0 auto;
+  background: none;
+  border: 0;
+  color: #3c506a;
+  padding: 0.7rem;
+  font-size: 0.85rem;
+  border-radius: 10px;
+}
+.primary-button {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 999px;
+  background: #e63757;
+  color: #fff;
+  font-weight: 700;
+}
+.primary-button:hover:enabled {
+  background: #c92343;
+}
+.error-message {
+  background: #fff0f2;
+  border-left: 3px solid #c92343;
+  color: #a01935;
+  padding: 0.8rem 1rem;
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+.sign-in-footer {
+  color: #606b7a;
+  font-size: 0.75rem;
+  padding-top: 1rem;
+}
+.workspace-shell {
+  width: min(100% - 2.5rem, 900px);
+  margin: auto;
+  padding: 1.5rem 0 3rem;
+}
+.workspace-header {
+  margin-bottom: 3rem;
+}
+.secondary-button {
+  border: 1px solid #aeb7c4;
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+  min-height: 44px;
+  color: #0e2138;
+  background: white;
+}
+.profile-panel {
+  background: white;
+  border-radius: 16px;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border: 1px solid #e8ebef;
+}
+.profile-panel img {
+  margin-bottom: 1rem;
+}
+.profile-panel > .muted {
+  margin-bottom: 0.4rem;
+}
+.profile-panel h1 {
+  font-size: clamp(1.7rem, 4vw, 2.3rem);
+  letter-spacing: -0.04em;
+}
+.profile-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem 3rem;
+  border-top: 1px solid #e8ebef;
+  padding-top: 1.5rem;
+  margin: 2rem 0 0;
+}
+.profile-facts dd {
+  margin: 0.4rem 0 0;
+  font-size: 1.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.profile-facts dd span {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #606b7a;
+}
+.profile-facts .date-value {
+  font-size: 1.15rem;
+}
+
+@media (max-width: 640px) {
+  .sign-in-shell {
+    width: min(100% - 2rem, 460px);
+    padding-top: 1.25rem;
+  }
+  .sign-in-panel {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 2rem 0;
+    align-content: start;
+  }
+  .intro h1 {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .intro-rule {
+    margin-bottom: 1rem;
+  }
+  .intro p {
+    margin-bottom: 0;
+  }
+  .sign-in-form {
+    padding: 1.5rem;
+  }
+  .workspace-header {
+    margin-bottom: 2rem;
+  }
+}
+
 :focus-visible {
   outline: 2px solid #0e2138;
   outline-offset: 3px;

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const [task, project] = process.argv.slice(2);
 const checks = {
-  nuxt: ['lint', 'typecheck', 'build'],
+  nuxt: ['lint', 'typecheck', 'build', 'test:server'],
   nest: ['lint', 'typecheck', 'test', 'test:e2e', 'build'],
 };
 const tasks = new Set(['setup', 'check', 'build', 'lint', 'typecheck', 'test']);

@@ -38,3 +38,33 @@ jobs:
         run: npm ci --prefix ${{ matrix.app }} --no-fund
       - name: Run application checks
         run: npm run check -- ${{ matrix.app }}
+
+  authentication:
+    name: Authentication browser tests
+    needs: check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            nuxt/package-lock.json
+            nest/package-lock.json
+      - name: Use the project npm version
+        run: npm install --global npm@11.21.1
+      - name: Install locked dependencies
+        run: npm run setup
+      - name: Install test browser
+        working-directory: nuxt
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Build both applications
+        run: npm run build
+      - name: Exercise authentication in the browser
+        run: npm run test:e2e

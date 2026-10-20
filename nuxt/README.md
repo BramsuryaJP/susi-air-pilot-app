@@ -9,7 +9,9 @@ npm run dev
 
 Development runs on <http://localhost:3001>. The Vue source is in `src/`;
 server-only Nitro handlers belong in `server/`. Put the backend base URL in
-`NUXT_API_BASE` when the API adapter is added. It is private runtime config.
+`NUXT_API_BASE`. It is private runtime config. Set `NUXT_APP_ORIGIN` to the
+exact browser origin (locally `http://localhost:3001`). Session tokens remain
+in HttpOnly cookies; Pinia contains profile data only.
 
 ```sh
 npm run lint

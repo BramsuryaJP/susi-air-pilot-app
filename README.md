@@ -6,11 +6,13 @@ branch for each feature.
 
 ## Current milestone
 
-The official starter baseline is on `main`. The `refactor/project-structure`
-branch establishes the application boundaries, runtime configuration, and CI.
-The starter welcome screens remain in place. Authentication, pilot data,
-flight-hour calculations, documents, schedules, and the final interface are
-subsequent features. This foundation is not the completed test submission.
+The project foundation is on `main`. The `feat/authentication` branch adds
+sign-in, protected navigation, the seeded pilot profile, and sign-out.
+Flight-hour calculations, documents, schedules, and the final branded interface
+are subsequent features. This milestone is not the completed test submission.
+
+See [authentication](docs/authentication.md) for the account, API contract,
+session behavior, production settings, and security limitations.
 
 ## Requirements
 
@@ -64,12 +66,17 @@ Copy the application's `.env.example` to `.env` to override them.
 | --- | --- | --- | --- |
 | Nest | `PORT` | `3000` | Validated HTTP port |
 | Nest | `BUSINESS_DATE` | `2026-05-15` | Validated date-only business clock |
+| Nest | `JWT_SECRET` | Random in development | Required production signing secret, at least 32 characters |
 | Nuxt | `NUXT_API_BASE` | `http://127.0.0.1:3000` | Private server-side API base URL |
+| Nuxt | `NUXT_APP_ORIGIN` | `http://localhost:3001` | Exact frontend origin; HTTPS in deployment |
 
 The business date follows the brief, including where the documents fixture
 contains a different date. No domain logic uses the machine's current date.
-`NUXT_API_BASE` is reserved for the server-side API adapter in the authentication
-feature. It is not exposed through public runtime configuration.
+`NUXT_API_BASE` is used only by the server-side adapter and is not exposed
+through public runtime configuration. Browser API writes require an Origin
+matching `NUXT_APP_ORIGIN`. Use `localhost:3001` for local development unless
+you update that variable. Production requires an explicit `JWT_SECRET`;
+generate one with `openssl rand -hex 32`.
 
 ## Validation
 
@@ -77,7 +84,7 @@ feature. It is not exposed through public runtime configuration.
 npm run check
 ```
 
-This runs frontend lint, type checks, and a production build; backend lint,
+This runs frontend lint, type checks, a production build, and adapter tests; backend lint,
 type checks, unit tests, HTTP end-to-end tests, and a production build; then
 starts each built application on a temporary port and checks its HTTP response.
 The smoke checks stop their own servers afterward.
@@ -91,8 +98,9 @@ npm run check -- nest
 
 Other commands: `npm run build`, `npm run lint`, `npm run typecheck`,
 `npm test`, and `npm run smoke`. The smoke command requires existing builds.
-At this milestone, `npm test` runs backend tests. Frontend interaction tests
-will accompany the actual user flows rather than testing placeholder markup.
+`npm test` runs backend unit tests. `npm run test:e2e` exercises the real
+browser authentication flows after both apps are built and Chromium is
+installed. See the authentication guide for the browser setup command.
 
 GitHub Actions checks each application independently on pull requests and
 pushes to `main`. Audit findings are documented separately from passing build
@@ -105,12 +113,15 @@ boundaries, and performance decisions. See [contributing](CONTRIBUTING.md) for
 the branch, commit, and review workflow.
 
 The original JSON fixtures remain unchanged at the repository root. The
+backend packages an unchanged flight-hours fixture copy in `nest/src/data`
+to seed the profile at startup and support independent deployment. The
 recruitment PDF stays local and is excluded from Git. Comments, documentation,
 commit messages, and interface copy use English.
 
 ## Remaining submission work
 
-- Implement and test the API and the three requested screens.
+- Implement the flight-hours, documents, and schedules APIs and screens.
+- Complete the brand artwork, typography, and dashboard interface.
 - Verify mobile layouts, keyboard access, stale-response handling, and bundles.
 - Resolve or explicitly assess outstanding dependency advisories.
 - Deploy both applications and record the actual verified URLs.
