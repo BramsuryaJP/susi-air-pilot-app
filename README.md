@@ -6,14 +6,15 @@ branch for each feature.
 
 ## Current milestone
 
-Authentication is on `main`. The `feat/flight-hours` branch adds authenticated
-daily queries, server-derived rolling summaries, Home limit cards, and a trend
-chart. Documents, schedules, and the final branded interface are subsequent
-features. This milestone is not the completed test submission.
+Authentication and flight hours are on `main`. The `feat/documents` branch
+adds document expiry metadata and the Home document list. Schedules, bottom
+navigation, and the final branded interface are subsequent features. This
+milestone is not the completed test submission.
 
 See [authentication](docs/authentication.md) for the account, API contract,
 session behavior, production settings, and security limitations. See
-[flight hours](docs/flight-hours.md) for calculation policies and API details.
+[flight hours](docs/flight-hours.md) for calculation policies and
+[documents](docs/documents.md) for expiry rules and browser behavior.
 
 ## Requirements
 
@@ -100,7 +101,7 @@ npm run check -- nest
 Other commands: `npm run build`, `npm run lint`, `npm run typecheck`,
 `npm test`, and `npm run smoke`. The smoke command requires existing builds.
 `npm test` runs backend unit tests. `npm run test:e2e` exercises the real
-browser authentication and flight-hour journeys after both apps are built and Chromium is
+browser authentication, flight-hour, and documents journeys after both apps are built and Chromium is
 installed. See the authentication guide for the browser setup command.
 
 GitHub Actions checks each application independently on pull requests and
@@ -114,14 +115,14 @@ boundaries, and performance decisions. See [contributing](CONTRIBUTING.md) for
 the branch, commit, and review workflow.
 
 The original JSON fixtures remain unchanged at the repository root. The
-backend packages an unchanged flight-hours fixture copy in `nest/src/data`
-to seed the profile and flight-hour service at startup and support independent deployment. The
+backend packages unchanged flight-hours and documents fixture copies in
+`nest/src/data` to seed services at startup and support independent deployment. The
 recruitment PDF stays local and is excluded from Git. Comments, documentation,
 commit messages, and interface copy use English.
 
 ## Remaining submission work
 
-- Implement the documents and schedules APIs and screens, including bottom navigation.
+- Implement the schedules API and screen, including bottom navigation.
 - Complete the brand artwork, typography, and dashboard interface.
 - Verify mobile layouts, keyboard access, stale-response handling, and bundles.
 - Resolve or explicitly assess outstanding dependency advisories.

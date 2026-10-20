@@ -6,7 +6,12 @@ import { clearPilotSession } from './auth-session';
 
 export async function pilotApi<T>(
   event: H3Event,
-  path: '/auth/login' | '/pilot/me' | '/flight-hours' | '/flight-hours/summary',
+  path:
+    | '/auth/login'
+    | '/pilot/me'
+    | '/flight-hours'
+    | '/flight-hours/summary'
+    | '/documents',
   options: {
     method: 'GET' | 'POST';
     body?: LoginInput;
@@ -61,7 +66,9 @@ export async function pilotApi<T>(
       statusCode: 503,
       message: path.startsWith('/flight-hours')
         ? 'Flight hours are unavailable. Please try again.'
-        : 'The sign-in service is unavailable. Please try again.',
+        : path === '/documents'
+          ? 'Documents are unavailable. Please try again.'
+          : 'The sign-in service is unavailable. Please try again.',
     });
   }
 }
