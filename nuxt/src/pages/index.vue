@@ -37,11 +37,9 @@ async function signOut() {
 </script>
 
 <template>
-  <main v-if="session.profile" class="workspace-shell">
+  <main v-if="session.profile" id="main-content" class="workspace-shell" tabindex="-1">
     <header class="workspace-header">
-      <span class="brand-name"
-        >Susi Air<span class="brand-dot" aria-hidden="true">.</span></span
-      >
+      <BrandMark />
       <button class="secondary-button" :disabled="pending" @click="signOut">
         {{ pending ? 'Signing out' : 'Sign out' }}
       </button>
@@ -50,9 +48,13 @@ async function signOut() {
       {{ errorMessage }}
     </p>
     <section class="profile-panel">
-      <img :src="session.profile.avatarUrl" alt="" width="64" height="64" >
-      <p class="muted">Pilot workspace</p>
-      <h1>Welcome, {{ session.profile.name }}</h1>
+      <div class="profile-heading">
+        <img :src="session.profile.avatarUrl" alt="" width="64" height="64" >
+        <div>
+          <p class="muted">Pilot workspace</p>
+          <h1>Welcome, {{ session.profile.name }}</h1>
+        </div>
+      </div>
       <dl class="profile-facts">
         <div>
           <dt>Total flight hours</dt>

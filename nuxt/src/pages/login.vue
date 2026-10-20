@@ -39,11 +39,9 @@ async function signIn() {
 </script>
 
 <template>
-  <main class="sign-in-shell">
+  <main id="main-content" class="sign-in-shell" tabindex="-1">
     <header class="brand-header">
-      <span class="brand-name"
-        >Susi Air<span class="brand-dot" aria-hidden="true">.</span></span
-      >
+      <BrandMark />
       <span>Pilot workspace</span>
     </header>
     <section class="sign-in-panel" aria-labelledby="sign-in-title">

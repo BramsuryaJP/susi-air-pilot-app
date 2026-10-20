@@ -79,8 +79,8 @@ const inSchedule = computed(
   grid-template-columns: repeat(4, 1fr);
   max-width: 940px;
   margin: 0 auto;
-  background: white;
-  border: 1px solid #e8ebef;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-bottom: 0;
   padding: 0.5rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom));
   border-radius: 16px 16px 0 0;
@@ -94,25 +94,26 @@ const inSchedule = computed(
     min-height: 48px;
     border: 0;
     border-radius: 8px;
-    color: #606b7a;
+    color: var(--muted);
     background: none;
     text-decoration: none;
     font-size: 0.7rem;
   }
   button:disabled {
     cursor: default;
-    opacity: 0.5;
+    opacity: 0.75;
   }
   svg {
     width: 22px;
     height: 22px;
   }
   a.active {
-    color: #e63757;
+    background: var(--danger-surface);
+    color: var(--danger-text);
     font-weight: 700;
   }
-  a:hover {
-    background: #f5f6f8;
+  a:hover:not(.active) {
+    background: var(--background);
   }
 }
 </style>

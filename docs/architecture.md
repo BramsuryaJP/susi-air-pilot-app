@@ -90,8 +90,9 @@ root inputs remain available for comparison.
   Test rapid range/month changes with intentionally reordered responses.
 - Keep tokens server-side, use private runtime configuration for the backend
   address, and validate browser-origin writes at the server adapter.
-- Keep SCSS global rules small. Add brand tokens and component styles with
-  the interface rather than shipping an unused design system in this refactor.
+- Keep shared SCSS tokens and base controls global, with feature styles scoped
+  to components. Serve the official logo and one variable font locally.
+  See [the interface guide](interface.md) for asset provenance and typography.
 - Inspect production bundle sizes and browser behavior before claiming an
   optimization. Inventory and build checks do not prove visual quality.
 

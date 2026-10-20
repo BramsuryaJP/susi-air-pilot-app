@@ -6,14 +6,15 @@ branch for each feature.
 
 ## Current milestone
 
-Authentication, flight hours, and documents are on `main`. The `feat/schedules`
-branch adds the monthly duty calendar, date-detail placeholder, and bottom
-navigation. Final brand styling and deployment remain before test submission.
+Authentication, flight hours, documents, and schedules are on `main`. The
+`style/pilot-interface` branch completes the brand styling, local typography,
+and responsive interface. Deployment remains before test submission.
 
 See [authentication](docs/authentication.md) for the account and session boundary,
 [flight hours](docs/flight-hours.md) for rolling calculations,
 [documents](docs/documents.md) for expiry rules, and
-[schedules](docs/schedules.md) for the monthly API and calendar behavior.
+[schedules](docs/schedules.md) for the monthly API and calendar behavior, and
+[interface](docs/interface.md) for branding, asset sources, and accessibility.
 
 ## Requirements
 
@@ -100,7 +101,7 @@ npm run check -- nest
 Other commands: `npm run build`, `npm run lint`, `npm run typecheck`,
 `npm test`, and `npm run smoke`. The smoke command requires existing builds.
 `npm test` runs backend unit tests and frontend calendar utility tests. `npm run test:e2e` exercises the real
-browser authentication, flight-hour, documents, and schedule journeys after both apps are built and Chromium is
+browser authentication, flight-hour, documents, schedule, and responsive interface journeys after both apps are built and Chromium is
 installed. See the authentication guide for the browser setup command.
 
 GitHub Actions checks each application independently on pull requests and
@@ -121,8 +122,6 @@ commit messages, and interface copy use English.
 
 ## Remaining submission work
 
-- Complete the brand artwork, typography, and dashboard interface.
-- Verify mobile layouts, keyboard access, stale-response handling, and bundles.
 - Resolve or explicitly assess outstanding dependency advisories.
 - Deploy both applications and record the actual verified URLs.
 - Grant reviewers access to this private repository if needed.

@@ -29,6 +29,22 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'en' },
       title: 'Susi Air Pilot App',
+      meta: [
+        { name: 'theme-color', content: '#0E2138' },
+        {
+          name: 'description',
+          content: 'Susi Air pilot flight hours, documents, and duty schedule.',
+        },
+      ],
+      link: [
+        {
+          rel: 'preload',
+          href: '/fonts/plus-jakarta-sans-latin-variable.woff2',
+          as: 'font',
+          type: 'font/woff2',
+          crossorigin: 'anonymous',
+        },
+      ],
     },
   },
 });

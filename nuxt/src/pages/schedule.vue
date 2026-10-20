@@ -70,9 +70,12 @@ function move(month: string | null) {
 </script>
 
 <template>
-  <main class="workspace-shell schedule-shell">
+  <main id="main-content" class="workspace-shell schedule-shell" tabindex="-1">
+    <header class="brand-header">
+      <BrandMark />
+      <span>Pilot workspace</span>
+    </header>
     <header class="schedule-intro">
-      <p class="muted">Pilot workspace</p>
       <h1>Schedule</h1>
       <p class="muted">Your duty calendar and logbook status.</p>
     </header>
@@ -130,7 +133,7 @@ function move(month: string | null) {
   max-width: 760px;
 }
 .schedule-intro {
-  margin: 1rem 0 2rem;
+  margin: 1.75rem 0 1.5rem;
   h1 {
     margin: 0.2rem 0 0.5rem;
     font-size: 2rem;
@@ -138,9 +141,6 @@ function move(month: string | null) {
   }
   p {
     margin-bottom: 0;
-  }
-  > p:first-child {
-    font-size: 0.8rem;
   }
 }
 .month-controls {
@@ -162,13 +162,13 @@ function move(month: string | null) {
   line-height: 1;
 }
 .schedule-message {
-  background: white;
-  border: 1px solid #e8ebef;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 2rem 1.5rem;
-  color: #606b7a;
+  color: var(--muted);
 }
 #schedule-error {
-  color: #a01935;
+  color: var(--danger-text);
 }
 </style>

@@ -19,7 +19,11 @@ const formatted = new Intl.DateTimeFormat('en-GB', {
 </script>
 
 <template>
-  <main class="workspace-shell duty-detail">
+  <main id="main-content" class="workspace-shell duty-detail" tabindex="-1">
+    <header class="brand-header">
+      <BrandMark />
+      <span>Pilot workspace</span>
+    </header>
     <NuxtLink
       :to="{ path: '/schedule', query: { month: date.slice(0, 7) } }"
       :prefetch="false"
@@ -38,14 +42,14 @@ const formatted = new Intl.DateTimeFormat('en-GB', {
 
 <style scoped lang="scss">
 .duty-detail {
-  padding-top: 2rem;
+  padding-top: 1.5rem;
 }
 .back-link {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  color: #0e2138;
-  margin-bottom: 1rem;
+  color: var(--navy);
+  margin: 1rem 0;
 }
 h1 {
   font-size: clamp(1.5rem, 5vw, 2rem);
