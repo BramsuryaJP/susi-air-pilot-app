@@ -15,11 +15,19 @@ The assigned public deployment addresses are:
 | Nuxt frontend | <https://susi-air-pilot-app-self.vercel.app> |
 | NestJS API health | <https://susi-air-pilot-api.vercel.app/health> |
 
-The production API was verified on 20 October 2026 at commit `5522052`:
-health, anonymous rejection, demo login, profile, flight totals, document states,
-May/June schedules, and DTO validation passed. Frontend production verification
-is recorded with the deployment PR after the sign-in hydration fix is released.
+Both production applications were verified on 20 October 2026 at 23:37 WIB,
+at commit `7e4081e`, after the sign-in hydration fix was released. Health,
+anonymous rejection, demo login, cookie protections, SSR reload, flight totals,
+document states, May/June schedules, DTO validation, keyboard date navigation,
+sign-out, and 320/390/1280px layouts passed. All four main CI jobs also passed,
+including ten browser journeys. The evidence is recorded in
+[PR #9](https://github.com/BramsuryaJP/susi-air-pilot-app/pull/9).
+See [submission review](submission.md) for the latest final-review results.
 A completed provider build alone does not establish functional correctness.
+
+The brief lists Railway, Render, or Fly for backend hosting. Using Vercel for
+NestJS is a deliberate deviation under the no-payment-method constraint;
+disclose it when submitting rather than claiming the provider list is met.
 
 ## Backend: Vercel Hobby
 

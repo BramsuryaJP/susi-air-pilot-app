@@ -1,8 +1,9 @@
 # Nest backend
 
 NestJS application with TypeScript, feature modules, and validated runtime
-configuration, JWT authentication, and a seeded pilot profile. Only
-`POST /auth/login` is public; `GET /pilot/me` requires its bearer token.
+configuration, JWT authentication, and seeded pilot, flight-hour, document,
+and schedule services. `POST /auth/login` and the minimal `GET /health` are
+public; every pilot-data endpoint requires the issued bearer token.
 
 ```sh
 npm ci
@@ -24,5 +25,6 @@ npm run build
 npm run start:prod
 ```
 
-The root README documents the pinned Node/npm versions, planned features,
-cross-application checks, and dependency-audit status.
+The [root README](../README.md) documents the pinned Node/npm versions,
+all API endpoints, local production commands, cross-application checks,
+live deployments, and dependency-audit status.
