@@ -15,7 +15,11 @@ export default defineConfig({
   projects: [
     {
       name: 'workspace',
-      testIgnore: ['**/errors.spec.ts', '**/schedule-picker.spec.ts'],
+      testIgnore: [
+        '**/errors.spec.ts',
+        '**/schedule-picker.spec.ts',
+        '**/unavailable.spec.ts',
+      ],
       outputDir: './test-results/workspace',
     },
     {
@@ -27,6 +31,11 @@ export default defineConfig({
       name: 'schedule-picker',
       testMatch: '**/schedule-picker.spec.ts',
       outputDir: './test-results/schedule-picker',
+    },
+    {
+      name: 'unavailable',
+      testMatch: '**/unavailable.spec.ts',
+      outputDir: './test-results/unavailable',
     },
   ],
   webServer: [

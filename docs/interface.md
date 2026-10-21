@@ -31,9 +31,11 @@ calendar keeps its seven-column layout, original API duty bands, and readable
 foreground colors. Bottom navigation reserves space and the device safe area.
 No layout introduces another source of pilot data or business calculations.
 
-Logbook and More remain disabled, with visible "Unavailable" captions and matching
-accessible names. Their screens are not defined in the brief. Home and Schedule
-remain working links. The Schedule layout, legend, and duty colors are retained.
+Logbook and More are working navigation links to protected pages reading "Page
+unavailable". Each page identifies its section and provides a working return to
+Home. The active tab has `aria-current="page"`. Full Logbook and More features
+are not defined in the brief. These pages share the workspace header, reserve
+space for navigation, and keep their SSR responses private and non-cacheable.
 
 The custom error screen reuses the masthead, palette, and pill action. A clear
 404 message replaces the framework's default missing-page screen; other statuses

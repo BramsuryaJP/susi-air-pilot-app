@@ -68,8 +68,8 @@ and the distinction between requirements and presentation choices.
 Tapping any date opens `/duty/YYYY-MM-DD`, a protected placeholder reading
 “Detail page coming soon”. It validates the actual date and returns to the
 same calendar month. Schedule/detail HTML responses use private/no-store
-headers. The bottom navigation links Home and Schedule; Logbook and More are
-disabled placeholders with visible "Unavailable" labels because their screens
+headers. The bottom navigation links Home and Schedule; Logbook and More open
+protected placeholders reading "Page unavailable", since their complete features
 are not defined in the brief. Invalid duty dates retain HTTP 404 and use the
 shared branded recovery screen. Returning Home revalidates the session before
 rendering dashboard content.

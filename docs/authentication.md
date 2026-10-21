@@ -129,12 +129,19 @@ npm run test:e2e
 ```
 
 The browser suite starts its own production servers on ports 4310 and 4311.
-The workspace, error-recovery, and schedule-picker projects run in separate invocations with fresh
+The workspace, error-recovery, schedule-picker, and unavailable-page projects run in separate invocations with fresh
 servers, retaining production rate limits without exhausting a shared quota.
 It exercises disabled JavaScript, delayed hydration, bad credentials, repeated
 submit events, private cookie behavior, cross-origin writes, SSR reload and
 cookie cleanup, session isolation, guest-only login redirects, browser-back
 navigation, expired sessions, error-page recovery with and without JavaScript,
-sessions removed during an error, and logout. Server adapter checks also cover
+sessions removed during an error, and logout.
+
+Logbook and More use the same session guard. Their shared placeholder marks its
+SSR output private/no-store and varies by Cookie, including case and trailing-slash
+route variants. Missing, rejected, or removed sessions cannot use these pages
+to enter the workspace.
+
+Server adapter checks also cover
 login redirects and session-validation outages. Test artifacts are ignored by
 Git. GitHub Actions runs the same browser suite after both application jobs pass.
