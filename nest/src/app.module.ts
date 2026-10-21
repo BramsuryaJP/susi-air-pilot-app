@@ -1,9 +1,15 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  ValidationPipe,
+} from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { loadAppConfig } from './config/app.config.js';
 import { loadAuthConfig } from './config/auth.config.js';
+import { SecurityHeadersMiddleware } from './common/middleware/security-headers.middleware.js';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { FlightHoursModule } from './modules/flight-hours/flight-hours.module.js';
@@ -40,4 +46,8 @@ import { PilotModule } from './modules/pilot/pilot.module.js';
     { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(SecurityHeadersMiddleware).forRoutes('{*path}');
+  }
+}

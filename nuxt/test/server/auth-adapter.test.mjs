@@ -141,7 +141,7 @@ test(
         },
       );
       await t.test(
-        'login is guest-only, validates the session, and clears rejected cookies on SSR',
+        'login is guest-only and validates sessions without cookie writes on SSR',
         async () => {
           mode = 'healthy';
           const before = upstreamCalls;
@@ -163,7 +163,7 @@ test(
             redirect: 'manual',
           });
           assert.equal(expired.status, 200);
-          assert.match(expired.headers.get('set-cookie'), /Max-Age=0/i);
+          assert.equal(expired.headers.get('set-cookie'), null);
           mode = 'healthy';
         },
       );
@@ -341,7 +341,7 @@ test(
         },
       );
       await t.test(
-        'an invalid upstream session clears the browser cookie',
+        'invalid upstream sessions are rejected without mutating browser cookies',
         async () => {
           mode = 'unauthorized';
           for (const path of [
@@ -354,7 +354,7 @@ test(
               headers: { Cookie: cookie },
             });
             assert.equal(result.status, 401);
-            assert.match(result.headers.get('set-cookie'), /Max-Age=0/i);
+            assert.equal(result.headers.get('set-cookie'), null);
             assert.match(result.headers.get('cache-control'), /no-store/);
           }
         },

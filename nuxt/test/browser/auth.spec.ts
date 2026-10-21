@@ -198,7 +198,7 @@ test('the server adapter enforces origin, JSON, private responses, and cookie-on
   expect((await request.get('/api/auth/session')).status()).toBe(401);
 });
 
-test('an invalid cookie is cleared and service failures give actionable feedback', async ({
+test('invalid sessions are rejected without cookie writes and service failures give actionable feedback', async ({
   page,
   context,
 }) => {
@@ -215,7 +215,7 @@ test('an invalid cookie is cleared and service failures give actionable feedback
   expect(result.status()).toBe(401);
   expect(
     (await context.cookies()).some((item) => item.name === 'pilot_session'),
-  ).toBe(false);
+  ).toBe(true);
   await context.addCookies([
     {
       name: 'pilot_session',
@@ -229,7 +229,7 @@ test('an invalid cookie is cleared and service failures give actionable feedback
   await expect(page).toHaveURL('/login');
   expect(
     (await context.cookies()).some((item) => item.name === 'pilot_session'),
-  ).toBe(false);
+  ).toBe(true);
   await page.goto('/login');
   await page.route('**/api/auth/login', (route) =>
     route.fulfill({ status: 503, json: { message: 'Temporary failure' } }),
@@ -319,7 +319,7 @@ test('browser back cannot return an authenticated pilot to the login form', asyn
   ).toBeVisible();
 });
 
-test('an expired session can open login and its invalid cookie is removed', async ({
+test('an expired session can open login without a read deleting its cookie', async ({
   page,
   context,
 }) => {
@@ -338,5 +338,5 @@ test('an expired session can open login and its invalid cookie is removed', asyn
   await expect(page.getByLabel('Username')).toBeEnabled();
   expect(
     (await context.cookies()).some((cookie) => cookie.name === 'pilot_session'),
-  ).toBe(false);
+  ).toBe(true);
 });

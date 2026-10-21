@@ -81,10 +81,13 @@ and visibly explains the requirement. The API still accepts only same-origin
 JSON login requests.
 
 The adapter calls fixed backend paths with a five-second timeout and no
-automatic retries. Backend 401 responses clear the cookie. Transport faults
-and 5xx responses preserve it, return a safe 503 message, and omit internal
-diagnostics. SSR forwards cookie-deletion headers to the browser before
-redirecting an invalid session.
+automatic retries. Protected read failures never write or delete cookies,
+including 401 responses and SSR session validation. This prevents an older
+response from deleting a cookie issued by a concurrent successful login.
+Rejected tokens remain unauthorized until replaced by login or removed by an
+explicit logout; retaining an invalid cookie does not grant access. Transport
+faults and 5xx responses preserve the session and return a safe 503 message
+without internal diagnostics.
 
 Pinia contains profile data only. Store instances are scoped to each Nuxt
 application/request. Session reads coalesce while in flight, and an earlier
@@ -101,7 +104,7 @@ before the form renders, including direct requests and browser-back navigation.
 The guard uses the named login route, including trailing-slash and case variants.
 The middleware validates the session rather than trusting an existing client
 profile or the mere presence of a cookie. Rejected sessions can still open the
-form, with cookie cleanup forwarded during SSR. A session-validation outage
+form, without cookie mutation during SSR. A session-validation outage
 returns the existing safe service error and preserves the cookie. The login
 response is private and non-cacheable and varies by Cookie.
 
@@ -112,7 +115,7 @@ hidden. A fresh document runs normal SSR session validation again. Valid session
 receive the complete dashboard; missing, expired, or invalid sessions return to
 sign-in. The error screen never includes protected workspace navigation.
 
-Sign-out clears the browser cookie and client profile. It does not revoke a
+Sign-out clears both browser session cookies, the client profile and expiry notice. It does not revoke a
 previously copied bearer token, which remains valid until expiry. Immediate
 server-side revocation, refresh-token rotation, and real account management
 are outside this one-account, no-database test and would be needed according
@@ -132,12 +135,12 @@ npm run test:e2e
 ```
 
 The browser suite starts its own production servers on ports 4310 and 4311.
-The workspace, error-recovery, schedule-picker, unavailable-page, chart-interaction, and route-privacy
+The workspace, error-recovery, schedule-picker, schedule-calendar, unavailable-page, chart-interaction, route-privacy, and session-security
 projects run in separate invocations with fresh
 servers, retaining production rate limits without exhausting a shared quota.
 It exercises disabled JavaScript, delayed hydration, bad credentials, repeated
 submit events, private cookie behavior, cross-origin writes, SSR reload and
-cookie cleanup, session isolation, guest-only login redirects, browser-back
+read-only cookie rejection, session isolation, guest-only login redirects, browser-back
 navigation, expired sessions, error-page recovery with and without JavaScript,
 sessions removed during an error, and logout.
 
@@ -149,3 +152,46 @@ to enter the workspace.
 Server adapter checks also cover
 login redirects and session-validation outages. Test artifacts are ignored by
 Git. GitHub Actions runs the same browser suite after both application jobs pass.
+
+## Expired-session notice
+
+Login also sets a host-only, HttpOnly, SameSite=Strict `pilot_session_hint=1`
+cookie, with Secure on HTTPS. It has no Max-Age and follows the browser session.
+It contains no identity or token and is never accepted as authentication. When
+the 30-minute token cookie has expired, the hint lets the adapter distinguish a
+previous sign-in from a first visit. Browser session restore may preserve it;
+its lifetime affects only explanatory text. Explicit logout removes both cookies.
+
+Rejected bearer sessions return the fixed `SESSION_EXPIRED` code; missing-token
+reads return that code only when the hint exists, otherwise `AUTH_REQUIRED`.
+Login displays an accessible “Session expired. Please sign in again.” notice
+for expired/invalid sessions. It persists through SSR reload until successful
+login or explicit logout. First visits and manual logout show no expiry notice;
+service outages do not end sessions. Explicit authentication writes are serialized. Session reads wait for them to
+settle, and client request generations advance before and after each write so
+older responses cannot repopulate state or label an explicit logout expired.
+
+## Browser and API security headers
+
+Both applications send `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`,
+`Referrer-Policy: no-referrer` and a Permissions-Policy disabling unused camera,
+microphone and geolocation access. The API uses a deny-by-default CSP suitable
+for JSON responses. Nuxt applies the basic headers through route rules so they
+also reach static assets in Vercel output.
+
+Production SSR generates a fresh 192-bit script nonce for each document and
+assigns it to all rendered scripts through Unhead's `tags:resolve` hook. CSP
+allows same-origin resources and nonce-bearing scripts, forbids script
+attributes, object embedding, base URLs and framing, and restricts forms and
+connections to the application origin. Inline styles remain allowed because
+Vue binds chart coordinates, meter widths and fixture duty colors to style
+attributes. This exception applies to styles, never scripts. Development CSP
+is left to local tooling; production-build browser tests enforce the policy.
+The deployment edge supplies HSTS for HTTPS; no HTTPS upgrade is forced on local
+HTTP test servers. These controls do not resolve the separate dependency findings
+or introduce bearer revocation/shared rate-limit storage.
+
+Regression coverage includes late API and SSR 401 responses after a new login,
+read-only session rejection, actual browser cookie retention, hint-only rejection,
+SSR/client expiry notices, manual logout and delayed client failures, fresh
+nonces, normal hydration under CSP, and blocking of an injected inline script.

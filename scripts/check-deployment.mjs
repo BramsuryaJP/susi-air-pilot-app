@@ -14,15 +14,51 @@ const config = await readJson(join(output, 'config.json'));
 assert.equal(config.version, 3);
 assert.equal(config.framework.name, 'nuxt');
 assert.match(config.framework.version, /^3\./);
-for (const path of ['/', '/login', '/schedule', '/duty/2026-05-15']) {
-  const rule = config.routes.find(
-    (route) => route.headers && new RegExp(`^${route.src}$`).test(path),
+function headersFor(path) {
+  // Vercel applies all matching continue rules, from general to specific.
+  return Object.assign(
+    {},
+    ...config.routes
+      .filter(
+        (route) => route.headers && new RegExp(`^${route.src}$`).test(path),
+      )
+      .map((route) =>
+        Object.fromEntries(
+          Object.entries(route.headers).map(([name, value]) => [
+            name.toLowerCase(),
+            value,
+          ]),
+        ),
+      ),
   );
-  assert.ok(
-    rule?.headers['Cache-Control'].includes('no-store'),
+}
+for (const path of ['/', '/login', '/schedule', '/duty/2026-05-15']) {
+  const headers = headersFor(path);
+  assert.match(
+    headers['cache-control'] ?? '',
+    /private.*no-store/,
     `${path} must not be publicly cached`,
   );
 }
+for (const path of [
+  '/',
+  '/login',
+  '/Schedule/',
+  '/api/auth/session',
+  '/fonts/plus-jakarta-sans-latin-variable.woff2',
+  '/brand/susi-air-white.png',
+]) {
+  const headers = headersFor(path);
+  assert.equal(headers['x-content-type-options'], 'nosniff');
+  assert.equal(headers['x-frame-options'], 'DENY');
+  assert.equal(headers['referrer-policy'], 'no-referrer');
+}
+assert.doesNotMatch(
+  headersFor('/fonts/plus-jakarta-sans-latin-variable.woff2')[
+    'cache-control'
+  ] ?? '',
+  /private|no-store/,
+);
 
 const blocked = new Set(['braces', 'node-forge', 'listhen']);
 async function checkPackages(path, names, visited = new Set()) {

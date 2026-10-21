@@ -2,7 +2,6 @@ import { createError } from 'h3';
 import { ofetch } from 'ofetch';
 import type { H3Event } from 'h3';
 import type { LoginInput } from '../../shared/types/auth';
-import { clearPilotSession } from './auth-session';
 
 export async function pilotApi<T>(
   event: H3Event,
@@ -38,13 +37,15 @@ export async function pilotApi<T>(
         ? error.statusCode
         : undefined;
     if (status === 401) {
-      if (options.token) clearPilotSession(event);
       throw createError({
         statusCode: 401,
         message:
           path === '/auth/login'
             ? 'Invalid username or password.'
             : 'Please sign in to continue.',
+        data: {
+          code: options.token ? 'SESSION_EXPIRED' : 'INVALID_CREDENTIALS',
+        },
       });
     }
     if (status === 400)

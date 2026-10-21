@@ -66,6 +66,9 @@ async function signIn() {
         <p class="muted" role="status">
           {{ ready ? 'Enter your pilot account details.' : 'Enable JavaScript to sign in.' }}
         </p>
+        <p v-if="session.expired" class="session-notice" role="alert">
+          Session expired. Please sign in again.
+        </p>
         <div
           v-if="errorMessage"
           id="sign-in-error"
@@ -121,3 +124,15 @@ async function signIn() {
     <footer class="sign-in-footer">PT. ASI Pudjiastuti Aviation</footer>
   </main>
 </template>
+
+<style scoped lang="scss">
+.session-notice {
+  padding: 0.875rem 1rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid #f4dcad;
+  border-radius: 10px;
+  color: var(--warning-text);
+  background: var(--warning-surface);
+  font-size: 0.875rem;
+}
+</style>

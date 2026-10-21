@@ -83,3 +83,13 @@ npm run check:deployment
 Run deployment checks in a separate checkout: pruning dependencies would remove
 local development tooling. See [free deployment](deployment.md) for the exact
 hosting setup and the remaining live verification steps.
+
+## Latest security-header artifact verification
+
+On 21 October, the security-header change was built with the actual Vercel
+preset and its seven generated functions were checked again. The runtime
+metadata still contains none of the three named affected packages. An isolated
+backend copy containing only the installed production dependency tree passed
+both standalone and captured-listener smoke checks. This verification also
+checks the combined Vercel header rules for pages and static assets. It does not
+turn the unchanged Nuxt source audit into a clean audit.

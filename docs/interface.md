@@ -180,3 +180,10 @@ Schedule and duty variants retain the active Schedule tab. Calendar query
 synchronization runs for every matched Schedule variant, including Back/Forward
 history, so the visible month stays aligned with the URL. Existing URL spelling,
 query parameters and history entries remain usable without extra redirects.
+
+Sign-in explains expired sessions with a compact amber notice above the fields,
+using the existing warning colors and an accessible alert. It remains visible
+through reload while the session is rejected and clears on successful login or
+explicit logout. New visitors and users who sign out manually do not receive a
+misleading expiry message. No transient toast, animation or extra request is
+required for the notice.

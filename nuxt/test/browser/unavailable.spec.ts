@@ -101,7 +101,7 @@ test('unavailable routes remain protected for missing, invalid, and removed sess
   await expect(page).toHaveURL('/login');
   expect(
     (await context.cookies()).some((cookie) => cookie.name === 'pilot_session'),
-  ).toBe(false);
+  ).toBe(true);
   await context.addCookies(pilotState.cookies);
   await page.goto('/more');
   await expect(
