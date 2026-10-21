@@ -58,7 +58,12 @@ It includes every date in the month, including leap days and unscheduled days;
 padding outside the month is inert. Actual day links are keyboard-accessible.
 A tick means all duties are logged; otherwise the badge shows remaining duties
 from the API. Today is marked with `aria-current="date"` and a red outline.
-Foreground text is selected for contrast without altering the supplied fill.
+The date surface stays neutral; a compact duty band preserves each exact API
+`base_color` and shows the duty code and base name. Band text selects a foreground
+meeting at least 4.5:1 contrast without altering the supplied fill. Today also has
+a visible label. The legend appears below the calendar at all widths, as required.
+See the [calendar design rationale](calendar-design.md) for the researched basis
+and the distinction between requirements and presentation choices.
 
 Tapping any date opens `/duty/YYYY-MM-DD`, a protected placeholder reading
 “Detail page coming soon”. It validates the actual date and returns to the

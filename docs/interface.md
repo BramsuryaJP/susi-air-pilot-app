@@ -15,8 +15,8 @@ total hours, and business date together above the limit cards. At desktop
 widths, the flight trend and documents sit side by side; below 1024px they
 return to a single reading column. Document dates and urgency labels stay
 visible together without opening a detail screen. The calendar places its
-legend beside the month at desktop widths and below it on mobile. Every duty
-fill remains the original API color.
+legend below the month at every width. Neutral date surfaces contain compact
+duty bands in the original API colors, with visible duty codes and base names.
 
 Navigation uses a compact floating bar on desktop and a bottom bar on narrow
 screens, with reserved scroll space. The polish uses component-scoped SCSS;
@@ -27,7 +27,7 @@ route, chart, and document splitting remain in place without another package.
 A shared official logo sits on the navy header. Home puts the pilot's profile
 and total hours first, followed by limit cards, the trend, and document status.
 Two-column mobile limit cards become four columns on larger screens. The
-calendar keeps its seven-column layout, original API fills, and readable
+calendar keeps its seven-column layout, original API duty bands, and readable
 foreground colors. Bottom navigation reserves space and the device safe area.
 No layout introduces another source of pilot data or business calculations.
 
@@ -51,7 +51,12 @@ Schedule uses native Month and Year selects with visible labels and 44px minimum
 control heights. Previous/next actions and "This month" sit beside them on desktop
 and in a separate row on mobile. The year options stay bounded around the selected
 year rather than rendering thousands of DOM nodes. The calendar, its API colors,
-and the responsive legend retain their existing presentation.
+and the legend below it retain all API information. The [calendar design rationale](calendar-design.md)
+distinguishes the brief's requirements from the presentation choices and records
+the primary accessibility/design sources. Today has both a visible label and
+an outline; completion ticks/counts remain separate from duty type. Text uses
+a measured foreground, with a black fallback when navy and white both fall
+below 4.5:1 contrast on a supplied duty color.
 
 ## Local assets and typography
 

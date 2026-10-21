@@ -20,7 +20,7 @@ their original release references.
 | Fixed business date | Configured `2026-05-15`; UTC date-only calculations; takes precedence over the documents fixture's different date |
 | Documents and urgency badges | API-derived expiry days and safe/soon/expired states; boundary tests and browser checks for all five documents |
 | Monthly schedules and a request on month change | Validated month endpoint, startup month index, cancellable requests, previous/next controls, and reordered-response browser tests |
-| Day colors, completion, legend, date placeholder | Original API `base_color`; completion from count equality; remaining-duty count otherwise; complete API legend and protected date links |
+| Day colors, completion, legend, date placeholder | Original API `base_color` on compact duty bands with visible duty/base codes; completion from count equality; remaining-duty count otherwise; API legend below the calendar and protected date links |
 | Sign-in, Home, and Schedule screens | Live API data through Nuxt's server adapter; no pilot JSON in frontend source; bad-credential, reload, logout, empty/error/retry journeys |
 | Bottom navigation | Home and Schedule links; Logbook and More are disabled with visible "Unavailable" captions because their screens are outside scope |
 | Module/controller/service/DTO separation and consistent errors | Feature modules, validated request DTOs, global validation pipe and exception filter; HTTP rejection tests |
@@ -92,7 +92,8 @@ audit was refreshed separately; its unresolved Nuxt findings remain disclosed.
 
 The dashboard refinement in [PR #11](https://github.com/BramsuryaJP/susi-air-pilot-app/pull/11)
 adds a compact overview, desktop chart/document columns, a shared masthead,
-and a responsive calendar legend. The chart has readable axes, a centered
+and a responsive calendar. The legend now sits below it at every width, with
+neutral date surfaces and exact-color duty bands. The chart has readable axes, a centered
 Today marker, a separate limit key, and circular 44px range buttons. The
 browser suite now contains **27 journeys**, including guest-only login redirects,
 browser-back navigation, expired-session cleanup, and chart-label separation
