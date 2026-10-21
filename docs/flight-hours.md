@@ -80,3 +80,8 @@ and a caption identifying the rolling window in hours. Numeric values remain
 right-aligned and unchanged; Recorded/Planned status text and a Today badge
 make the rows easier to scan. Its layout preserves all dates at narrow widths
 and uses the shared focus policy without a new dependency or client state.
+
+Chart hover, keyboard, and tap inspection shows the same API series values as
+the daily table. A selected point above `yMax` retains its full value and an
+explicit scale note. Selection is local presentation state, resets with the
+summary, and does not trigger another request or alter chart bounds.

@@ -44,7 +44,7 @@ test('interactive controls share visible inset focus across light, red, and navy
       await page.keyboard.press('Tab');
       let checked = 0;
       for (const control of await page
-        .locator('a[href], button, input, select, summary')
+        .locator('a[href], button, input, select, summary, [tabindex="0"]')
         .all()) {
         if (!(await control.isVisible()) || !(await control.isEnabled()))
           continue;

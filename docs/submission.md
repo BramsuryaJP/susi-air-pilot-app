@@ -95,7 +95,7 @@ adds a compact overview, desktop chart/document columns, a shared masthead,
 and a responsive calendar. The legend now sits below the date grid within the same calendar panel at every width, with
 neutral date surfaces and exact-color duty bands. The chart has readable axes, a centered
 Today marker, a separate limit key, and circular 44px range buttons. The
-browser suite now contains **30 journeys**, including guest-only login redirects,
+browser suite now contains **32 journeys**, including guest-only login redirects,
 browser-back navigation, expired-session cleanup, and chart-label separation
 at all five ranges and four widths, desktop/mobile layout, and exact table
 values for an above-scale projection. The original login, API, and domain
@@ -149,3 +149,7 @@ builds in an isolated checkout when development servers are active.
 3. Inspect all five documents: two Valid, two Due soon, and one Expired.
 4. Open Schedule, navigate April/May/June, inspect colors and completion
    counts, then open a date placeholder and return. Reload and sign out.
+
+Two chart-inspection journeys verify exact API values at every range and four
+widths, tooltip containment, hovering the tooltip, dismissal, keyboard and tap
+selection, range resets, and above-scale values. Hover does not issue requests.
