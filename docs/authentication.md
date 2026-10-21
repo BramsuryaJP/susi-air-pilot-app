@@ -90,8 +90,11 @@ Pinia contains profile data only. Store instances are scoped to each Nuxt
 application/request. Session reads coalesce while in flight, and an earlier
 response cannot repopulate state after sign-in or sign-out. Navigation checks
 the backend session; initial hydration reuses the server-verified profile
-instead of fetching it twice. Sensitive pages use `Cache-Control: private,
-no-store`.
+instead of fetching it twice. Global route middleware sets `Cache-Control:
+private, no-store` and `Vary: Cookie` for every SSR page before validation,
+redirects, or error handling. Page privacy therefore also covers accepted case
+and trailing-slash variants, without depending on case-sensitive Nitro path
+rules. Static assets do not execute page middleware and retain their cache policy.
 
 The sign-in route is guest-only. A valid session redirects `/login` to Home
 before the form renders, including direct requests and browser-back navigation.
@@ -129,7 +132,7 @@ npm run test:e2e
 ```
 
 The browser suite starts its own production servers on ports 4310 and 4311.
-The workspace, error-recovery, schedule-picker, unavailable-page, and chart-interaction
+The workspace, error-recovery, schedule-picker, unavailable-page, chart-interaction, and route-privacy
 projects run in separate invocations with fresh
 servers, retaining production rate limits without exhausting a shared quota.
 It exercises disabled JavaScript, delayed hydration, bad credentials, repeated

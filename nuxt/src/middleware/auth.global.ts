@@ -1,10 +1,11 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  if (useError().value) return;
-  const isLoginPage = to.name === 'login';
-  if (import.meta.server && isLoginPage) {
+  // Page privacy must not depend on case-sensitive server path rules.
+  if (import.meta.server) {
     useResponseHeader('Cache-Control').value = 'private, no-store';
     useResponseHeader('Vary').value = 'Cookie';
   }
+  if (useError().value) return;
+  const isLoginPage = to.name === 'login';
   const session = useSessionStore();
   const app = useNuxtApp();
   try {
