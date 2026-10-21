@@ -13,6 +13,19 @@ export default defineNuxtConfig({
     appOrigin: 'http://localhost:3001',
   },
   routeRules: {
+    '/**': {
+      headers: {
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'Referrer-Policy': 'no-referrer',
+        'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+      },
+    },
+    '/api/**': {
+      headers: {
+        'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
+      },
+    },
     '/': { headers: { 'Cache-Control': 'private, no-store', Vary: 'Cookie' } },
     '/schedule': {
       headers: { 'Cache-Control': 'private, no-store', Vary: 'Cookie' },

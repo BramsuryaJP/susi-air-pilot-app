@@ -5,13 +5,13 @@ import type { LoginInput, PilotProfile } from '../../shared/types/auth';
 export const useSessionStore = defineStore('session', () => {
   const profile = ref<PilotProfile | null>(null);
   const request = useRequestFetch();
-  const responseCookie = import.meta.server
-    ? useResponseHeader('set-cookie')
-    : null;
+  const expired = ref(false);
   let generation = 0;
   let pending: Promise<void> | null = null;
+  let authentication: Promise<void> | null = null;
 
   async function refresh(): Promise<void> {
+    while (authentication) await authentication;
     if (pending) return pending;
     const current = generation;
     const task = (async () => {
@@ -19,27 +19,19 @@ export const useSessionStore = defineStore('session', () => {
         const result = await request<PilotProfile>('/api/auth/session', {
           retry: 0,
         });
-        if (current === generation) profile.value = result;
+        if (current === generation) {
+          profile.value = result;
+          expired.value = false;
+        }
       } catch (error: unknown) {
         if (current !== generation) return;
         const failure = error as Partial<FetchError>;
         const status = failure.statusCode;
-        if (responseCookie) {
-          const cookies = failure.response?.headers.getSetCookie() ?? [];
-          if (cookies.length) {
-            const previous = responseCookie.value;
-            responseCookie.value = [
-              ...(typeof previous === 'string'
-                ? [previous]
-                : Array.isArray(previous)
-                  ? previous
-                  : []),
-              ...cookies,
-            ];
-          }
-        }
         if (status !== 401) throw error;
-        if (current === generation) profile.value = null;
+        const data = failure.data as { data?: { code?: unknown } } | undefined;
+        expired.value =
+          data?.data?.code === 'SESSION_EXPIRED' || profile.value !== null;
+        profile.value = null;
       }
     })();
     pending = task;
@@ -50,19 +42,51 @@ export const useSessionStore = defineStore('session', () => {
     }
   }
 
-  async function signIn(input: LoginInput): Promise<void> {
-    await request('/api/auth/login', { method: 'POST', body: input, retry: 0 });
+  async function mutateSession(write: () => Promise<unknown>): Promise<void> {
+    // Serialize explicit writes; a failed earlier action must not block a later one.
+    while (authentication) {
+      try {
+        await authentication;
+      } catch {
+        // Each caller still receives its own write failure.
+      }
+    }
     generation++;
     pending = null;
-    profile.value = null;
+    const task = Promise.resolve()
+      .then(write)
+      .then(() => {
+        profile.value = null;
+        expired.value = false;
+      })
+      .finally(() => {
+        // Fence reads both before and after the cookie mutation settles.
+        generation++;
+        pending = null;
+      });
+    authentication = task;
+    try {
+      await task;
+    } finally {
+      if (authentication === task) authentication = null;
+    }
   }
 
-  async function signOut(): Promise<void> {
-    await request('/api/auth/logout', { method: 'POST', retry: 0 });
-    generation++;
-    pending = null;
-    profile.value = null;
+  function signIn(input: LoginInput): Promise<void> {
+    return mutateSession(() =>
+      request('/api/auth/login', {
+        method: 'POST',
+        body: input,
+        retry: 0,
+      }),
+    );
   }
 
-  return { profile, refresh, signIn, signOut };
+  function signOut(): Promise<void> {
+    return mutateSession(() =>
+      request('/api/auth/logout', { method: 'POST', retry: 0 }),
+    );
+  }
+
+  return { profile, expired, refresh, signIn, signOut };
 });

@@ -27,6 +27,19 @@ describe('deployment health (HTTP)', () => {
     expect(result.headers['cache-control']).toBe('no-store');
   });
 
+  it.each(['/health', '/pilot/me', '/missing-security-route'])(
+    'sets security headers before processing %s',
+    async (path) => {
+      const result = await request(app.getHttpServer()).get(path);
+      expect(result.headers['x-content-type-options']).toBe('nosniff');
+      expect(result.headers['x-frame-options']).toBe('DENY');
+      expect(result.headers['referrer-policy']).toBe('no-referrer');
+      expect(result.headers['content-security-policy']).toContain(
+        "default-src 'none'",
+      );
+    },
+  );
+
   it.each([
     '/pilot/me',
     '/documents',

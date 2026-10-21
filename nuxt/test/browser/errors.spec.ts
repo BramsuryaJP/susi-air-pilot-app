@@ -135,7 +135,7 @@ test('anonymous and invalid sessions cannot use error recovery to enter the work
   await expect(page.getByLabel('Username')).toBeEnabled();
   expect(
     (await context.cookies()).some((cookie) => cookie.name === 'pilot_session'),
-  ).toBe(false);
+  ).toBe(true);
 });
 
 test('error recovery also works without JavaScript', async ({

@@ -21,6 +21,8 @@ export default defineConfig({
         '**/unavailable.spec.ts',
         '**/chart-interaction.spec.ts',
         '**/route-privacy.spec.ts',
+        '**/session-security.spec.ts',
+        '**/schedules.spec.ts',
       ],
       outputDir: './test-results/workspace',
     },
@@ -33,6 +35,11 @@ export default defineConfig({
       name: 'schedule-picker',
       testMatch: '**/schedule-picker.spec.ts',
       outputDir: './test-results/schedule-picker',
+    },
+    {
+      name: 'schedule-calendar',
+      testMatch: '**/schedules.spec.ts',
+      outputDir: './test-results/schedule-calendar',
     },
     {
       name: 'unavailable',
@@ -48,6 +55,11 @@ export default defineConfig({
       name: 'route-privacy',
       testMatch: '**/route-privacy.spec.ts',
       outputDir: './test-results/route-privacy',
+    },
+    {
+      name: 'session-security',
+      testMatch: '**/session-security.spec.ts',
+      outputDir: './test-results/session-security',
     },
   ],
   webServer: [

@@ -8,6 +8,8 @@ import {
 import type { H3Event } from 'h3';
 
 export const SESSION_COOKIE = 'pilot_session';
+// A non-sensitive hint explains expiry after the authentication cookie expires.
+export const SESSION_HINT_COOKIE = 'pilot_session_hint';
 
 export function sessionCookieOptions(event: H3Event) {
   const configured = useRuntimeConfig(event).appOrigin;
@@ -56,7 +58,9 @@ export function requireSameOrigin(event: H3Event): void {
 }
 
 export function clearPilotSession(event: H3Event): void {
-  deleteCookie(event, SESSION_COOKIE, sessionCookieOptions(event));
+  const options = sessionCookieOptions(event);
+  deleteCookie(event, SESSION_COOKIE, options);
+  deleteCookie(event, SESSION_HINT_COOKIE, options);
 }
 
 export function privateResponse(event: H3Event): void {
@@ -70,6 +74,12 @@ export function pilotSessionToken(event: H3Event): string {
     throw createError({
       statusCode: 401,
       message: 'Please sign in to continue.',
+      data: {
+        code:
+          getCookie(event, SESSION_HINT_COOKIE) === '1'
+            ? 'SESSION_EXPIRED'
+            : 'AUTH_REQUIRED',
+      },
     });
   return token;
 }

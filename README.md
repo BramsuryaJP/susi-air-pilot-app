@@ -187,7 +187,7 @@ npm run test:e2e
 ```
 
 The browser suite starts and stops its own production servers on ports 4310/4311.
-Workspace, error-recovery, schedule-picker, unavailable-page, chart-interaction, and route-privacy
+Workspace, error-recovery, schedule-picker, schedule-calendar, unavailable-page, chart-interaction, route-privacy, and session-security
 projects run in separate invocations
 so real session checks stay within the unchanged production rate limits. Run all with
 `npm run test:e2e`; their screenshots and traces use separate output folders.
@@ -254,3 +254,9 @@ With more time:
   and distributed rate limiting if extending beyond this seeded demonstration.
 - Confirm the backend hosting alternative with the reviewer, or move to a
   listed provider if its account requirements can be met.
+
+Security behavior and remaining demonstration limits are documented in the
+[authentication guide](docs/authentication.md): protected read failures never
+mutate session cookies, expired sessions show an explanatory sign-in notice,
+and production SSR uses a per-document script nonce with enforced CSP. Existing
+[dependency findings](docs/dependency-audit.md) remain a separate assessment.

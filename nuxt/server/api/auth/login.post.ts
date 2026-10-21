@@ -4,6 +4,7 @@ import {
   privateResponse,
   requireSameOrigin,
   SESSION_COOKIE,
+  SESSION_HINT_COOKIE,
   sessionCookieOptions,
 } from '../../utils/auth-session';
 import { pilotApi } from '../../utils/pilot-api';
@@ -59,5 +60,7 @@ export default defineEventHandler(async (event) => {
     ...sessionCookieOptions(event),
     maxAge: result.expiresIn,
   });
+  // This session-scoped flag carries no identity and never authorizes a request.
+  setCookie(event, SESSION_HINT_COOKIE, '1', sessionCookieOptions(event));
   return { authenticated: true };
 });
