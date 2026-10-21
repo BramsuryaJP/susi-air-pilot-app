@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import ScheduleCalendar from '../components/schedules/ScheduleCalendar.vue';
+import ScheduleMonthPicker from '../components/schedules/ScheduleMonthPicker.vue';
 import WorkspaceHeader from '../components/navigation/WorkspaceHeader.vue';
 import type { MonthlySchedule } from '../../shared/types/schedules';
-import { parseCalendarMonth, shiftCalendarMonth } from '../utils/calendar';
+import { parseCalendarMonth } from '../utils/calendar';
 
 useHead({ title: 'Schedule | Susi Air' });
 const route = useRoute();
+const router = useRouter();
 const session = useSessionStore();
 const selection = useSchedulesStore();
 const request = useRequestFetch();
@@ -30,8 +32,6 @@ const monthLabel = computed(() =>
     new Date(Date.UTC(selected.value.year, selected.value.month - 1, 1)),
   ),
 );
-const previous = computed(() => shiftCalendarMonth(selected.value.key, -1));
-const next = computed(() => shiftCalendarMonth(selected.value.key, 1));
 const { data, status, error, refresh } = await useAsyncData(
   'schedule-month',
   (_app, { signal }) =>
@@ -62,8 +62,8 @@ watch(
   },
   { immediate: true },
 );
-function move(month: string | null) {
-  if (month) return navigateTo({ path: '/schedule', query: { month } });
+function move(month: string) {
+  return router.push({ path: '/schedule', query: { month } });
 }
 </script>
 
@@ -75,25 +75,14 @@ function move(month: string | null) {
       <p class="muted">Your duty calendar and logbook status.</p>
     </header>
     <section aria-labelledby="month-title" :aria-busy="status === 'pending'">
-      <div class="month-controls">
-        <button
-          class="secondary-button month-button"
-          aria-label="Previous month"
-          :disabled="!previous"
-          @click="move(previous)"
-        >
-          <span aria-hidden="true">‹</span>
-        </button>
-        <h2 id="month-title" aria-live="polite">{{ monthLabel }}</h2>
-        <button
-          class="secondary-button month-button"
-          aria-label="Next month"
-          :disabled="!next"
-          @click="move(next)"
-        >
-          <span aria-hidden="true">›</span>
-        </button>
-      </div>
+      <h2 id="month-title" class="month-title" aria-live="polite">
+        {{ monthLabel }}
+      </h2>
+      <ScheduleMonthPicker
+        :month="selected.key"
+        :today="session.profile!.today"
+        @change="move"
+      />
       <div
         v-if="error"
         id="schedule-error"
@@ -144,29 +133,15 @@ function move(month: string | null) {
     font-size: 0.85rem;
   }
 }
-.month-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  padding: 0.4rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  h2 {
-    margin: 0;
-    font-size: 1.1rem;
-    letter-spacing: -0.025em;
-  }
-}
-.month-button {
-  min-width: 44px;
+.month-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
   padding: 0;
-  border: 0;
-  background: transparent;
-  font-size: 1.65rem;
-  line-height: 1;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .schedule-message {
   background: var(--surface);
@@ -177,11 +152,6 @@ function move(month: string | null) {
 }
 #schedule-error {
   color: var(--danger-text);
-}
-@media (min-width: 960px) {
-  .month-controls {
-    width: calc(100% - 260px - 1.5rem);
-  }
 }
 @media (max-width: 640px) {
   .schedule-shell {

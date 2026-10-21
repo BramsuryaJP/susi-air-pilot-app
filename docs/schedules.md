@@ -41,6 +41,15 @@ prevents an earlier response from replacing the latest selection. Old calendar
 content is hidden while loading or after failure; retry reloads the selected
 month without changing it.
 
+The month picker provides native, labelled Month and Year selects alongside
+previous/next controls and "This month". The latter uses the API business date,
+not the device clock. The year list contains the selected year and up to ten
+years on either side, bounded to 1000–9999, plus the current business year when
+outside that range. This keeps the DOM small while preserving supported deep
+links and allowing larger jumps. The controls keep consecutive choices together
+while route authentication is pending; only committed route changes load data.
+Browser history and reload restore the controls from the URL.
+
 The table uses Monday-first weeks and UTC date arithmetic for presentation.
 It includes every date in the month, including leap days and unscheduled days;
 padding outside the month is inert. Actual day links are keyboard-accessible.

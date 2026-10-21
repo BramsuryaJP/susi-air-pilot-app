@@ -43,6 +43,16 @@ have their own main landmark and skip link, no workspace navigation, and a
 navigation to revalidate the session outside the failed router context. Normal
 workspace links continue to use client navigation.
 
+The error composition places recovery copy beside a local SVG flight-path
+illustration on desktop and stacks it on narrow screens. The illustration is
+decorative and adds no external requests or dependency.
+
+Schedule uses native Month and Year selects with visible labels and 44px minimum
+control heights. Previous/next actions and "This month" sit beside them on desktop
+and in a separate row on mobile. The year options stay bounded around the selected
+year rather than rendering thousands of DOM nodes. The calendar, its API colors,
+and the responsive legend retain their existing presentation.
+
 ## Local assets and typography
 
 - Logo: unmodified white PNG from the [official Susi Air website](https://susiair.com/images/susiairlogo.png),

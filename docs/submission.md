@@ -94,7 +94,7 @@ The dashboard refinement in [PR #11](https://github.com/BramsuryaJP/susi-air-pil
 adds a compact overview, desktop chart/document columns, a shared masthead,
 and a responsive calendar legend. The chart has readable axes, a centered
 Today marker, a separate limit key, and circular 44px range buttons. The
-browser suite now contains **22 journeys**, including guest-only login redirects,
+browser suite now contains **26 journeys**, including guest-only login redirects,
 browser-back navigation, expired-session cleanup, and chart-label separation
 at all five ranges and four widths, desktop/mobile layout, and exact table
 values for an above-scale projection. The original login, API, and domain
@@ -106,6 +106,12 @@ errors. Six browser journeys cover complete dashboard recovery, HTTP error
 statuses, keyboard and responsive behavior, removed/invalid sessions, anonymous
 access, and recovery without JavaScript. The "Back to Home" action starts a new
 document so SSR session validation cannot be skipped by the failed router state.
+
+The Schedule month picker adds labelled month/year selects, previous/next controls,
+and a return to the API-derived current month. Four additional browser journeys
+cover direct jumps, leap years, URL/history/reload synchronization, quick combined
+selections during session validation, year bounds, keyboard access, reflow, and
+server-rendered selections before JavaScript runs.
 
 For a fresh local verification:
 

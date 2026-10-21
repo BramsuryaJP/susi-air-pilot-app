@@ -15,13 +15,18 @@ export default defineConfig({
   projects: [
     {
       name: 'workspace',
-      testIgnore: '**/errors.spec.ts',
+      testIgnore: ['**/errors.spec.ts', '**/schedule-picker.spec.ts'],
       outputDir: './test-results/workspace',
     },
     {
       name: 'error-recovery',
       testMatch: '**/errors.spec.ts',
       outputDir: './test-results/error-recovery',
+    },
+    {
+      name: 'schedule-picker',
+      testMatch: '**/schedule-picker.spec.ts',
+      outputDir: './test-results/schedule-picker',
     },
   ],
   webServer: [
