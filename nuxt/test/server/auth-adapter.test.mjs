@@ -141,6 +141,53 @@ test(
         },
       );
       await t.test(
+        'login is guest-only, validates the session, and clears rejected cookies on SSR',
+        async () => {
+          mode = 'healthy';
+          const before = upstreamCalls;
+          const guest = await fetch(`${base}/login`, { redirect: 'manual' });
+          assert.equal(guest.status, 200);
+          assert.equal(upstreamCalls, before);
+          const signedIn = await fetch(`${base}/login`, {
+            headers: { Cookie: cookie },
+            redirect: 'manual',
+          });
+          assert.equal(signedIn.status, 302);
+          assert.equal(signedIn.headers.get('location'), '/');
+          assert.match(signedIn.headers.get('cache-control'), /no-store/);
+          assert.match(signedIn.headers.get('vary'), /Cookie/i);
+          assert.equal(signedIn.headers.get('set-cookie'), null);
+          mode = 'unauthorized';
+          const expired = await fetch(`${base}/login`, {
+            headers: { Cookie: cookie },
+            redirect: 'manual',
+          });
+          assert.equal(expired.status, 200);
+          assert.match(expired.headers.get('set-cookie'), /Max-Age=0/i);
+          mode = 'healthy';
+        },
+      );
+      await t.test(
+        'login session-validation failures preserve the cookie and return a safe service error',
+        async () => {
+          for (const failure of ['unavailable', 'disconnected']) {
+            mode = failure;
+            const response = await fetch(`${base}/login`, {
+              headers: { Cookie: cookie },
+              redirect: 'manual',
+              signal: AbortSignal.timeout(7000),
+            });
+            assert.equal(response.status, 503);
+            assert.equal(response.headers.get('set-cookie'), null);
+            assert.match(response.headers.get('cache-control'), /no-store/);
+            const body = await response.text();
+            assert.doesNotMatch(body, /Private upstream diagnostic/);
+            assert.ok(!body.includes(upstreamOrigin));
+          }
+          mode = 'healthy';
+        },
+      );
+      await t.test(
         'flight-hour reads forward only validated query fields and the private cookie token',
         async () => {
           mode = 'healthy';

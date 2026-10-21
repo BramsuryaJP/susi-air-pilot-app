@@ -20,7 +20,9 @@ export default defineNuxtConfig({
     '/duty/**': {
       headers: { 'Cache-Control': 'private, no-store', Vary: 'Cookie' },
     },
-    '/login': { headers: { 'Cache-Control': 'private, no-store' } },
+    '/login': {
+      headers: { 'Cache-Control': 'private, no-store', Vary: 'Cookie' },
+    },
     '/api/auth/**': {
       headers: { 'Cache-Control': 'private, no-store', Vary: 'Cookie' },
     },

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './support/pilot-test';
 
 const origin = 'http://127.0.0.1:4311';
 const credentials = { username: 'johndoe', password: 'susiairtest' };
@@ -20,9 +20,7 @@ test('the SSR sign-in form cannot submit credentials before hydration', async ({
     await expect(
       page.getByRole('button', { name: 'Sign in', exact: true }),
     ).toBeDisabled();
-    await expect(
-      page.getByText('Enable JavaScript to sign in.'),
-    ).toBeVisible();
+    await expect(page.getByText('Enable JavaScript to sign in.')).toBeVisible();
     await expect(page).toHaveURL('/login');
   } finally {
     await context.close();
@@ -271,4 +269,74 @@ test('sessions are isolated between browser contexts', async ({
   } finally {
     await isolated.close();
   }
+});
+
+test('authenticated pilots are redirected from login before the form renders', async ({
+  page,
+  context,
+  pilotState,
+}) => {
+  await context.addCookies(pilotState.cookies);
+  for (const path of [
+    '/login?returnTo=%2Fschedule',
+    '/login/',
+    '/LOGIN',
+    '/LOGIN/',
+  ]) {
+    const response = await page.request.get(path, { maxRedirects: 0 });
+    expect(response.status(), path).toBe(302);
+    expect(response.headers().location).toBe('/');
+    expect(response.headers()['cache-control']).toContain('no-store');
+    expect(response.headers().vary).toMatch(/Cookie/i);
+  }
+  await page.goto('/login');
+  await expect(page).toHaveURL('/');
+  await expect(
+    page.getByRole('heading', { name: 'Welcome, John Doe' }),
+  ).toBeVisible();
+  await expect(page.getByLabel('Username')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+  await expect(page).toHaveURL('/login');
+  await expect(page.getByLabel('Username')).toBeEnabled();
+});
+
+test('browser back cannot return an authenticated pilot to the login form', async ({
+  page,
+  context,
+  pilotState,
+}) => {
+  await page.goto('/login');
+  await expect(page.getByLabel('Username')).toBeEnabled();
+  await context.addCookies(pilotState.cookies);
+  await page.goto('/schedule');
+  await expect(
+    page.getByRole('heading', { name: 'Schedule', exact: true }),
+  ).toBeVisible();
+  await page.goBack();
+  await expect(page).toHaveURL('/');
+  await expect(
+    page.getByRole('heading', { name: 'Welcome, John Doe' }),
+  ).toBeVisible();
+});
+
+test('an expired session can open login and its invalid cookie is removed', async ({
+  page,
+  context,
+}) => {
+  await context.addCookies([
+    {
+      name: 'pilot_session',
+      value: 'expired-session',
+      url: origin,
+      httpOnly: true,
+      sameSite: 'Strict',
+    },
+  ]);
+  const response = await page.goto('/login');
+  expect(response!.status()).toBe(200);
+  await expect(page).toHaveURL('/login');
+  await expect(page.getByLabel('Username')).toBeEnabled();
+  expect(
+    (await context.cookies()).some((cookie) => cookie.name === 'pilot_session'),
+  ).toBe(false);
 });
