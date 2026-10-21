@@ -1,7 +1,9 @@
 # Dependency audit
 
-Audit refreshed: **2026-10-20** against the current lockfiles and deployment
-artifacts. Repeat this assessment when dependencies or build presets change.
+Source audit refreshed: **2026-10-21** against the current lockfiles: Nuxt still
+reports 11 high affected entries and Nest reports zero. Deployment artifact
+assessment below was performed on 20 October against the unchanged application
+code and lockfiles. Repeat it when dependencies or build presets change.
 
 ## Current results
 

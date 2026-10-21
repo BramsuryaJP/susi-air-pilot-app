@@ -17,9 +17,10 @@ in HttpOnly cookies; Pinia contains profile data only.
 npm run lint
 npm run typecheck
 npm run build
-node .output/server/index.mjs
+NODE_ENV=production HOST=127.0.0.1 PORT=3001 node .output/server/index.mjs
 ```
 
-Set `PORT` when running the production server on a custom port. The root
-README documents the pinned Node/npm versions and the complete validation
+This keeps the production browser origin at `http://localhost:3001`. Match
+`NUXT_APP_ORIGIN` if changing the port. The [root README](../README.md)
+documents the pinned Node/npm versions and the complete validation
 workflow. No fixture data belongs in the frontend bundle.
