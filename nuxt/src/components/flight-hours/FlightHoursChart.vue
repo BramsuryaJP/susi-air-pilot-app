@@ -137,7 +137,7 @@ const formatDate = (date: string) =>
 
 <style scoped lang="scss">
 .trend-figure {
-  margin: 1rem 0 0;
+  margin: 1.5rem 0 0;
 }
 svg {
   display: block;
@@ -160,6 +160,7 @@ svg {
 .limit-line {
   stroke: var(--red);
   stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
 }
 .limit-label {
   fill: var(--danger-text);
@@ -168,7 +169,8 @@ svg {
 .actual-line,
 .planned-line {
   fill: none;
-  stroke-width: 3;
+  stroke-width: 2.5;
+  vector-effect: non-scaling-stroke;
   stroke-linejoin: round;
   stroke-linecap: round;
 }
@@ -226,7 +228,7 @@ i {
 .projection-note {
   color: var(--muted);
   font-size: 0.8rem;
-  margin: 1rem 0;
+  margin: 0.9rem 0;
 }
 .chart-values {
   font-size: 0.85rem;
@@ -252,7 +254,11 @@ table {
   }
 }
 @media (max-width: 640px) {
-  svg { font-size: 30px; }
-  .limit-label { font-size: 28px; }
+  svg {
+    font-size: 30px;
+  }
+  .limit-label {
+    font-size: 28px;
+  }
 }
 </style>

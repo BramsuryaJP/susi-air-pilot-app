@@ -55,11 +55,23 @@ watch(
       <button
         class="documents-refresh secondary-button"
         :disabled="status === 'pending'"
+        :aria-label="
+          status === 'pending' ? 'Refreshing documents' : 'Refresh documents'
+        "
         @click="refresh()"
       >
-        {{
-          status === 'pending' ? 'Refreshing documents' : 'Refresh documents'
-        }}
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          aria-hidden="true"
+        >
+          <path
+            d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 2M4 16l2 2a7 7 0 0 0 12-1"
+          />
+        </svg>
+        {{ status === 'pending' ? 'Refreshing' : 'Refresh' }}
       </button>
     </header>
     <p v-if="data" class="documents-as-of muted">
@@ -119,62 +131,71 @@ watch(
 
 <style scoped lang="scss">
 .documents-section {
-  margin-top: 2rem;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem;
 }
 .documents-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.75rem 1rem;
+  gap: 0.5rem;
   h2 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     letter-spacing: -0.025em;
   }
 }
 .documents-refresh {
-  font-size: 0.8rem;
-  padding: 0.45rem 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  padding: 0.45rem 0.65rem;
+  border-color: var(--border);
+  svg {
+    width: 15px;
+    height: 15px;
+  }
 }
 .documents-as-of {
-  font-size: 0.8rem;
-  margin: 0.5rem 0 1rem;
+  font-size: 0.75rem;
+  margin: 0.35rem 0 1rem;
 }
 .documents-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: var(--card-shadow);
   li {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0.8rem 1.5rem;
-    padding: 1.2rem 1.5rem;
-    + li {
-      border-top: 1px solid var(--border);
+    align-items: start;
+    gap: 0.6rem 0.75rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--border);
+    &:last-child {
+      padding-bottom: 0;
     }
   }
 }
 .document-details {
   min-width: 0;
   h3 {
-    margin: 0 0 0.4rem;
-    font-size: 0.9rem;
+    margin: 0 0 0.45rem;
+    font-size: 0.85rem;
+    line-height: 1.45;
     font-weight: 600;
     overflow-wrap: anywhere;
   }
   p {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 1rem;
+    flex-direction: column;
+    gap: 0.15rem;
     margin: 0;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--muted);
   }
   time {
@@ -185,17 +206,18 @@ watch(
 .expiry-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
   justify-self: start;
-  padding: 0.3rem 0.65rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  line-height: 1.6;
   font-weight: 600;
   white-space: nowrap;
 }
 .status-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--status-color, currentColor);
 }
@@ -215,24 +237,18 @@ watch(
   background: var(--danger-surface);
 }
 .documents-message {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 0 0;
   margin: 1rem 0 0;
   color: var(--muted);
+  font-size: 0.85rem;
 }
 #documents-error {
   color: var(--danger-text);
 }
-@media (max-width: 480px) {
-  .documents-list li {
-    grid-template-columns: 1fr;
+@media (max-width: 640px) {
+  .documents-section {
     padding: 1rem;
-    gap: 0.6rem;
-  }
-  .document-details p {
-    flex-direction: column;
   }
 }
 </style>

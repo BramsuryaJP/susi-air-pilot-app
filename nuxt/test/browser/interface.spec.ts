@@ -1,5 +1,36 @@
 import { test, expect } from './support/pilot-test';
 
+test('dashboard keeps the trend and documents together on desktop and limits above mobile navigation', async ({
+  page,
+  context,
+  pilotState,
+}) => {
+  await context.addCookies(pilotState.cookies);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  const trend = await page.locator('.trend-panel').boundingBox();
+  const documents = await page
+    .getByRole('region', {
+      name: 'My documents',
+      exact: true,
+    })
+    .boundingBox();
+  expect(documents!.x).toBeGreaterThan(trend!.x + trend!.width);
+  expect(Math.abs(documents!.y - trend!.y)).toBeLessThan(2);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate(() => scrollTo(0, 0));
+  const navigation = await page
+    .getByRole('navigation', {
+      name: 'Main navigation',
+    })
+    .boundingBox();
+  for (const card of await page.locator('[data-testid="limit-card"]').all()) {
+    const bounds = await card.boundingBox();
+    expect(bounds!.y + bounds!.height).toBeLessThan(navigation!.y);
+  }
+});
+
 test('pilot interface loads local brand assets and remains usable across screen sizes', async ({
   page,
   context,
@@ -32,14 +63,16 @@ test('pilot interface loads local brand assets and remains usable across screen 
   await expect(page.locator('main')).toBeFocused();
   await page.getByLabel('Username').focus();
   expect(
-    await page.getByLabel('Username').evaluate(
-      (element) => getComputedStyle(element).outlineStyle,
-    ),
+    await page
+      .getByLabel('Username')
+      .evaluate((element) => getComputedStyle(element).outlineStyle),
   ).toBe('solid');
   for (const width of [320, 390, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     expect(
-      await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
     ).toBe(true);
     await page.screenshot({
       path: testInfo.outputPath(`login-${width}.png`),
@@ -56,11 +89,16 @@ test('pilot interface loads local brand assets and remains usable across screen 
     for (const width of [320, 390, 768, 1280]) {
       await page.setViewportSize({ width, height: 900 });
       expect(
-        await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
       ).toBe(true);
       if (path === '/') {
         const today = await page.locator('.today-label').boundingBox();
-        const zero = await page.locator('.chart-grid text').first().boundingBox();
+        const zero = await page
+          .locator('.chart-grid text')
+          .first()
+          .boundingBox();
         const dates = await page.locator('.date-label').all();
         for (const date of dates) {
           const bounds = await date.boundingBox();
@@ -68,7 +106,8 @@ test('pilot interface loads local brand assets and remains usable across screen 
           expect(zero!.y + zero!.height).toBeLessThan(bounds!.y);
         }
       }
-      const name = path === '/' ? 'home' : path.startsWith('/duty') ? 'duty' : 'schedule';
+      const name =
+        path === '/' ? 'home' : path.startsWith('/duty') ? 'duty' : 'schedule';
       await page.screenshot({
         path: testInfo.outputPath(`${name}-${width}.png`),
         fullPage: true,

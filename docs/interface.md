@@ -10,6 +10,20 @@ light status badges and the page background. The red sign-in button uses
 large bold white text. Cards use 12–16px corners and restrained shadows;
 primary actions use pill shapes.
 
+The authenticated screens share a compact masthead. Home keeps the greeting,
+total hours, and business date together above the limit cards. At desktop
+widths, the flight trend and documents sit side by side; below 1024px they
+return to a single reading column. Document dates and urgency labels stay
+visible together without opening a detail screen. The calendar places its
+legend beside the month at desktop widths and below it on mobile. Every duty
+fill remains the original API color.
+
+Navigation uses a compact floating bar on desktop and a bottom bar on narrow
+screens, with reserved scroll space. The polish uses component-scoped SCSS;
+the existing sign-in page, global stylesheet, authentication, and API behavior
+are unchanged. A shared header replaces repeated authenticated-page markup;
+route, chart, and document splitting remain in place without another package.
+
 A shared official logo sits on the navy header. Home puts the pilot's profile
 and total hours first, followed by limit cards, the trend, and document status.
 Two-column mobile limit cards become four columns on larger screens. The
@@ -53,3 +67,8 @@ placeholder at each width. Existing authentication, flight-hour, document,
 and calendar journeys remain regression coverage, including failures, retries,
 and deliberately reordered responses. Screenshot review supplements these
 checks; layout assertions alone do not establish visual quality.
+
+The dashboard layout regression checks that the trend and document panels
+share a desktop row and that all four limit cards stay above the mobile
+navigation at 390px. Sign-in screenshots are also compared with the baseline
+when reviewing this visual-only change.
