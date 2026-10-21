@@ -43,7 +43,7 @@ const inSchedule = computed(
         <path d="M7 2v6m10-6v6M3 11h18m-13 4h2m4 0h2" /></svg
       ><span>Schedule</span></NuxtLink
     >
-    <button type="button" disabled aria-label="Logbook (coming soon)">
+    <button type="button" disabled aria-label="Logbook (unavailable)">
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -52,9 +52,13 @@ const inSchedule = computed(
         aria-hidden="true"
       >
         <path d="M5 3h14v18H5zM9 7h6M9 11h6M9 15h4" /></svg
-      ><span>Logbook</span>
+      ><span
+        >Logbook<small class="navigation-status" aria-hidden="true"
+          >Unavailable</small
+        ></span
+      >
     </button>
-    <button type="button" disabled aria-label="More (coming soon)">
+    <button type="button" disabled aria-label="More (unavailable)">
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -65,7 +69,11 @@ const inSchedule = computed(
         <circle cx="5" cy="12" r="1" />
         <circle cx="12" cy="12" r="1" />
         <circle cx="19" cy="12" r="1" /></svg
-      ><span>More</span>
+      ><span
+        >More<small class="navigation-status" aria-hidden="true"
+          >Unavailable</small
+        ></span
+      >
     </button>
   </nav>
 </template>
@@ -101,7 +109,12 @@ const inSchedule = computed(
   }
   button:disabled {
     cursor: default;
-    opacity: 0.75;
+    opacity: 1;
+  }
+  .navigation-status {
+    display: block;
+    font-size: 0.6rem;
+    line-height: 1.2;
   }
   svg {
     width: 21px;
