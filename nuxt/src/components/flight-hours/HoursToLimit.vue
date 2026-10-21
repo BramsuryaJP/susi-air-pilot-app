@@ -233,17 +233,20 @@ watch(
 .range-toggle {
   display: flex;
   background: var(--background);
-  padding: 3px;
+  padding: 4px;
   border-radius: 999px;
-  gap: 2px;
+  gap: 4px;
   button {
     border: 0;
-    min-width: 40px;
-    min-height: 44px;
-    padding: 0.4rem 0.5rem;
+    display: grid;
+    place-items: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     background: transparent;
     color: var(--muted-on-background);
-    border-radius: 999px;
+    border-radius: 50%;
     font-size: 0.75rem;
     &[aria-pressed='true'] {
       background: var(--navy);
@@ -288,10 +291,6 @@ watch(
   .range-toggle {
     width: 100%;
     justify-content: space-between;
-    button {
-      flex: 1;
-      min-width: 0;
-    }
   }
 }
 </style>
