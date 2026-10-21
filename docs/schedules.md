@@ -49,6 +49,9 @@ outside that range. This keeps the DOM small while preserving supported deep
 links and allowing larger jumps. The controls keep consecutive choices together
 while route authentication is pending; only committed route changes load data.
 Browser history and reload restore the controls from the URL.
+The server renders the selected options immediately, while controls remain
+disabled until hydration attaches their handlers. Without JavaScript, a visible
+message explains that changing the month requires it.
 
 The table uses Monday-first weeks and UTC date arithmetic for presentation.
 It includes every date in the month, including leap days and unscheduled days;

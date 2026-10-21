@@ -108,6 +108,7 @@ test('month picker stays bounded, keyboard accessible, and responsive', async ({
   }
   await page.goto('/schedule');
   const month = page.getByRole('combobox', { name: 'Month', exact: true });
+  await expect(month).toBeEnabled();
   await month.focus();
   // Native typeahead selects June after May without relying on an OS popup.
   await page.keyboard.press('j');
@@ -151,7 +152,52 @@ test('SSR renders the selected month and year without client JavaScript', async 
     await expect(
       page.getByRole('combobox', { name: 'Year', exact: true }),
     ).toHaveValue('2024');
+    await expect(
+      page.getByRole('combobox', { name: 'Month', exact: true }),
+    ).toBeDisabled();
+    await expect(
+      page.getByText('Enable JavaScript to change the calendar month.'),
+    ).toBeVisible();
   } finally {
     await context.close();
+  }
+});
+
+test('calendar controls wait for hydration and retain the first enabled selection', async ({
+  page,
+  context,
+  pilotState,
+}) => {
+  await context.addCookies(pilotState.cookies);
+  let release: () => void = () => {};
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route('**/_nuxt/*.js', async (route) => {
+    await held;
+    await route.continue();
+  });
+  try {
+    await page.goto('/schedule', { waitUntil: 'commit' });
+    const month = page.getByRole('combobox', { name: 'Month', exact: true });
+    await expect(month).toHaveValue('5');
+    await expect(month).toBeDisabled();
+    await expect(
+      page.getByRole('combobox', { name: 'Year', exact: true }),
+    ).toBeDisabled();
+    await expect(
+      page.getByRole('button', { name: 'Next month', exact: true }),
+    ).toBeDisabled();
+    release();
+    await expect(month).toBeEnabled();
+    await month.selectOption('6');
+    await expect(page).toHaveURL('/schedule?month=2026-06');
+    await expect(page.locator('[data-calendar-month]')).toHaveAttribute(
+      'data-calendar-month',
+      '2026-06',
+    );
+  } finally {
+    release();
+    await page.unrouteAll({ behavior: 'wait' });
   }
 });

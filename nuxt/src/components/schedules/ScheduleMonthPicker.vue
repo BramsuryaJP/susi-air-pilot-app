@@ -3,6 +3,10 @@ import { parseCalendarMonth, shiftCalendarMonth } from '../../utils/calendar';
 
 const props = defineProps<{ month: string; today: string }>();
 const emit = defineEmits<{ change: [month: string] }>();
+const ready = ref(false);
+onMounted(() => {
+  ready.value = true;
+});
 // Keep consecutive selections together while the route guard validates the session.
 const draft = ref(props.month);
 watch(
@@ -54,7 +58,7 @@ function choose(month: string | null) {
   <div class="month-controls" role="group" aria-label="Calendar month">
     <div class="month-field">
       <label for="schedule-month">Month</label>
-      <select id="schedule-month" v-model="monthValue">
+      <select id="schedule-month" v-model="monthValue" :disabled="!ready">
         <option
           v-for="option in months"
           :key="option.value"
@@ -66,7 +70,7 @@ function choose(month: string | null) {
     </div>
     <div class="month-field">
       <label for="schedule-year">Year</label>
-      <select id="schedule-year" v-model="yearValue">
+      <select id="schedule-year" v-model="yearValue" :disabled="!ready">
         <option v-for="year in years" :key="year" :value="year">
           {{ year }}
         </option>
@@ -77,7 +81,7 @@ function choose(month: string | null) {
         type="button"
         class="secondary-button month-button"
         aria-label="Previous month"
-        :disabled="!previous"
+        :disabled="!ready || !previous"
         @click="choose(previous)"
       >
         <span aria-hidden="true">‹</span>
@@ -85,7 +89,7 @@ function choose(month: string | null) {
       <button
         type="button"
         class="secondary-button current-month"
-        :disabled="draft === currentMonth"
+        :disabled="!ready || draft === currentMonth"
         @click="choose(currentMonth)"
       >
         This month
@@ -94,12 +98,15 @@ function choose(month: string | null) {
         type="button"
         class="secondary-button month-button"
         aria-label="Next month"
-        :disabled="!next"
+        :disabled="!ready || !next"
         @click="choose(next)"
       >
         <span aria-hidden="true">›</span>
       </button>
     </div>
+    <p v-if="!ready" class="picker-note">
+      Enable JavaScript to change the calendar month.
+    </p>
   </div>
 </template>
 
@@ -133,6 +140,9 @@ function choose(month: string | null) {
     font: inherit;
     font-size: 1rem;
     cursor: pointer;
+    &:disabled {
+      cursor: default;
+    }
   }
 }
 .month-actions {
@@ -153,6 +163,12 @@ function choose(month: string | null) {
 .current-month {
   white-space: nowrap;
   font-size: 0.8rem;
+}
+.picker-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--muted-on-background);
 }
 @media (max-width: 767px) {
   .month-controls {
