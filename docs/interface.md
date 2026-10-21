@@ -131,3 +131,14 @@ Schedule, duty details, Logbook, More, and the 404 screen at 320px and 1280px.
 It verifies the common geometry and at least 3:1 contrast with the painted
 surface. Focused screenshots intentionally differ from the earlier login
 captures; this change does not alter layout or sign-in behavior.
+
+## Daily chart values
+
+The native daily-values disclosure uses a full-width summary with a date count
+and decorative chevron. It keeps keyboard Enter/Space behavior and the shared
+inset focus outline without JavaScript state. The table names its rolling window
+and unit, aligns numeric hours to the right, and distinguishes Recorded/Planned
+with visible text and quiet status pills. Today has a labelled date and a subtle
+row highlight. All 15 supplied values remain available, including above-scale
+projections, with the same one-decimal precision. The table stays in the normal
+page scroll flow and reflows down to 320px without an inner scrolling region.

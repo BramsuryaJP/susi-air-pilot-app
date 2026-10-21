@@ -74,3 +74,9 @@ described in the authentication guide.
 
 Documents and schedules are implemented in their own modules. Brand artwork,
 local typography, and responsive presentation are described in [the interface guide](interface.md).
+
+The daily-value disclosure uses native details/summary controls, a date count,
+and a caption identifying the rolling window in hours. Numeric values remain
+right-aligned and unchanged; Recorded/Planned status text and a Today badge
+make the rows easier to scan. Its layout preserves all dates at narrow widths
+and uses the shared focus policy without a new dependency or client state.
