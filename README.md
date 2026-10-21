@@ -12,7 +12,7 @@ applications run as separate Vercel Hobby projects. Production follows `main`;
 check the [deployment history](https://github.com/BramsuryaJP/susi-air-pilot-app/deployments)
 for the currently deployed revision.
 See [submission review](docs/submission.md) for requirement coverage, verification,
-and the remaining reviewer-access step.
+and delivery notes.
 
 ## Hosted demonstration
 
@@ -57,7 +57,7 @@ nvm use
 npm run setup
 ```
 
-The repository is private; your GitHub account must have access to clone it.
+The repository is public and can be cloned without collaborator access.
 The `nvm` commands are optional if the required Node version is already installed.
 This runs `npm ci` in each application using its own lockfile. There are no
 root dependencies to install. To install just one application:
@@ -240,9 +240,8 @@ open "Detail page coming soon", as requested. The avatar is a local placeholder
 URL returned by the API. Styling uses small inline line icons rather than an icon
 package. No frontend pilot fixtures or database are needed.
 
-The application has been deployed and reviewed; repository access for the
-reviewer remains pending. Keep this repository private and grant the intended
-reviewer access before sending its link. The brief requests the repository link
+The application has been deployed and reviewed. The public repository can be
+reviewed without collaborator access. The brief requests the repository link
 and both live deployment URLs; include the demo account and hosting deviation
 with those links. No submission email has been sent.
 

@@ -40,8 +40,9 @@ For the calculation, expiry, request ownership, and rendering policies, see
 - Backend health: <https://susi-air-pilot-api.vercel.app/health>
 - Demo account: `johndoe` / `susiairtest`
 
-The repository remains private by the owner's choice. **Reviewer access is
-pending** and must be granted before the repository link can be reviewed.
+The repository is public and can be reviewed without collaborator access.
+No GitHub invitation is required to inspect the source or clone the project.
+
 The brief asks for the repository and both deployment URLs. Include the demo
 account and the backend-hosting deviation with those links. Submission itself
 is a separate manual step; no email has been sent.
