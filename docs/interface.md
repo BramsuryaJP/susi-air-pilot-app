@@ -167,3 +167,9 @@ Chart inspection becomes focusable and pointer-enabled only after its client
 handlers mount. Until then the static SVG and native daily-value disclosure
 remain available. Tap selections ignore touch pointer-leave events, so contact
 ending after a tap does not dismiss the chosen date.
+
+Mobile bottom navigation uses 24px icons, 13px labels, and a 60px minimum tap
+height. Four equal columns retain all destination labels at narrow widths. The
+bar includes bottom safe-area padding; the workspace and scroll clearance keep
+final content above it. At 768px and wider, the compact floating navigation
+retains its existing 21px icons and 48px minimum link height.

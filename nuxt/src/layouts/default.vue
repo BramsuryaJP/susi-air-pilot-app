@@ -16,4 +16,9 @@ const showNavigation = computed(() => route.path !== '/login' && !error.value);
 .with-navigation {
   padding-bottom: calc(5rem + env(safe-area-inset-bottom));
 }
+@media (max-width: 767px) {
+  .with-navigation {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
+}
 </style>
