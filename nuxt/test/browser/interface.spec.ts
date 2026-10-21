@@ -1,4 +1,5 @@
 import { test, expect } from './support/pilot-test';
+import { expectStatusPanelLayout } from './support/status-panel';
 
 test('dashboard keeps the trend and documents together on desktop and limits above mobile navigation', async ({
   page,
@@ -91,6 +92,12 @@ test('pilot interface loads local brand assets and remains usable across screen 
       await expect(
         page.getByRole('link', { name: 'Back to schedule', exact: true }),
       ).toHaveAttribute('href', '/schedule?month=2026-05');
+      await expect(
+        page.getByRole('link', { name: 'Back to schedule', exact: true }),
+      ).toHaveCSS('background-color', 'rgb(230, 55, 87)');
+      await expect(
+        page.getByRole('link', { name: 'Back to schedule', exact: true }),
+      ).toHaveCSS('font-weight', '700');
     }
     expect(
       await logo.evaluate((image: HTMLImageElement) => image.naturalWidth),
@@ -112,6 +119,7 @@ test('pilot interface loads local brand assets and remains usable across screen 
         }
       }
       if (path.startsWith('/duty')) {
+        await expectStatusPanelLayout(page, width);
         const back = page.getByRole('link', {
           name: 'Back to schedule',
           exact: true,
