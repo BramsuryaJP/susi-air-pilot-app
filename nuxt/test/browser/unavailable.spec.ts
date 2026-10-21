@@ -26,13 +26,38 @@ test('Logbook and More open clear unavailable pages and recover through working 
       expect(response.headers()['cache-control']).toContain('no-store');
       expect(response.headers().vary).toMatch(/Cookie/i);
     }
-    for (const width of [320, 390, 768, 1280]) {
+    for (const width of [320, 360, 390, 768, 1280]) {
       await page.setViewportSize({ width, height: 900 });
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,
         ),
       ).toBe(true);
+      const navigation = page.getByRole('navigation', {
+        name: 'Main navigation',
+      });
+      const navBounds = (await navigation.boundingBox())!;
+      for (const link of await navigation.getByRole('link').all()) {
+        const bounds = (await link.boundingBox())!;
+        expect(bounds.width).toBeGreaterThanOrEqual(60);
+        expect(bounds.height).toBeGreaterThanOrEqual(width < 768 ? 60 : 48);
+        await expect(link.locator('svg')).toHaveCSS(
+          'width',
+          width < 768 ? '24px' : '21px',
+        );
+        await expect(link).toHaveCSS(
+          'font-size',
+          width < 768 ? '13px' : '11.2px',
+        );
+        const label = (await link.locator('span').boundingBox())!;
+        expect(label.x).toBeGreaterThanOrEqual(bounds.x);
+        expect(label.x + label.width).toBeLessThanOrEqual(bounds.x + bounds.width);
+      }
+      await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
+      const recovery = (await page
+        .getByRole('link', { name: 'Back to Home', exact: true })
+        .boundingBox())!;
+      expect(recovery.y + recovery.height).toBeLessThan(navBounds.y);
       await page.screenshot({
         path: testInfo.outputPath(`${name.toLowerCase()}-${width}.png`),
         fullPage: true,

@@ -92,25 +92,26 @@ const inSchedule = computed(
   background: var(--surface);
   border: 1px solid var(--border);
   border-bottom: 0;
-  padding: 0.45rem 0.5rem calc(0.45rem + env(safe-area-inset-bottom));
+  padding: 0.5rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom));
   border-radius: 16px 16px 0 0;
   a {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.2rem;
-    min-height: 48px;
+    gap: 0.25rem;
+    min-height: 60px;
     border: 0;
     border-radius: 10px;
     color: var(--muted);
     background: none;
     text-decoration: none;
-    font-size: 0.7rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
   }
   svg {
-    width: 21px;
-    height: 21px;
+    width: 24px;
+    height: 24px;
   }
   a.active {
     background: var(--danger-surface);
@@ -128,6 +129,16 @@ const inSchedule = computed(
     border-bottom: 1px solid var(--border);
     border-radius: 18px;
     box-shadow: 0 8px 32px #0e213812;
+    a {
+      gap: 0.2rem;
+      min-height: 48px;
+      font-size: 0.7rem;
+      font-weight: 400;
+    }
+    svg {
+      width: 21px;
+      height: 21px;
+    }
   }
 }
 </style>
