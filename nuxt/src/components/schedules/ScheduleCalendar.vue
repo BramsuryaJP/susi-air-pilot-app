@@ -83,12 +83,6 @@ function dayLabel(date: string): string {
                 >
               </span>
               <span
-                v-if="date === schedule.today"
-                class="today-label"
-                aria-hidden="true"
-                >Today</span
-              >
-              <span
                 v-if="entries.has(date)"
                 class="duty-event"
                 :style="{
@@ -110,7 +104,7 @@ function dayLabel(date: string): string {
     </table>
     <p class="calendar-key">
       A tick means all duties are logged. Numbers show remaining duties. Today
-      is labelled and outlined.
+      is outlined in red.
     </p>
     <p v-if="!schedule.schedules.length" class="empty-month" role="status">
       No duties scheduled for this month.
@@ -186,16 +180,6 @@ function dayLabel(date: string): string {
 .day-number {
   font-weight: 700;
   font-size: 0.95rem;
-}
-.today-label {
-  position: absolute;
-  top: 2rem;
-  left: 0;
-  right: 0;
-  text-align: center;
-  color: var(--danger-text);
-  font-size: 0.65rem;
-  font-weight: 700;
 }
 .duty-event {
   display: flex;
@@ -296,10 +280,6 @@ function dayLabel(date: string): string {
     min-height: 34px;
     padding: 0.25rem 0.1rem;
     font-size: 0.65rem;
-  }
-  .today-label {
-    font-size: 0.6rem;
-    top: 1.7rem;
   }
   .base-name {
     font-size: 0.65rem;

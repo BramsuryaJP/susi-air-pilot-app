@@ -63,8 +63,8 @@ duty band containing the exact API color, visible duty code, and base name.
 Keep status separate from duty type: green duty color must not imply that
 logbooks are complete. Retain the API's count-based tick/remaining calculation.
 
-Mark the configured business date with both a visible Today label and
-`aria-current="date"`; keep its border distinct from keyboard focus. Unscheduled
+Mark the configured business date with a red outline and `aria-current="date"`
+without extra text inside the cell; keep its border distinct from keyboard focus. Unscheduled
 dates stay neutral and announce that no duties are scheduled. Do not infer
 leave, completion, or missing data from a blank cell.
 

@@ -79,9 +79,11 @@ test('schedule calendar preserves API colors and counts, owns month requests, an
     expect(legendBounds!.y).toBeGreaterThan(
       calendarBounds!.y + calendarBounds!.height,
     );
-    await expect(
-      calendar.locator('[aria-current="date"] .today-label'),
-    ).toHaveText('Today');
+    const currentDate = calendar.locator('[aria-current="date"]');
+    await expect(currentDate).not.toContainText('Today');
+    await expect(currentDate).toHaveCSS('outline-style', 'solid');
+    await expect(currentDate).toHaveCSS('outline-width', '2px');
+    await expect(currentDate).toHaveCSS('outline-color', 'rgb(230, 55, 87)');
     for (const cell of await calendar
       .locator('[data-date]:has(.duty-event)')
       .all()) {
