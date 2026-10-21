@@ -237,17 +237,14 @@ test('schedule calendar preserves API colors and counts, owns month requests, an
   await expect(
     page.getByRole('heading', { name: 'Welcome, John Doe' }),
   ).toBeVisible();
-  await expect(
-    page.getByRole('button', { name: 'Logbook (unavailable)', exact: true }),
-  ).toBeDisabled();
-  await expect(
-    page.getByRole('button', { name: 'More (unavailable)', exact: true }),
-  ).toBeDisabled();
-  for (const name of ['Logbook', 'More']) {
+  for (const [name, path] of [
+    ['Logbook', '/logbook'],
+    ['More', '/more'],
+  ] as const) {
     await expect(
       page
-        .getByRole('button', { name: `${name} (unavailable)`, exact: true })
-        .getByText('Unavailable'),
-    ).toBeVisible();
+        .getByRole('navigation', { name: 'Main navigation' })
+        .getByRole('link', { name, exact: true }),
+    ).toHaveAttribute('href', path);
   }
 });
