@@ -94,7 +94,8 @@ The dashboard refinement in [PR #11](https://github.com/BramsuryaJP/susi-air-pil
 adds a compact overview, desktop chart/document columns, a shared masthead,
 and a responsive calendar legend. The chart has readable axes, a centered
 Today marker, a separate limit key, and circular 44px range buttons. The
-browser suite now contains **13 journeys**, including chart-label separation
+browser suite now contains **16 journeys**, including guest-only login redirects,
+browser-back navigation, expired-session cleanup, and chart-label separation
 at all five ranges and four widths, desktop/mobile layout, and exact table
 values for an above-scale projection. The original login, API, and domain
 behavior remain covered. See [interface](interface.md) for the design and

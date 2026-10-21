@@ -93,6 +93,15 @@ the backend session; initial hydration reuses the server-verified profile
 instead of fetching it twice. Sensitive pages use `Cache-Control: private,
 no-store`.
 
+The sign-in route is guest-only. A valid session redirects `/login` to Home
+before the form renders, including direct requests and browser-back navigation.
+The guard uses the named login route, including trailing-slash and case variants.
+The middleware validates the session rather than trusting an existing client
+profile or the mere presence of a cookie. Rejected sessions can still open the
+form, with cookie cleanup forwarded during SSR. A session-validation outage
+returns the existing safe service error and preserves the cookie. The login
+response is private and non-cacheable and varies by Cookie.
+
 Sign-out clears the browser cookie and client profile. It does not revoke a
 previously copied bearer token, which remains valid until expiry. Immediate
 server-side revocation, refresh-token rotation, and real account management
@@ -115,5 +124,7 @@ npm run test:e2e
 The browser suite starts its own production servers on ports 4310 and 4311.
 It exercises disabled JavaScript, delayed hydration, bad credentials, repeated
 submit events, private cookie behavior, cross-origin writes, SSR reload and
-cookie cleanup, session isolation, and logout. Test artifacts are ignored by
+cookie cleanup, session isolation, guest-only login redirects, browser-back
+navigation, expired sessions, and logout. Server adapter checks also cover
+login redirects and session-validation outages. Test artifacts are ignored by
 Git. GitHub Actions runs the same browser suite after both application jobs pass.
