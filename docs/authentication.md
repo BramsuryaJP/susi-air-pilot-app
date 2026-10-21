@@ -102,6 +102,13 @@ form, with cookie cleanup forwarded during SSR. A session-validation outage
 returns the existing safe service error and preserves the cookie. The login
 response is private and non-cacheable and varies by Cookie.
 
+The standalone error screen deliberately uses a native "Back to Home" link.
+Nuxt's default error recovery could navigate to Home while the error guard was
+still active, leaving the new client session store empty and the dashboard
+hidden. A fresh document runs normal SSR session validation again. Valid sessions
+receive the complete dashboard; missing, expired, or invalid sessions return to
+sign-in. The error screen never includes protected workspace navigation.
+
 Sign-out clears the browser cookie and client profile. It does not revoke a
 previously copied bearer token, which remains valid until expiry. Immediate
 server-side revocation, refresh-token rotation, and real account management
@@ -122,9 +129,12 @@ npm run test:e2e
 ```
 
 The browser suite starts its own production servers on ports 4310 and 4311.
+The workspace and error-recovery projects run in separate invocations with fresh
+servers, retaining production rate limits without exhausting a shared quota.
 It exercises disabled JavaScript, delayed hydration, bad credentials, repeated
 submit events, private cookie behavior, cross-origin writes, SSR reload and
 cookie cleanup, session isolation, guest-only login redirects, browser-back
-navigation, expired sessions, and logout. Server adapter checks also cover
+navigation, expired sessions, error-page recovery with and without JavaScript,
+sessions removed during an error, and logout. Server adapter checks also cover
 login redirects and session-validation outages. Test artifacts are ignored by
 Git. GitHub Actions runs the same browser suite after both application jobs pass.

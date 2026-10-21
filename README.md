@@ -187,6 +187,9 @@ npm run test:e2e
 ```
 
 The browser suite starts and stops its own production servers on ports 4310/4311.
+Workspace and error-recovery projects run in separate invocations so real
+session checks stay within the unchanged production rate limits. Run both with
+`npm run test:e2e`; their screenshots and traces use separate output folders.
 Run build checks in a separate checkout if a Nuxt development server is active;
 both commands generate files under `.nuxt`.
 
@@ -225,7 +228,12 @@ The main choices are:
 
 ## Scope, limitations, and submission
 
-Logbook and More are disabled navigation placeholders. Date links intentionally
+Logbook and More are disabled navigation placeholders with visible "Unavailable"
+labels; no additional screens are defined for them in the brief. Missing pages
+use a branded 404 screen. Its "Back to Home" link loads a fresh document so session
+validation runs again, restoring the dashboard or redirecting to sign-in when
+the session is no longer valid. Other page errors use safe recovery copy without
+displaying internal diagnostics. Date links intentionally
 open "Detail page coming soon", as requested. The avatar is a local placeholder
 URL returned by the API. Styling uses small inline line icons rather than an icon
 package. No frontend pilot fixtures or database are needed.

@@ -22,7 +22,7 @@ their original release references.
 | Monthly schedules and a request on month change | Validated month endpoint, startup month index, cancellable requests, previous/next controls, and reordered-response browser tests |
 | Day colors, completion, legend, date placeholder | Original API `base_color`; completion from count equality; remaining-duty count otherwise; complete API legend and protected date links |
 | Sign-in, Home, and Schedule screens | Live API data through Nuxt's server adapter; no pilot JSON in frontend source; bad-credential, reload, logout, empty/error/retry journeys |
-| Bottom navigation | Home and Schedule links; Logbook and More are visibly disabled because their screens are outside scope |
+| Bottom navigation | Home and Schedule links; Logbook and More are disabled with visible "Unavailable" captions because their screens are outside scope |
 | Module/controller/service/DTO separation and consistent errors | Feature modules, validated request DTOs, global validation pipe and exception filter; HTTP rejection tests |
 | Minimal mobile-first airline interface | Brief palette, official local Susi Air logo, local Plus Jakarta Sans, rounded cards, pill controls, inline line icons; responsive and keyboard browser checks plus screenshot review |
 | Live frontend and backend | Separate working Vercel Hobby deployments; backend provider deviation is disclosed below |
@@ -94,12 +94,18 @@ The dashboard refinement in [PR #11](https://github.com/BramsuryaJP/susi-air-pil
 adds a compact overview, desktop chart/document columns, a shared masthead,
 and a responsive calendar legend. The chart has readable axes, a centered
 Today marker, a separate limit key, and circular 44px range buttons. The
-browser suite now contains **16 journeys**, including guest-only login redirects,
+browser suite now contains **22 journeys**, including guest-only login redirects,
 browser-back navigation, expired-session cleanup, and chart-label separation
 at all five ranges and four widths, desktop/mobile layout, and exact table
 values for an above-scale projection. The original login, API, and domain
 behavior remain covered. See [interface](interface.md) for the design and
 accessibility details.
+
+The error recovery update adds a branded 404 and safe fallback for other page
+errors. Six browser journeys cover complete dashboard recovery, HTTP error
+statuses, keyboard and responsive behavior, removed/invalid sessions, anonymous
+access, and recovery without JavaScript. The "Back to Home" action starts a new
+document so SSR session validation cannot be skipped by the failed router state.
 
 For a fresh local verification:
 

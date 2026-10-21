@@ -11,6 +11,19 @@ export default defineConfig({
   retries: 0,
   reporter: process.env.CI ? 'github' : 'list',
   use: { baseURL: webOrigin, trace: 'retain-on-failure' },
+  // Run each project in its own invocation to preserve production rate limits.
+  projects: [
+    {
+      name: 'workspace',
+      testIgnore: '**/errors.spec.ts',
+      outputDir: './test-results/workspace',
+    },
+    {
+      name: 'error-recovery',
+      testMatch: '**/errors.spec.ts',
+      outputDir: './test-results/error-recovery',
+    },
+  ],
   webServer: [
     {
       command: 'node dist/main.js',

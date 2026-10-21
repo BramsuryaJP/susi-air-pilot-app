@@ -31,6 +31,18 @@ calendar keeps its seven-column layout, original API fills, and readable
 foreground colors. Bottom navigation reserves space and the device safe area.
 No layout introduces another source of pilot data or business calculations.
 
+Logbook and More remain disabled, with visible "Unavailable" captions and matching
+accessible names. Their screens are not defined in the brief. Home and Schedule
+remain working links. The Schedule layout, legend, and duty colors are retained.
+
+The custom error screen reuses the masthead, palette, and pill action. A clear
+404 message replaces the framework's default missing-page screen; other statuses
+use generic recovery copy without rendering diagnostic messages. Error pages
+have their own main landmark and skip link, no workspace navigation, and a
+`noindex, nofollow` directive. Their "Back to Home" action uses a native document
+navigation to revalidate the session outside the failed router context. Normal
+workspace links continue to use client navigation.
+
 ## Local assets and typography
 
 - Logo: unmodified white PNG from the [official Susi Air website](https://susiair.com/images/susiairlogo.png),
@@ -78,3 +90,8 @@ navigation at 390px. Sign-in screenshots are also compared with the baseline
 when reviewing this visual-only change. Chart regression coverage checks all
 five ranges at all four widths for readable, separated date labels, centered
 Today placement, and a limit key clear of the plot.
+
+Error recovery coverage checks unknown routes, malformed duty dates, other page
+statuses, keyboard access, and reflow at the same four widths. It also checks
+dashboard content after recovery, removed or invalid cookies, anonymous access,
+and recovery without JavaScript.
