@@ -173,22 +173,59 @@ const formatDate = (date: string) =>
     </div>
     <p class="projection-note">Future values include supplied planned hours.</p>
     <details class="chart-values">
-      <summary>View daily values</summary>
-      <table aria-label="Rolling flight-hour values">
+      <summary>
+        <span>View daily values</span>
+        <span class="values-count" aria-hidden="true"
+          >{{ summary.series.length }} days</span
+        >
+        <svg
+          class="values-chevron"
+          viewBox="0 0 20 20"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path d="m6 8 4 4 4-4" />
+        </svg>
+      </summary>
+      <table class="values-table" aria-label="Rolling flight-hour values">
+        <caption>
+          {{
+            summary.windowDays
+          }}-day rolling totals, in hours
+        </caption>
         <thead>
           <tr>
             <th scope="col">Date</th>
-            <th scope="col">Hours</th>
-            <th scope="col">Status</th>
+            <th scope="col" class="value-hours">Hours</th>
+            <th scope="col" class="value-status">Status</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="point in summary.series" :key="point.date">
+          <tr
+            v-for="point in summary.series"
+            :key="point.date"
+            :class="{ 'today-row': point.isToday }"
+          >
             <th scope="row">
-              {{ formatDate(point.date) }}{{ point.isToday ? ' (today)' : '' }}
+              <span class="value-date">
+                <time
+                  :datetime="point.date"
+                  :aria-current="point.isToday ? 'date' : undefined"
+                  >{{ formatDate(point.date) }}</time
+                >
+                <span v-if="point.isToday" class="value-today">Today</span>
+              </span>
             </th>
-            <td>{{ point.hours.toFixed(1) }}</td>
-            <td>{{ point.isProjection ? 'Planned' : 'Recorded' }}</td>
+            <td class="value-hours">{{ point.hours.toFixed(1) }}</td>
+            <td class="value-status">
+              <span
+                class="values-status"
+                :class="
+                  point.isProjection ? 'status-planned' : 'status-recorded'
+                "
+                >{{ point.isProjection ? 'Planned' : 'Recorded' }}</span
+              >
+            </td>
           </tr>
         </tbody>
       </table>
@@ -358,29 +395,173 @@ i {
   margin: 0.9rem 0;
 }
 .chart-values {
-  font-size: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
   summary {
-    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 52px;
+    padding: 0.75rem 1rem;
+    background: var(--background);
+    color: var(--navy);
+    border-radius: 11px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    list-style: none;
     cursor: pointer;
-    padding: 0.4rem 0;
+    &::-webkit-details-marker {
+      display: none;
+    }
+    &:hover {
+      background: #edf0f4;
+    }
+  }
+  &[open] summary {
+    border-bottom: 1px solid var(--border);
+    border-radius: 11px 11px 0 0;
+  }
+  &[open] .values-chevron {
+    transform: rotate(180deg);
   }
 }
-table {
+.values-count {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.values-chevron {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.values-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
-  margin-top: 0.75rem;
   text-align: left;
+  font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
+  caption {
+    padding: 0.75rem 1rem;
+    color: var(--muted);
+    font-size: 0.7rem;
+    text-align: left;
+  }
   th,
   td {
-    padding: 0.5rem 0.25rem;
+    padding: 0.6rem 1rem;
+  }
+  thead th {
     border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    &:first-child {
+      width: 42%;
+    }
+    &:nth-child(2) {
+      width: 24%;
+    }
+    &:last-child {
+      width: 34%;
+    }
+  }
+  tbody tr + tr {
+    border-top: 1px solid var(--border);
   }
   tbody th {
-    font-weight: 400;
+    font-weight: 500;
+  }
+  .value-hours {
+    text-align: right;
+    white-space: nowrap;
+  }
+  td.value-hours {
+    font-weight: 700;
+  }
+  .value-status {
+    text-align: right;
   }
 }
+.value-date {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.today-row {
+  background: #f0faff;
+}
+.value-today {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  background: var(--navy);
+  color: var(--surface);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.values-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  &::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+}
+.status-recorded {
+  background: #edf9fc;
+  color: #13677a;
+}
+.status-planned {
+  background: #edf0f4;
+  color: var(--navy);
+}
 @media (max-width: 480px) {
+  .chart-values summary {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  .values-table {
+    th,
+    td {
+      padding: 0.6rem 0.5rem;
+    }
+    caption {
+      padding: 0.75rem 0.5rem;
+    }
+    thead th:first-child {
+      width: 32%;
+    }
+    thead th:nth-child(2) {
+      width: 26%;
+    }
+    thead th:last-child {
+      width: 42%;
+    }
+  }
+  .value-date {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
   .chart-layout {
     grid-template-columns: 2.25rem minmax(0, 1fr);
   }
