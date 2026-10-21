@@ -2,7 +2,7 @@
 import AppNavigation from '../components/navigation/AppNavigation.vue';
 const route = useRoute();
 const error = useError();
-const showNavigation = computed(() => route.path !== '/login' && !error.value);
+const showNavigation = computed(() => route.name !== 'login' && !error.value);
 </script>
 
 <template>

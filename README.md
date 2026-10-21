@@ -187,7 +187,7 @@ npm run test:e2e
 ```
 
 The browser suite starts and stops its own production servers on ports 4310/4311.
-Workspace, error-recovery, schedule-picker, unavailable-page, and chart-interaction
+Workspace, error-recovery, schedule-picker, unavailable-page, chart-interaction, and route-privacy
 projects run in separate invocations
 so real session checks stay within the unchanged production rate limits. Run all with
 `npm run test:e2e`; their screenshots and traces use separate output folders.

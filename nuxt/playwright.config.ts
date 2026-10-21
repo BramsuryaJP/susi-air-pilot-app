@@ -20,6 +20,7 @@ export default defineConfig({
         '**/schedule-picker.spec.ts',
         '**/unavailable.spec.ts',
         '**/chart-interaction.spec.ts',
+        '**/route-privacy.spec.ts',
       ],
       outputDir: './test-results/workspace',
     },
@@ -42,6 +43,11 @@ export default defineConfig({
       name: 'chart-interaction',
       testMatch: '**/chart-interaction.spec.ts',
       outputDir: './test-results/chart-interaction',
+    },
+    {
+      name: 'route-privacy',
+      testMatch: '**/route-privacy.spec.ts',
+      outputDir: './test-results/route-privacy',
     },
   ],
   webServer: [

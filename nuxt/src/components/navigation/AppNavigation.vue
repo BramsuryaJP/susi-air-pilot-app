@@ -6,7 +6,7 @@ const scheduleLink = computed(() => ({
   query: schedule.selectedMonth ? { month: schedule.selectedMonth } : undefined,
 }));
 const inSchedule = computed(
-  () => route.path === '/schedule' || route.path.startsWith('/duty/'),
+  () => route.name === 'schedule' || route.name === 'duty-date',
 );
 </script>
 
@@ -15,8 +15,8 @@ const inSchedule = computed(
     <NuxtLink
       to="/"
       :prefetch="false"
-      :aria-current="route.path === '/' ? 'page' : undefined"
-      :class="{ active: route.path === '/' }"
+      :aria-current="route.name === 'index' ? 'page' : undefined"
+      :class="{ active: route.name === 'index' }"
       ><svg
         viewBox="0 0 24 24"
         fill="none"

@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck",
-    "test:e2e": "playwright test --project=workspace && playwright test --project=error-recovery && playwright test --project=schedule-picker && playwright test --project=unavailable && playwright test --project=chart-interaction",
+    "test:e2e": "playwright test --project=workspace && playwright test --project=error-recovery && playwright test --project=schedule-picker && playwright test --project=unavailable && playwright test --project=chart-interaction && playwright test --project=route-privacy",
     "test:server": "node --test test/server/*.test.mjs",
     "postinstall": "nuxt prepare",
     "test": "node --test test/unit/*.test.mjs"

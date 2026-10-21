@@ -95,7 +95,7 @@ adds a compact overview, desktop chart/document columns, a shared masthead,
 and a responsive calendar. The legend now sits below the date grid within the same calendar panel at every width, with
 neutral date surfaces and exact-color duty bands. The chart has readable axes, a centered
 Today marker, a separate limit key, and circular 44px range buttons. The
-browser suite now contains **32 journeys**, including guest-only login redirects,
+browser suite now contains **35 journeys**, including guest-only login redirects,
 browser-back navigation, expired-session cleanup, and chart-label separation
 at all five ranges and four widths, desktop/mobile layout, and exact table
 values for an above-scale projection. The original login, API, and domain
@@ -154,3 +154,9 @@ Two chart-inspection journeys verify exact API values at every range and four
 widths, tooltip containment, hovering the tooltip, dismissal, keyboard and tap
 selection, delayed hydration, touch pointer-leave ordering, range resets, and
 above-scale values. Hover does not issue requests.
+
+Three routing/privacy journeys cover case and trailing-slash variants, private
+SSR headers on successful pages, redirects and errors, guest-only login without
+client scripts, protected-route rejection, static asset cache separation, active
+navigation, and calendar Back/Forward synchronization. They run with fresh
+servers in the route-privacy project, preserving production rate limits.

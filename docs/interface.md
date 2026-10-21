@@ -173,3 +173,10 @@ height. Four equal columns retain all destination labels at narrow widths. The
 bar includes bottom safe-area padding; the workspace and scroll clearance keep
 final content above it. At 768px and wider, the compact floating navigation
 retains its existing 21px icons and 48px minimum link height.
+
+Route-aware presentation uses matched route names rather than raw URL strings.
+Login case/trailing-slash variants hide workspace navigation before hydration;
+Schedule and duty variants retain the active Schedule tab. Calendar query
+synchronization runs for every matched Schedule variant, including Back/Forward
+history, so the visible month stays aligned with the URL. Existing URL spelling,
+query parameters and history entries remain usable without extra redirects.

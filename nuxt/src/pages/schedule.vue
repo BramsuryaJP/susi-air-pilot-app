@@ -45,13 +45,13 @@ const { data, status, error, refresh } = await useAsyncData(
 watch(
   () => route.query.month,
   () => {
-    if (route.path === '/schedule') selection.selectedMonth = routeMonth();
+    if (route.name === 'schedule') selection.selectedMonth = routeMonth();
   },
 );
 watch(
   () => selection.selectedMonth,
   () => {
-    if (route.path === '/schedule') void refresh({ dedupe: 'cancel' });
+    if (route.name === 'schedule') void refresh({ dedupe: 'cancel' });
   },
 );
 watch(
