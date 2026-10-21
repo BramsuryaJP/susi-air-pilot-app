@@ -68,7 +68,11 @@ Mark the configured business date with both a visible Today label and
 dates stay neutral and announce that no duties are scheduled. Do not infer
 leave, completion, or missing data from a blank cell.
 
-Place the legend below the calendar at every breakpoint. Preserve the
+Place the legend below the date grid inside the same calendar container at every
+breakpoint. A divider separates the legend footer without creating another card.
+Use a compact header with joined native month/year selects and separate circular
+previous/next buttons around This month. Keep the select focus outline inside
+the control bounds. Preserve the
 Month/Year selectors, previous/next buttons, This month action, URL history,
 and fresh monthly API requests. These selectors are a usability enhancement,
 not an additional requirement stated in the brief.

@@ -92,7 +92,7 @@ audit was refreshed separately; its unresolved Nuxt findings remain disclosed.
 
 The dashboard refinement in [PR #11](https://github.com/BramsuryaJP/susi-air-pilot-app/pull/11)
 adds a compact overview, desktop chart/document columns, a shared masthead,
-and a responsive calendar. The legend now sits below it at every width, with
+and a responsive calendar. The legend now sits below the date grid within the same calendar panel at every width, with
 neutral date surfaces and exact-color duty bands. The chart has readable axes, a centered
 Today marker, a separate limit key, and circular 44px range buttons. The
 browser suite now contains **29 journeys**, including guest-only login redirects,
@@ -108,7 +108,8 @@ statuses, keyboard and responsive behavior, removed/invalid sessions, anonymous
 access, and recovery without JavaScript. The "Back to Home" action starts a new
 document so SSR session validation cannot be skipped by the failed router state.
 
-The Schedule month picker adds labelled month/year selects, previous/next controls,
+The Schedule month picker adds compact native month/year selects with accessible
+labels, circular previous/next controls surrounding This month,
 and a return to the API-derived current month. Five additional browser journeys
 cover direct jumps, leap years, URL/history/reload synchronization, quick combined
 selections during session validation, year bounds, keyboard access, reflow, and

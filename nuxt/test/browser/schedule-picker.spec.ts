@@ -120,11 +120,54 @@ test('month picker stays bounded, keyboard accessible, and responsive', async ({
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
+    const panel = page.locator('.schedule-panel');
+    await expect(
+      panel.getByRole('group', { name: 'Calendar month' }),
+    ).toBeVisible();
+    await expect(panel.getByRole('table')).toBeVisible();
+    await expect(
+      panel.getByRole('list', { name: 'Duty legend' }),
+    ).toBeVisible();
+    const toolbar = await panel
+      .getByRole('group', { name: 'Calendar month' })
+      .boundingBox();
+    expect(toolbar!.height).toBeLessThanOrEqual(width >= 768 ? 96 : 160);
+    const previous = await panel
+      .getByRole('button', { name: 'Previous month', exact: true })
+      .boundingBox();
+    const current = await panel
+      .getByRole('button', { name: 'This month', exact: true })
+      .boundingBox();
+    const next = await panel
+      .getByRole('button', { name: 'Next month', exact: true })
+      .boundingBox();
+    expect.soft(previous!.x + previous!.width).toBeLessThanOrEqual(current!.x);
+    expect.soft(current!.x + current!.width).toBeLessThanOrEqual(next!.x);
+    for (const name of ['Previous month', 'Next month', 'This month']) {
+      const target = await panel
+        .getByRole('button', { name, exact: true })
+        .boundingBox();
+      expect(target!.height).toBeGreaterThanOrEqual(44);
+      expect(target!.width).toBeGreaterThanOrEqual(44);
+    }
     for (const name of ['Month', 'Year']) {
       const bounds = await page
         .getByRole('combobox', { name, exact: true })
         .boundingBox();
       expect(bounds!.height).toBeGreaterThanOrEqual(44);
+      const control = page.getByRole('combobox', { name, exact: true });
+      await control.focus();
+      const focus = await control.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          width: parseFloat(style.outlineWidth),
+          offset: parseFloat(style.outlineOffset),
+          style: style.outlineStyle,
+        };
+      });
+      expect(focus.width).toBeGreaterThanOrEqual(2);
+      expect(focus.style).toBe('solid');
+      expect.soft(focus.offset).toBeLessThanOrEqual(-focus.width);
     }
     await page.screenshot({
       path: testInfo.outputPath(`month-picker-${width}.png`),

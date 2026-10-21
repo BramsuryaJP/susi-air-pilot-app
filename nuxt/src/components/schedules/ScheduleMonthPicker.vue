@@ -56,35 +56,45 @@ function choose(month: string | null) {
 
 <template>
   <div class="month-controls" role="group" aria-label="Calendar month">
-    <div class="month-field">
-      <label for="schedule-month">Month</label>
-      <select id="schedule-month" v-model="monthValue" :disabled="!ready">
-        <option
-          v-for="option in months"
-          :key="option.value"
-          :value="option.value"
-        >
-          {{ option.label }}
-        </option>
-      </select>
+    <div class="month-selects">
+      <div class="month-field">
+        <label class="field-label" for="schedule-month">Month</label>
+        <select id="schedule-month" v-model="monthValue" :disabled="!ready">
+          <option
+            v-for="option in months"
+            :key="option.value"
+            :value="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="m6 8 4 4 4-4" />
+        </svg>
+      </div>
+      <div class="month-field year-field">
+        <label class="field-label" for="schedule-year">Year</label>
+        <select id="schedule-year" v-model="yearValue" :disabled="!ready">
+          <option v-for="year in years" :key="year" :value="year">
+            {{ year }}
+          </option>
+        </select>
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="m6 8 4 4 4-4" />
+        </svg>
+      </div>
     </div>
-    <div class="month-field">
-      <label for="schedule-year">Year</label>
-      <select id="schedule-year" v-model="yearValue" :disabled="!ready">
-        <option v-for="year in years" :key="year" :value="year">
-          {{ year }}
-        </option>
-      </select>
-    </div>
-    <div class="month-actions">
+    <div class="month-navigation">
       <button
         type="button"
-        class="secondary-button month-button"
+        class="month-button"
         aria-label="Previous month"
         :disabled="!ready || !previous"
         @click="choose(previous)"
       >
-        <span aria-hidden="true">‹</span>
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="m12 5-5 5 5 5" />
+        </svg>
       </button>
       <button
         type="button"
@@ -96,12 +106,14 @@ function choose(month: string | null) {
       </button>
       <button
         type="button"
-        class="secondary-button month-button"
+        class="month-button"
         aria-label="Next month"
         :disabled="!ready || !next"
         @click="choose(next)"
       >
-        <span aria-hidden="true">›</span>
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="m8 5 5 5-5 5" />
+        </svg>
       </button>
     </div>
     <p v-if="!ready" class="picker-note">
@@ -113,56 +125,104 @@ function choose(month: string | null) {
 <style scoped lang="scss">
 .month-controls {
   display: grid;
-  grid-template-columns: minmax(0, 14rem) minmax(5rem, 8rem) minmax(0, 1fr);
-  align-items: end;
-  gap: 1rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background: var(--surface);
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+  }
+}
+.month-selects {
+  display: grid;
+  grid-template-columns: minmax(0, 10rem) 7rem;
+  background: var(--background);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 12px;
 }
 .month-field {
+  position: relative;
   min-width: 0;
-  label {
-    margin-bottom: 0.4rem;
-    color: var(--muted-on-background);
-    font-size: 0.75rem;
-  }
   select {
+    appearance: none;
     width: 100%;
     min-height: 44px;
-    padding: 0.6rem 0.65rem;
-    border: 1px solid var(--input-border);
+    padding: 0.5rem 2.25rem 0.5rem 0.85rem;
+    border: 0;
     border-radius: 10px;
     color: var(--navy);
-    background: var(--surface);
+    background: transparent;
     font: inherit;
-    font-size: 1rem;
+    font-size: 1.05rem;
+    font-weight: 700;
     cursor: pointer;
     &:disabled {
       cursor: default;
     }
+    &:focus {
+      outline: 2px solid var(--navy);
+      outline-offset: -2px;
+    }
+  }
+  svg {
+    position: absolute;
+    right: 0.65rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-on-background);
   }
 }
-.month-actions {
+.year-field {
+  border-left: 1px solid var(--border);
+}
+.field-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.month-navigation {
   display: flex;
-  justify-self: end;
   align-items: center;
+  justify-self: end;
   gap: 0.5rem;
-  button:disabled {
-    cursor: default;
-  }
 }
 .month-button {
-  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
   padding: 0;
-  font-size: 1.65rem;
-  line-height: 1;
+  border: 1px solid var(--input-border);
+  border-radius: 50%;
+  color: var(--navy);
+  background: var(--surface);
+  cursor: pointer;
+  &:hover:enabled {
+    background: var(--background);
+  }
+  &:disabled {
+    color: var(--muted-on-background);
+    cursor: default;
+  }
 }
 .current-month {
   white-space: nowrap;
   font-size: 0.8rem;
+  &:disabled {
+    cursor: default;
+  }
 }
 .picker-note {
   grid-column: 1 / -1;
@@ -172,10 +232,14 @@ function choose(month: string | null) {
 }
 @media (max-width: 767px) {
   .month-controls {
-    grid-template-columns: minmax(0, 1fr) minmax(5rem, 0.65fr);
-    gap: 0.75rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 0.75rem;
   }
-  .month-actions {
+  .month-selects {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.65fr);
+  }
+  .month-navigation {
     grid-column: 1 / -1;
     justify-self: stretch;
     justify-content: space-between;
