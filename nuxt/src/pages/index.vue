@@ -6,8 +6,6 @@ const MyDocuments = defineAsyncComponent(
 );
 useHead({ title: 'Pilot workspace | Susi Air' });
 const session = useSessionStore();
-const pending = ref(false);
-const errorMessage = ref('');
 const hours = computed(() =>
   new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(
     session.profile?.totalFlightHours ?? 0,
@@ -22,19 +20,6 @@ const today = computed(() =>
     : '',
 );
 
-async function signOut() {
-  if (pending.value) return;
-  pending.value = true;
-  errorMessage.value = '';
-  try {
-    await session.signOut();
-    await navigateTo('/login', { replace: true });
-  } catch {
-    errorMessage.value = 'Sign out could not be completed. Please try again.';
-  } finally {
-    pending.value = false;
-  }
-}
 </script>
 
 <template>
@@ -44,16 +29,7 @@ async function signOut() {
     class="workspace-shell dashboard-shell"
     tabindex="-1"
   >
-    <WorkspaceHeader>
-      <template #actions>
-        <button class="secondary-button" :disabled="pending" @click="signOut">
-          {{ pending ? 'Signing out' : 'Sign out' }}
-        </button>
-      </template>
-    </WorkspaceHeader>
-    <p v-if="errorMessage" class="error-message" role="alert">
-      {{ errorMessage }}
-    </p>
+    <WorkspaceHeader />
     <section
       class="profile-panel pilot-overview"
       aria-labelledby="pilot-greeting"

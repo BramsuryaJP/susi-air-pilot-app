@@ -187,3 +187,12 @@ through reload while the session is rejected and clears on successful login or
 explicit logout. New visitors and users who sign out manually do not receive a
 misleading expiry message. No transient toast, animation or extra request is
 required for the notice.
+
+## Shared sign-out action
+
+Sign out appears in the shared masthead on every authenticated workspace page,
+including Schedule, the required duty-detail placeholder, Logbook, and More.
+It retains the existing visible label, minimum 44px control height, pill shape,
+and contrasting focus indicator. The action waits for hydration, prevents
+repeated writes while pending, and shows an accessible error below the header
+if logout fails. Guest and error screens keep the brand-only masthead.

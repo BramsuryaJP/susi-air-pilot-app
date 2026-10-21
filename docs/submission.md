@@ -96,7 +96,7 @@ adds a compact overview, desktop chart/document columns, a shared masthead,
 and a responsive calendar. The legend now sits below the date grid within the same calendar panel at every width, with
 neutral date surfaces and exact-color duty bands. The chart has readable axes, a centered
 Today marker, a separate limit key, and circular 44px range buttons. The
-browser suite now contains **39 journeys**, including guest-only login redirects,
+browser suite now contains **42 journeys**, including guest-only login redirects,
 browser-back navigation, expired-session rejection, and chart-label separation
 at all five ranges and four widths, desktop/mobile layout, and exact table
 values for an above-scale projection. The original login, API, and domain
@@ -170,3 +170,10 @@ a new cookie is issued, then verify that the late rejection cannot remove it.
 Backend HTTP cases check security headers before healthy, unauthorized and
 missing-route responses. Historical release results above retain their original
 counts and behavior; current cookie-write policy is described in authentication.
+
+Three shared-sign-out journeys cover Home, Schedule, duty details, Logbook,
+and More at mobile/desktop widths, successful cookie removal and protected-page
+rejection, failure/retry and duplicate writes, and server rendering before
+hydration. Guest and error pages do not expose the sign-out control. The duty
+placeholder still reads "Detail page coming soon", as explicitly requested by
+the brief; a complete duty-detail feature remains outside its scope.
