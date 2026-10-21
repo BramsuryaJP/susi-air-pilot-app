@@ -23,6 +23,7 @@ export default defineConfig({
         '**/route-privacy.spec.ts',
         '**/session-security.spec.ts',
         '**/schedules.spec.ts',
+        '**/sign-out.spec.ts',
       ],
       outputDir: './test-results/workspace',
     },
@@ -60,6 +61,11 @@ export default defineConfig({
       name: 'session-security',
       testMatch: '**/session-security.spec.ts',
       outputDir: './test-results/session-security',
+    },
+    {
+      name: 'sign-out',
+      testMatch: '**/sign-out.spec.ts',
+      outputDir: './test-results/sign-out',
     },
   ],
   webServer: [

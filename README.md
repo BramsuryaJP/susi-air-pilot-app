@@ -187,8 +187,8 @@ npm run test:e2e
 ```
 
 The browser suite starts and stops its own production servers on ports 4310/4311.
-Workspace, error-recovery, schedule-picker, schedule-calendar, unavailable-page, chart-interaction, route-privacy, and session-security
-projects run in separate invocations
+Workspace, error-recovery, schedule-picker, schedule-calendar, unavailable-page,
+chart-interaction, route-privacy, session-security, and sign-out projects run in separate invocations
 so real session checks stay within the unchanged production rate limits. Run all with
 `npm run test:e2e`; their screenshots and traces use separate output folders.
 Run build checks in a separate checkout if a Nuxt development server is active;

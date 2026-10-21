@@ -68,7 +68,12 @@ function move(month: string) {
 </script>
 
 <template>
-  <main id="main-content" class="workspace-shell schedule-shell" tabindex="-1">
+  <main
+    v-if="session.profile"
+    id="main-content"
+    class="workspace-shell schedule-shell"
+    tabindex="-1"
+  >
     <WorkspaceHeader />
     <header class="schedule-intro">
       <h1>Schedule</h1>

@@ -1,13 +1,52 @@
+<script setup lang="ts">
+const session = useSessionStore();
+const pageError = useError();
+const ready = ref(false);
+const pending = ref(false);
+const errorMessage = ref('');
+const showSignOut = computed(() => session.profile !== null && !pageError.value);
+
+onMounted(() => {
+  ready.value = true;
+});
+
+async function signOut() {
+  if (!ready.value || pending.value || !session.profile) return;
+  pending.value = true;
+  errorMessage.value = '';
+  try {
+    await session.signOut();
+    await navigateTo('/login', { replace: true });
+  } catch {
+    errorMessage.value = 'Sign out could not be completed. Please try again.';
+  } finally {
+    pending.value = false;
+  }
+}
+</script>
+
 <template>
   <header class="workspace-masthead">
     <div class="workspace-brand">
       <BrandMark />
       <span>Pilot workspace</span>
     </div>
-    <div v-if="$slots.actions" class="workspace-actions">
+    <div v-if="$slots.actions || showSignOut" class="workspace-actions">
       <slot name="actions" />
+      <button
+        v-if="showSignOut"
+        type="button"
+        class="secondary-button"
+        :disabled="!ready || pending"
+        @click="signOut"
+      >
+        {{ pending ? 'Signing out' : 'Sign out' }}
+      </button>
     </div>
   </header>
+  <p v-if="errorMessage" class="error-message" role="alert">
+    {{ errorMessage }}
+  </p>
 </template>
 
 <style scoped lang="scss">

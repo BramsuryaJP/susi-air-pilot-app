@@ -195,3 +195,19 @@ Regression coverage includes late API and SSR 401 responses after a new login,
 read-only session rejection, actual browser cookie retention, hint-only rejection,
 SSR/client expiry notices, manual logout and delayed client failures, fresh
 nonces, normal hydration under CSP, and blocking of an injected inline script.
+
+## Shared workspace sign-out
+
+The shared workspace header provides Sign out on Home, Schedule, duty details,
+Logbook, and More. Each page uses the same existing session-store action and
+same-origin logout endpoint. Guest and error screens do not expose the action.
+The button is disabled until hydration and while a request is pending. A failed
+request leaves the current session in place and shows an accessible retry
+message; successful manual logout clears both cookies and redirects to sign-in
+without an expiry notice. Schedule stops rendering its profile-dependent content
+when logout clears the profile, avoiding a null-profile render during navigation.
+
+Three browser journeys exercise every workspace page at mobile and desktop
+widths, session/cookie removal, duplicate-click protection, failure/retry,
+hydration readiness, and guest/error-page behavior. They run in their own
+fresh-server project to preserve production rate limits.
