@@ -179,7 +179,7 @@ useHead(() => ({
   font-weight: 700;
   text-decoration: none;
   &:hover {
-    background: #c92343;
+    background: var(--red-hover);
   }
 }
 @media (max-width: 640px) {

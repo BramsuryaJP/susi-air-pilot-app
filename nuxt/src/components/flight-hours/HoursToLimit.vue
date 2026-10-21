@@ -249,6 +249,7 @@ watch(
     border-radius: 50%;
     font-size: 0.75rem;
     &[aria-pressed='true'] {
+      --focus-color: var(--surface);
       background: var(--navy);
       color: #fff;
       font-weight: 700;

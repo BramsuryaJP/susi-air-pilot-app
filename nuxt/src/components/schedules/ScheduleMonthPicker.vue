@@ -166,10 +166,6 @@ function choose(month: string | null) {
     &:disabled {
       cursor: default;
     }
-    &:focus {
-      outline: 2px solid var(--navy);
-      outline-offset: -2px;
-    }
   }
   svg {
     position: absolute;

@@ -12,6 +12,7 @@
 
 <style scoped lang="scss">
 .workspace-masthead {
+  --focus-color: var(--surface);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -41,9 +42,6 @@
     color: var(--surface);
     &:hover:enabled {
       background: #ffffff15;
-    }
-    &:focus-visible {
-      outline-color: var(--surface);
     }
   }
 }
