@@ -15,7 +15,7 @@ total hours, and business date together above the limit cards. At desktop
 widths, the flight trend and documents sit side by side; below 1024px they
 return to a single reading column. Document dates and urgency labels stay
 visible together without opening a detail screen. The calendar places its
-legend below the month at every width. Neutral date surfaces contain compact
+legend below the month inside the same calendar panel at every width. Neutral date surfaces contain compact
 duty bands in the original API colors, with visible duty codes and base names.
 
 Navigation uses a compact floating bar on desktop and a bottom bar on narrow
@@ -49,9 +49,11 @@ The error composition places recovery copy beside a local SVG flight-path
 illustration on desktop and stacks it on narrow screens. The illustration is
 decorative and adds no external requests or dependency.
 
-Schedule uses native Month and Year selects with visible labels and 44px minimum
-control heights. Previous/next actions and "This month" sit beside them on desktop
-and in a separate row on mobile. The year options stay bounded around the selected
+Schedule uses compact native Month and Year selects with accessible labels,
+custom decorative chevrons, and 44px minimum control heights. The joined selects
+and grouped previous/next buttons form the calendar header; "This month" is a
+separate action. Controls reflow into two rows on mobile. The header, date grid,
+status key, and legend share one bordered panel, with a divider above the legend. The year options stay bounded around the selected
 year rather than rendering thousands of DOM nodes. The calendar, its API colors,
 and the legend below it retain all API information. The [calendar design rationale](calendar-design.md)
 distinguishes the brief's requirements from the presentation choices and records

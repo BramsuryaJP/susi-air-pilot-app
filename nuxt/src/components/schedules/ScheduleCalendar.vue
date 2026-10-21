@@ -39,86 +39,82 @@ function dayLabel(date: string): string {
 </script>
 
 <template>
-  <div class="schedule-body">
-    <div class="calendar-main">
-      <div class="calendar-card">
-        <table
-          class="calendar-grid"
-          :aria-label="monthLabel"
-          :data-calendar-month="`${schedule.year}-${String(schedule.month).padStart(2, '0')}`"
-        >
-          <thead>
-            <tr>
-              <th v-for="weekday in weekdays" :key="weekday" scope="col">
-                {{ weekday }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(week, index) in weeks" :key="index">
-              <td
-                v-for="(date, column) in week"
-                :key="date ?? `padding-${column}`"
-                :aria-hidden="!date || undefined"
-              >
-                <NuxtLink
-                  v-if="date"
-                  class="day-link"
-                  :to="`/duty/${date}`"
-                  :prefetch="false"
-                  :data-date="date"
-                  :aria-label="dayLabel(date)"
-                  :aria-current="date === schedule.today ? 'date' : undefined"
+  <div class="calendar-card">
+    <table
+      class="calendar-grid"
+      :aria-label="monthLabel"
+      :data-calendar-month="`${schedule.year}-${String(schedule.month).padStart(2, '0')}`"
+    >
+      <thead>
+        <tr>
+          <th v-for="weekday in weekdays" :key="weekday" scope="col">
+            {{ weekday }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(week, index) in weeks" :key="index">
+          <td
+            v-for="(date, column) in week"
+            :key="date ?? `padding-${column}`"
+            :aria-hidden="!date || undefined"
+          >
+            <NuxtLink
+              v-if="date"
+              class="day-link"
+              :to="`/duty/${date}`"
+              :prefetch="false"
+              :data-date="date"
+              :aria-label="dayLabel(date)"
+              :aria-current="date === schedule.today ? 'date' : undefined"
+            >
+              <span class="day-heading">
+                <span class="day-number">{{ Number(date.slice(8)) }}</span>
+                <span
+                  v-if="entries.has(date)"
+                  class="duty-badge"
+                  :data-complete="entries.get(date)!.isComplete"
+                  aria-hidden="true"
+                  >{{
+                    entries.get(date)!.isComplete
+                      ? '✓'
+                      : entries.get(date)!.remainingDuties
+                  }}</span
                 >
-                  <span class="day-heading">
-                    <span class="day-number">{{ Number(date.slice(8)) }}</span>
-                    <span
-                      v-if="entries.has(date)"
-                      class="duty-badge"
-                      :data-complete="entries.get(date)!.isComplete"
-                      aria-hidden="true"
-                      >{{
-                        entries.get(date)!.isComplete
-                          ? '✓'
-                          : entries.get(date)!.remainingDuties
-                      }}</span
-                    >
-                  </span>
-                  <span
-                    v-if="date === schedule.today"
-                    class="today-label"
-                    aria-hidden="true"
-                    >Today</span
-                  >
-                  <span
-                    v-if="entries.has(date)"
-                    class="duty-event"
-                    :style="{
-                      backgroundColor: entries.get(date)!.base_color,
-                      color: calendarTextColor(entries.get(date)!.base_color),
-                    }"
-                  >
-                    <span class="duty-type">{{
-                      entries.get(date)!.duty_type
-                    }}</span>
-                    <span class="base-name">{{
-                      entries.get(date)!.base_name
-                    }}</span>
-                  </span>
-                </NuxtLink>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p class="calendar-key">
-          A tick means all duties are logged. Numbers show remaining duties.
-          Today is labelled and outlined.
-        </p>
-      </div>
-      <p v-if="!schedule.schedules.length" class="empty-month" role="status">
-        No duties scheduled for this month.
-      </p>
-    </div>
+              </span>
+              <span
+                v-if="date === schedule.today"
+                class="today-label"
+                aria-hidden="true"
+                >Today</span
+              >
+              <span
+                v-if="entries.has(date)"
+                class="duty-event"
+                :style="{
+                  backgroundColor: entries.get(date)!.base_color,
+                  color: calendarTextColor(entries.get(date)!.base_color),
+                }"
+              >
+                <span class="duty-type">{{
+                  entries.get(date)!.duty_type
+                }}</span>
+                <span class="base-name">{{
+                  entries.get(date)!.base_name
+                }}</span>
+              </span>
+            </NuxtLink>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="calendar-key">
+      A tick means all duties are logged. Numbers show remaining duties. Today
+      is labelled and outlined.
+    </p>
+    <p v-if="!schedule.schedules.length" class="empty-month" role="status">
+      No duties scheduled for this month.
+    </p>
     <section class="legend-panel" aria-labelledby="legend-title">
       <h2 id="legend-title">Duty legend</h2>
       <ul class="legend-list" aria-label="Duty legend">
@@ -139,19 +135,8 @@ function dayLabel(date: string): string {
 </template>
 
 <style scoped lang="scss">
-.schedule-body {
-  display: grid;
-  gap: 1.5rem;
-  align-items: start;
-}
-.calendar-main {
-  min-width: 0;
-}
 .calendar-card {
   padding: 0.65rem 0.45rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
 }
 .calendar-grid {
   width: 100%;
@@ -250,16 +235,15 @@ function dayLabel(date: string): string {
   font-size: 0.75rem;
 }
 .empty-month {
-  margin: 1rem 0 0;
+  margin: 1rem 0.5rem;
   color: var(--muted-on-background);
   font-size: 0.85rem;
 }
 .legend-panel {
   min-width: 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1.25rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 0.75rem 0.5rem;
   h2 {
     font-size: 1rem;
     margin: 0 0 1.25rem;
@@ -299,9 +283,6 @@ function dayLabel(date: string): string {
   }
 }
 @media (max-width: 640px) {
-  .schedule-body {
-    gap: 1.25rem;
-  }
   .day-link {
     min-height: 96px;
     padding: 0.35rem 0.2rem;
@@ -340,7 +321,7 @@ function dayLabel(date: string): string {
     padding: 0.5rem 0.25rem;
   }
   .legend-panel {
-    padding: 1rem;
+    padding: 1rem 0.5rem 0.5rem;
   }
   .legend-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));

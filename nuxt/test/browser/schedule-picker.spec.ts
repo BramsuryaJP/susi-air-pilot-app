@@ -120,6 +120,25 @@ test('month picker stays bounded, keyboard accessible, and responsive', async ({
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
+    const panel = page.locator('.schedule-panel');
+    await expect(
+      panel.getByRole('group', { name: 'Calendar month' }),
+    ).toBeVisible();
+    await expect(panel.getByRole('table')).toBeVisible();
+    await expect(
+      panel.getByRole('list', { name: 'Duty legend' }),
+    ).toBeVisible();
+    const toolbar = await panel
+      .getByRole('group', { name: 'Calendar month' })
+      .boundingBox();
+    expect(toolbar!.height).toBeLessThanOrEqual(width >= 768 ? 96 : 160);
+    for (const name of ['Previous month', 'Next month', 'This month']) {
+      const target = await panel
+        .getByRole('button', { name, exact: true })
+        .boundingBox();
+      expect(target!.height).toBeGreaterThanOrEqual(44);
+      expect(target!.width).toBeGreaterThanOrEqual(44);
+    }
     for (const name of ['Month', 'Year']) {
       const bounds = await page
         .getByRole('combobox', { name, exact: true })

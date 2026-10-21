@@ -74,7 +74,11 @@ function move(month: string) {
       <h1>Schedule</h1>
       <p class="muted">Your duty calendar and logbook status.</p>
     </header>
-    <section aria-labelledby="month-title" :aria-busy="status === 'pending'">
+    <section
+      class="schedule-panel"
+      aria-labelledby="month-title"
+      :aria-busy="status === 'pending'"
+    >
       <h2 id="month-title" class="month-title" aria-live="polite">
         {{ monthLabel }}
       </h2>
@@ -143,10 +147,12 @@ function move(month: string) {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-.schedule-message {
+.schedule-panel {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
+}
+.schedule-message {
   padding: 2rem 1.5rem;
   color: var(--muted);
 }

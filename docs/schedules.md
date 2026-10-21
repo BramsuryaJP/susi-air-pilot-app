@@ -41,7 +41,7 @@ prevents an earlier response from replacing the latest selection. Old calendar
 content is hidden while loading or after failure; retry reloads the selected
 month without changing it.
 
-The month picker provides native, labelled Month and Year selects alongside
+The month picker provides compact native Month and Year selects with accessible labels alongside
 previous/next controls and "This month". The latter uses the API business date,
 not the device clock. The year list contains the selected year and up to ten
 years on either side, bounded to 1000–9999, plus the current business year when
@@ -61,7 +61,9 @@ from the API. Today is marked with `aria-current="date"` and a red outline.
 The date surface stays neutral; a compact duty band preserves each exact API
 `base_color` and shows the duty code and base name. Band text selects a foreground
 meeting at least 4.5:1 contrast without altering the supplied fill. Today also has
-a visible label. The legend appears below the calendar at all widths, as required.
+a visible label. The legend appears below the date grid at all widths, as required.
+The toolbar, grid, status key, and legend share a single calendar container. A
+thin divider separates the legend footer; it does not have a second card border.
 See the [calendar design rationale](calendar-design.md) for the researched basis
 and the distinction between requirements and presentation choices.
 
