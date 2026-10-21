@@ -58,8 +58,8 @@ status key, and legend share one bordered panel, with a divider above the legend
 year rather than rendering thousands of DOM nodes. The calendar, its API colors,
 and the legend below it retain all API information. The [calendar design rationale](calendar-design.md)
 distinguishes the brief's requirements from the presentation choices and records
-the primary accessibility/design sources. Today has both a visible label and
-an outline; completion ticks/counts remain separate from duty type. Text uses
+the primary accessibility/design sources. Today has a red outline and
+`aria-current="date"`; completion ticks/counts remain separate from duty type. Text uses
 a measured foreground, with a black fallback when navy and white both fall
 below 4.5:1 contrast on a supplied duty color.
 
