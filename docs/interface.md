@@ -142,3 +142,28 @@ with visible text and quiet status pills. Today has a labelled date and a subtle
 row highlight. All 15 supplied values remain available, including above-scale
 projections, with the same one-decimal precision. The table stays in the normal
 page scroll flow and reflows down to 320px without an inner scrolling region.
+
+## Chart inspection
+
+The chart exposes a nearest-date tooltip across its plot area, with a guide line,
+active point, full date, exact one-decimal hours, and Recorded/Planned status.
+Today and values above the scale remain explicit. The tooltip stays inside the
+plot at narrow widths and edge dates, can itself be hovered, and closes with
+Escape or pointer leave. A tap selects a date; tapping outside dismisses it.
+
+The plot has one keyboard focus target using the shared inset style. Left/Right
+select dates, Home/End select the edges, and Escape closes the tooltip. A polite
+status announces keyboard selections; the semantic daily-values table remains
+available. Range/data changes reset inspection. Event listeners are removed on
+unmount, hover sends no API requests, and pointer movement updates only the
+selected date. Native touch scrolling is not prevented. The implementation
+stays inside the existing lazy chart component without a charting dependency.
+
+The additional interaction journeys run in their own browser-project invocation
+with fresh servers, preserving the production request/login rate limits while
+exercising every range at four widths.
+
+Chart inspection becomes focusable and pointer-enabled only after its client
+handlers mount. Until then the static SVG and native daily-value disclosure
+remain available. Tap selections ignore touch pointer-leave events, so contact
+ending after a tap does not dismiss the chosen date.

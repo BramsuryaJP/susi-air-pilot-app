@@ -19,6 +19,7 @@ export default defineConfig({
         '**/errors.spec.ts',
         '**/schedule-picker.spec.ts',
         '**/unavailable.spec.ts',
+        '**/chart-interaction.spec.ts',
       ],
       outputDir: './test-results/workspace',
     },
@@ -36,6 +37,11 @@ export default defineConfig({
       name: 'unavailable',
       testMatch: '**/unavailable.spec.ts',
       outputDir: './test-results/unavailable',
+    },
+    {
+      name: 'chart-interaction',
+      testMatch: '**/chart-interaction.spec.ts',
+      outputDir: './test-results/chart-interaction',
     },
   ],
   webServer: [

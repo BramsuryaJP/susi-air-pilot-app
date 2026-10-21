@@ -1,7 +1,122 @@
 <script setup lang="ts">
-import type { FlightSummary } from '../../../shared/types/flight-hours';
+import { useId } from 'vue';
+import type {
+  FlightPoint,
+  FlightSummary,
+} from '../../../shared/types/flight-hours';
 
 const props = defineProps<{ summary: FlightSummary }>();
+const ready = ref(false);
+const plot = ref<HTMLDivElement | null>(null);
+const tooltip = ref<HTMLDivElement | null>(null);
+const interactionId = useId();
+const helpId = `${interactionId}-help`;
+const activeIndex = ref<number | null>(null);
+const selectedIndex = ref(7);
+const inputMode = ref<'keyboard' | 'pointer' | null>(null);
+const activePoint = computed(() =>
+  activeIndex.value === null
+    ? null
+    : (props.summary.series[activeIndex.value] ?? null),
+);
+const pointDateFormatter = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const pointDate = (date: string) =>
+  pointDateFormatter.format(new Date(`${date}T00:00:00Z`));
+const pointLabel = (point: FlightPoint) =>
+  `${pointDate(point.date)}, ${point.hours.toFixed(1)} hours, ${point.isProjection ? 'Planned' : 'Recorded'}${point.isToday ? ', Today' : ''}`;
+
+function selectPoint(index: number, mode: 'keyboard' | 'pointer') {
+  if (!props.summary.series.length) return;
+  selectedIndex.value = Math.min(
+    props.summary.series.length - 1,
+    Math.max(0, index),
+  );
+  inputMode.value = mode;
+  activeIndex.value = selectedIndex.value;
+}
+function clearInspection() {
+  activeIndex.value = null;
+}
+function isTooltipTarget(event: Event): boolean {
+  return (
+    event.target instanceof Node && !!tooltip.value?.contains(event.target)
+  );
+}
+function inspectPointer(event: MouseEvent | PointerEvent) {
+  if (!plot.value || isTooltipTarget(event)) return;
+  const bounds = plot.value.getBoundingClientRect();
+  if (!bounds.width) return;
+  // Match the plot's 2%-98% date domain, including its edge padding.
+  const index = Math.round(
+    (((event.clientX - bounds.left) / bounds.width - 0.02) / 0.96) * 14,
+  );
+  selectPoint(index, 'pointer');
+}
+function hoverPoint(event: PointerEvent) {
+  if (event.pointerType !== 'touch') inspectPointer(event);
+}
+function leavePlot(event: PointerEvent) {
+  if (event.pointerType !== 'touch' && inputMode.value === 'pointer')
+    clearInspection();
+}
+function inspectKey(event: KeyboardEvent) {
+  if (event.altKey || event.ctrlKey || event.metaKey) return;
+  let index = selectedIndex.value;
+  switch (event.key) {
+    case 'ArrowLeft':
+      index--;
+      break;
+    case 'ArrowRight':
+      index++;
+      break;
+    case 'Home':
+      index = 0;
+      break;
+    case 'End':
+      index = props.summary.series.length - 1;
+      break;
+    case 'Enter':
+    case ' ':
+      break;
+    case 'Escape':
+      clearInspection();
+      event.preventDefault();
+      return;
+    default:
+      return;
+  }
+  event.preventDefault();
+  selectPoint(index, 'keyboard');
+}
+function dismissOutside(event: PointerEvent) {
+  if (event.target instanceof Node && !plot.value?.contains(event.target))
+    clearInspection();
+}
+function dismissEscape(event: KeyboardEvent) {
+  if (event.key === 'Escape') clearInspection();
+}
+watch(
+  () => props.summary,
+  () => {
+    clearInspection();
+    selectedIndex.value = 7;
+    inputMode.value = null;
+  },
+);
+onMounted(() => {
+  document.addEventListener('pointerdown', dismissOutside);
+  document.addEventListener('keydown', dismissEscape);
+  ready.value = true;
+});
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', dismissOutside);
+  document.removeEventListener('keydown', dismissEscape);
+});
 const x = (index: number) => 2 + (index / 14) * 96;
 const y = (hours: number) =>
   95 - (Math.min(hours, props.summary.yMax) / props.summary.yMax) * 90;
@@ -62,90 +177,141 @@ const formatDate = (date: string) =>
         >
       </div>
       <div class="plot-column">
-        <svg
-          class="chart-plot"
-          role="img"
-          aria-label="Rolling flight hours for seven days before and after today"
-          data-testid="flight-chart"
-          :data-range="summary.range"
-          :data-y-max="summary.yMax"
+        <div
+          ref="plot"
+          class="chart-interaction"
+          role="group"
+          aria-label="Explore flight-hour values"
+          :aria-describedby="helpId"
+          :tabindex="ready ? 0 : -1"
+          :aria-disabled="!ready"
+          @focus="selectPoint(selectedIndex, 'keyboard')"
+          @blur="clearInspection"
+          @pointermove="hoverPoint"
+          @pointerleave="leavePlot"
+          @pointercancel="clearInspection"
+          @click="inspectPointer"
+          @keydown="inspectKey"
         >
-          <title>{{ summary.windowDays }}-day rolling flight hours</title>
-          <desc>
-            Cyan shows hours through today. Dashed navy shows planned
-            projections. The shaded right half shows future dates. The red line
-            marks the
-            {{ summary.limit }}-hour limit. All values are available in the
-            table below.
-          </desc>
-          <rect
-            class="projection-area"
-            x="50%"
-            y="5%"
-            width="48%"
-            height="90%"
-          />
-          <line
-            v-for="tick in ticks"
-            :key="tick"
-            class="chart-grid"
-            x1="2%"
-            x2="98%"
-            :y1="`${y(tick)}%`"
-            :y2="`${y(tick)}%`"
-          />
           <svg
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            width="100%"
-            height="100%"
-            aria-hidden="true"
+            class="chart-plot"
+            role="img"
+            aria-label="Rolling flight hours for seven days before and after today"
+            data-testid="flight-chart"
+            :data-range="summary.range"
+            :data-y-max="summary.yMax"
           >
-            <polygon
-              class="actual-area"
-              :points="`${x(0)},95 ${actual} ${x(7)},95`"
-            />
-            <polyline class="actual-line" :points="actual" />
-            <polyline class="planned-line" :points="planned" />
-          </svg>
-          <line
-            class="limit-line"
-            x1="2%"
-            x2="98%"
-            :y1="`${y(summary.limit)}%`"
-            :y2="`${y(summary.limit)}%`"
-          />
-          <line class="today-line" x1="50%" x2="50%" y1="5%" y2="95%" />
-          <g v-for="(point, index) in summary.series" :key="point.date">
-            <circle
-              :cx="`${x(index)}%`"
-              :cy="`${y(point.hours)}%`"
-              :r="point.isToday ? 5 : 3"
-              :class="{ 'planned-point': point.isProjection }"
-            >
-              <title>
-                {{ formatDate(point.date) }}: {{ point.hours }} hours{{
-                  point.isProjection ? ' (planned)' : ''
-                }}
-              </title>
-            </circle>
-            <svg
-              v-if="point.hours > summary.yMax"
-              :x="`${x(index)}%`"
+            <title>{{ summary.windowDays }}-day rolling flight hours</title>
+            <desc>
+              Cyan shows hours through today. Dashed navy shows planned
+              projections. The shaded right half shows future dates. The red
+              line marks the
+              {{ summary.limit }}-hour limit. All values are available in the
+              table below.
+            </desc>
+            <rect
+              class="projection-area"
+              x="50%"
               y="5%"
-              width="1"
-              height="1"
-              overflow="visible"
+              width="48%"
+              height="90%"
+            />
+            <line
+              v-for="tick in ticks"
+              :key="tick"
+              class="chart-grid"
+              x1="2%"
+              x2="98%"
+              :y1="`${y(tick)}%`"
+              :y2="`${y(tick)}%`"
+            />
+            <svg
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              width="100%"
+              height="100%"
+              aria-hidden="true"
             >
-              <path class="overflow-point" d="M -5 8 L 0 0 L 5 8 Z">
-                <title>
-                  {{ point.hours }} hours exceeds the chart scale; see the daily
-                  values.
-                </title>
-              </path>
+              <polygon
+                class="actual-area"
+                :points="`${x(0)},95 ${actual} ${x(7)},95`"
+              />
+              <polyline class="actual-line" :points="actual" />
+              <polyline class="planned-line" :points="planned" />
             </svg>
-          </g>
-        </svg>
+            <line
+              class="limit-line"
+              x1="2%"
+              x2="98%"
+              :y1="`${y(summary.limit)}%`"
+              :y2="`${y(summary.limit)}%`"
+            />
+            <line class="today-line" x1="50%" x2="50%" y1="5%" y2="95%" />
+            <line
+              v-if="activeIndex !== null"
+              class="inspection-line"
+              :x1="`${x(activeIndex)}%`"
+              :x2="`${x(activeIndex)}%`"
+              y1="5%"
+              y2="95%"
+            />
+            <g v-for="(point, index) in summary.series" :key="point.date">
+              <circle
+                :cx="`${x(index)}%`"
+                :cy="`${y(point.hours)}%`"
+                :r="activeIndex === index ? 6 : point.isToday ? 5 : 3"
+                :class="{
+                  'planned-point': point.isProjection,
+                  'active-point': activeIndex === index,
+                }"
+              >
+                <title>
+                  {{ formatDate(point.date) }}: {{ point.hours }} hours{{
+                    point.isProjection ? ' (planned)' : ''
+                  }}
+                </title>
+              </circle>
+              <svg
+                v-if="point.hours > summary.yMax"
+                :x="`${x(index)}%`"
+                y="5%"
+                width="1"
+                height="1"
+                overflow="visible"
+              >
+                <path class="overflow-point" d="M -5 8 L 0 0 L 5 8 Z">
+                  <title>
+                    {{ point.hours }} hours exceeds the chart scale; see the
+                    daily values.
+                  </title>
+                </path>
+              </svg>
+            </g>
+          </svg>
+          <div
+            v-if="activePoint && activeIndex !== null"
+            ref="tooltip"
+            class="chart-tooltip"
+            :class="{ 'tooltip-below': y(activePoint.hours) < 50 }"
+            role="tooltip"
+            :style="{
+              left: `clamp(0.5rem, calc(${x(activeIndex)}% - 4.75rem), calc(100% - 10rem))`,
+              top: `${y(activePoint.hours)}%`,
+            }"
+          >
+            <p class="tooltip-date">{{ pointDate(activePoint.date) }}</p>
+            <strong class="tooltip-hours"
+              >{{ activePoint.hours.toFixed(1) }} h</strong
+            >
+            <p class="tooltip-status">
+              {{ activePoint.isProjection ? 'Planned' : 'Recorded'
+              }}<span v-if="activePoint.isToday"> (Today)</span>
+            </p>
+            <p v-if="activePoint.hours > summary.yMax" class="tooltip-note">
+              Above chart scale
+            </p>
+          </div>
+        </div>
         <div class="date-axis" aria-hidden="true">
           <span
             v-for="index in dateIndices"
@@ -163,6 +329,23 @@ const formatDate = (date: string) =>
         </div>
       </div>
     </div>
+    <p :id="helpId" class="inspection-help">
+      Hover, tap, or use arrow keys to inspect a date.
+      <span class="chart-sr-only"
+        >Home and End select the first and last dates. Escape closes the
+        tooltip.</span
+      >
+    </p>
+    <p
+      class="chart-announcement chart-sr-only"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      {{
+        inputMode === 'keyboard' && activePoint ? pointLabel(activePoint) : ''
+      }}
+    </p>
     <div class="chart-legend" aria-hidden="true">
       <span><i class="actual-key" />Recorded</span>
       <span><i class="planned-key" />Planned</span>
@@ -280,11 +463,79 @@ const formatDate = (date: string) =>
     transform: translateY(-50%);
   }
 }
+.chart-interaction {
+  position: relative;
+  border-radius: 8px;
+  cursor: crosshair;
+  &[aria-disabled='true'] {
+    pointer-events: none;
+  }
+}
 .chart-plot {
+  pointer-events: none;
   display: block;
   width: 100%;
   height: 240px;
   overflow: visible;
+}
+.inspection-line {
+  stroke: var(--navy);
+  stroke-opacity: 0.6;
+  stroke-dasharray: 3 4;
+}
+.chart-tooltip {
+  position: absolute;
+  z-index: 2;
+  width: min(9.5rem, calc(100% - 1rem));
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--navy);
+  box-shadow: 0 6px 20px #0e21381a;
+  transform: translateY(calc(-100% - 0.75rem));
+  cursor: default;
+  line-height: 1.4;
+  p {
+    margin: 0;
+  }
+  &.tooltip-below {
+    transform: translateY(0.75rem);
+  }
+}
+.tooltip-date {
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.tooltip-hours {
+  display: block;
+  margin: 0.25rem 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+.tooltip-status,
+.tooltip-note {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.chart-tooltip .tooltip-note {
+  margin-top: 0.25rem;
+  color: var(--danger-text);
+}
+.inspection-help {
+  margin: 0 0 0.75rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.chart-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .projection-area {
   fill: #f5f6f8;
@@ -326,6 +577,10 @@ circle {
 }
 .planned-point {
   fill: var(--navy);
+}
+.active-point {
+  stroke: var(--navy);
+  stroke-width: 2;
 }
 .overflow-point {
   fill: var(--red);
