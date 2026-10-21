@@ -81,7 +81,46 @@ test('pilot interface loads local brand assets and remains usable across screen 
   }
   await context.addCookies(pilotState.cookies);
   for (const path of ['/', '/schedule', '/duty/2026-05-15']) {
-    await page.goto(path);
+    const response = await page.goto(path);
+    // Icons must be present in SSR HTML, before any client-side enhancement.
+    expect(/class="[^"]*\blucide\b/.test(await response!.text())).toBe(true);
+    const navigation = page.getByRole('navigation', {
+      name: 'Main navigation',
+    });
+    for (const name of ['Home', 'Schedule', 'Logbook', 'More']) {
+      const link = navigation.getByRole('link', { name, exact: true });
+      const icon = link.locator('svg.lucide');
+      await expect(icon).toHaveCount(1);
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+      await expect(icon).toHaveAttribute('focusable', 'false');
+      await expect(icon).not.toHaveAttribute('tabindex');
+    }
+    if (path === '/') {
+      await expect(
+        page.getByRole('button', { name: 'Refresh documents' })
+          .locator('svg.lucide'),
+      ).toHaveCount(1);
+      await expect(
+        page.locator('.chart-values summary svg.lucide'),
+      ).toHaveCount(1);
+    }
+    if (path === '/schedule') {
+      for (const name of ['Previous month', 'Next month']) {
+        await expect(
+          page.getByRole('button', { name, exact: true })
+            .locator('svg.lucide'),
+        ).toHaveCount(1);
+      }
+      await expect(
+        page.locator('.month-field svg.lucide'),
+      ).toHaveCount(2);
+      await expect(
+        page.locator('[data-date="2026-05-15"] .duty-badge svg.lucide'),
+      ).toHaveCount(1);
+      await expect(
+        page.locator('[data-date="2026-05-15"]'),
+      ).toHaveAccessibleName(/all duties logged/);
+    }
     await expect(logo).toBeVisible();
     expect(
       await logo.evaluate((image: HTMLImageElement) => image.naturalWidth),

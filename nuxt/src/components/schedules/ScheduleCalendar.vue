@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Check } from '@lucide/vue';
 import type { MonthlySchedule } from '../../../shared/types/schedules';
 import { monthWeeks, calendarTextColor } from '../../utils/calendar';
 
@@ -75,12 +76,16 @@ function dayLabel(date: string): string {
                   class="duty-badge"
                   :data-complete="entries.get(date)!.isComplete"
                   aria-hidden="true"
-                  >{{
-                    entries.get(date)!.isComplete
-                      ? '✓'
-                      : entries.get(date)!.remainingDuties
-                  }}</span
                 >
+                  <Check
+                    v-if="entries.get(date)!.isComplete"
+                    :size="12"
+                    :stroke-width="2.5"
+                    aria-hidden="true"
+                    focusable="false"
+                  />
+                  <template v-else>{{ entries.get(date)!.remainingDuties }}</template>
+                </span>
               </span>
               <span
                 v-if="entries.has(date)"

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronDown } from '@lucide/vue';
 import { useId } from 'vue';
 import type {
   FlightPoint,
@@ -361,14 +362,13 @@ const formatDate = (date: string) =>
         <span class="values-count" aria-hidden="true"
           >{{ summary.series.length }} days</span
         >
-        <svg
+        <ChevronDown
           class="values-chevron"
-          viewBox="0 0 20 20"
-          fill="none"
+          :size="18"
+          :stroke-width="1.7"
           aria-hidden="true"
-        >
-          <path d="m6 8 4 4 4-4" />
-        </svg>
+          focusable="false"
+        />
       </summary>
       <table class="values-table" aria-label="Rolling flight-hour values">
         <caption>

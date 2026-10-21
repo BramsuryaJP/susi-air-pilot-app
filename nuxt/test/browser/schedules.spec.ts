@@ -28,8 +28,8 @@ test('schedule calendar preserves API colors and counts, owns month requests, an
     'date',
   );
   await expect(
-    calendar.locator('[data-date="2026-05-15"] .duty-badge'),
-  ).toHaveText('✓');
+    calendar.locator('[data-date="2026-05-15"] .duty-badge svg.lucide-check'),
+  ).toHaveCount(1);
   await expect(
     calendar.locator('[data-date="2026-05-19"] .duty-badge'),
   ).toHaveText('2');
@@ -49,9 +49,15 @@ test('schedule calendar preserves API colors and counts, owns month requests, an
     await expect(cell).toContainText(entry.base_name);
     await expect(cell.locator('.duty-type')).toHaveText(entry.duty_type);
     await expect(cell).toHaveCSS('background-color', 'rgb(255, 255, 255)');
-    await expect(cell.locator('.duty-badge')).toHaveText(
-      entry.isComplete ? '✓' : String(entry.remainingDuties),
-    );
+    const badge = cell.locator('.duty-badge');
+    await expect(badge).toHaveAttribute('data-complete', String(entry.isComplete));
+    if (entry.isComplete) {
+      await expect(badge.locator('svg.lucide-check')).toHaveCount(1);
+      await expect(cell).toHaveAccessibleName(/all duties logged/);
+    } else {
+      await expect(badge).toHaveText(String(entry.remainingDuties));
+      await expect(badge.locator('svg')).toHaveCount(0);
+    }
   }
   await expect(
     page.getByRole('list', { name: 'Duty legend' }).getByRole('listitem'),
