@@ -95,7 +95,7 @@ adds a compact overview, desktop chart/document columns, a shared masthead,
 and a responsive calendar. The legend now sits below the date grid within the same calendar panel at every width, with
 neutral date surfaces and exact-color duty bands. The chart has readable axes, a centered
 Today marker, a separate limit key, and circular 44px range buttons. The
-browser suite now contains **29 journeys**, including guest-only login redirects,
+browser suite now contains **30 journeys**, including guest-only login redirects,
 browser-back navigation, expired-session cleanup, and chart-label separation
 at all five ranges and four widths, desktop/mobile layout, and exact table
 values for an above-scale projection. The original login, API, and domain
@@ -115,6 +115,10 @@ cover direct jumps, leap years, URL/history/reload synchronization, quick combin
 selections during session validation, year bounds, keyboard access, reflow, and
 server-rendered selections before JavaScript runs, and controls that wait for
 hydration before accepting the first selection.
+
+One additional focus journey checks all visible enabled controls across seven
+routes at mobile and desktop widths, including shared inset geometry and
+contrast on light, red, and navy surfaces.
 
 Two navigation-page journeys cover Logbook/More placeholders, active tabs,
 responsive layouts, private SSR headers including route variants, return links,

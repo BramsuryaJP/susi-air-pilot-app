@@ -13,6 +13,7 @@
   color-scheme: light;
   --navy: #0e2138;
   --red: #e63757;
+  --red-hover: #d12b4a;
   --background: #f5f6f8;
   --surface: #fff;
   --muted: #6b7280;
@@ -29,6 +30,9 @@
   --success-surface: #e7f7f1;
   --warning-surface: #fff5df;
   --card-shadow: 0 3px 14px #0e213805;
+  --focus-color: var(--navy);
+  --focus-width: 2px;
+  --focus-offset: -2px;
 }
 html {
   -webkit-text-size-adjust: 100%;
@@ -52,6 +56,7 @@ h1, h2, h3 { line-height: 1.3; }
 .muted { color: var(--muted-on-background); }
 dt { color: var(--muted); }
 .brand-header, .workspace-header {
+  --focus-color: var(--surface);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -146,7 +151,7 @@ input {
   color: var(--surface);
   font-size: 1.2rem;
   font-weight: 700;
-  &:hover:enabled { background: #c92343; }
+  &:hover:enabled { background: var(--red-hover); }
 }
 .error-message {
   background: var(--danger-surface);
@@ -181,7 +186,6 @@ input {
   background: transparent;
   color: var(--surface);
   &:hover:enabled { background: #ffffff15; }
-  &:focus-visible { outline-color: var(--surface); }
 }
 .profile-panel {
   background: var(--surface);
@@ -228,7 +232,10 @@ input {
   transform: translateY(-200%);
   &:focus { transform: none; }
 }
-:focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
+:focus-visible, select:focus {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
 main:focus { outline: none; }
 ::selection { background: #e6375725; }
 

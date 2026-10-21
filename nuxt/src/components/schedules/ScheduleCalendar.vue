@@ -173,8 +173,7 @@ function dayLabel(date: string): string {
     box-shadow: inset 0 0 0 2px #0e213860;
   }
   &:focus-visible {
-    outline: 3px solid var(--navy);
-    outline-offset: 1px;
+    outline-color: var(--focus-color);
     z-index: 1;
   }
 }

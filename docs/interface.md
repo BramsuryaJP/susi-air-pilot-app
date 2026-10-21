@@ -20,8 +20,8 @@ duty bands in the original API colors, with visible duty codes and base names.
 
 Navigation uses a compact floating bar on desktop and a bottom bar on narrow
 screens, with reserved scroll space. The polish uses component-scoped SCSS;
-the existing sign-in page, global stylesheet, authentication, and API behavior
-are unchanged. A shared header replaces repeated authenticated-page markup;
+authentication and API behavior are unchanged. A shared focus policy now
+updates the global stylesheet and all interactive controls, including sign-in. A shared header replaces repeated authenticated-page markup;
 route, chart, and document splitting remain in place without another package.
 
 A shared official logo sits on the navy header. Home puts the pilot's profile
@@ -115,3 +115,19 @@ Error recovery coverage checks unknown routes, malformed duty dates, other page
 statuses, keyboard access, and reflow at the same four widths. It also checks
 dashboard content after recovery, removed or invalid cookies, anonymous access,
 and recovery without JavaScript.
+
+## Shared focus indicators
+
+All interactive controls use the same 2px solid inset outline with a -2px offset.
+The global rule covers keyboard focus and native select focus. Shared custom
+properties define the width, offset, and color; components only adapt color for
+contrast. Light surfaces and red actions use navy. Selected navy range buttons
+and controls on the navy masthead use white. Red actions share a hover color
+that keeps the navy focus outline above 3:1 contrast. Main content targets remain free
+of a focus outline when reached through a skip link.
+
+A browser journey focuses every visible enabled control on sign-in, Home,
+Schedule, duty details, Logbook, More, and the 404 screen at 320px and 1280px.
+It verifies the common geometry and at least 3:1 contrast with the painted
+surface. Focused screenshots intentionally differ from the earlier login
+captures; this change does not alter layout or sign-in behavior.
