@@ -69,7 +69,12 @@ and the distinction between requirements and presentation choices.
 
 Tapping any date opens `/duty/YYYY-MM-DD`, a protected placeholder reading
 “Detail page coming soon”. It validates the actual date and returns to the
-same calendar month. Schedule/detail HTML responses use private/no-store
+same calendar month. A calendar-style date panel shows the selected weekday,
+day, month, and year in UTC. The shared status panel places the message and
+pink return action on the left and the date on the right. On mobile the
+message comes first and the date sits below it, matching error and unavailable
+pages. This placeholder does not request or invent additional duty data.
+Schedule/detail HTML responses use private/no-store
 headers. The bottom navigation links Home and Schedule; Logbook and More open
 protected placeholders reading "Page unavailable", since their complete features
 are not defined in the brief. Invalid duty dates retain HTTP 404 and use the

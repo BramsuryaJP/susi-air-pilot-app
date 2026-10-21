@@ -141,6 +141,14 @@ statuses, keyboard access, and reflow at the same four widths. It also checks
 dashboard content after recovery, removed or invalid cookies, anonymous access,
 and recovery without JavaScript.
 
+Error, unavailable, and duty-placeholder screens use one shared status panel.
+Content and the pink primary return action sit on the left, with the visual on
+the right; mobile places content first and the visual below it. The error and
+unavailable screens share local flight-path artwork. The duty placeholder uses
+its selected date as the visual. Artwork is decorative and hidden from assistive
+technology; the selected date remains readable as a labelled time element.
+Browser layout assertions cover this ordering at mobile and desktop widths.
+
 ## Shared focus indicators
 
 All interactive controls use the same 2px solid inset outline with a -2px offset.

@@ -1,4 +1,5 @@
 import { expect, test } from './support/pilot-test';
+import { expectStatusPanelLayout } from './support/status-panel';
 
 test('Logbook and More open clear unavailable pages and recover through working navigation', async ({
   page,
@@ -28,6 +29,7 @@ test('Logbook and More open clear unavailable pages and recover through working 
     }
     for (const width of [320, 360, 390, 768, 1280]) {
       await page.setViewportSize({ width, height: 900 });
+      await expectStatusPanelLayout(page, width);
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,

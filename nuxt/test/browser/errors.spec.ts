@@ -1,4 +1,5 @@
 import { expect, test } from './support/pilot-test';
+import { expectStatusPanelLayout } from './support/status-panel';
 
 test('an unknown page recovers the complete authenticated dashboard', async ({
   page,
@@ -70,6 +71,7 @@ test('missing pages have a branded, responsive error screen with no protected na
   }
   for (const width of [320, 390, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 });
+    await expectStatusPanelLayout(page, width);
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
