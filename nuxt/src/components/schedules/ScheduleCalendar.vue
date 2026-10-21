@@ -115,8 +115,7 @@ function dayLabel(date: string): string {
     <p v-if="!schedule.schedules.length" class="empty-month" role="status">
       No duties scheduled for this month.
     </p>
-    <section class="legend-panel" aria-labelledby="legend-title">
-      <h2 id="legend-title">Duty legend</h2>
+    <section class="legend-panel" aria-label="Duty legend">
       <ul class="legend-list" aria-label="Duty legend">
         <li v-for="entry in schedule.legend" :key="entry.code">
           <span
@@ -244,11 +243,6 @@ function dayLabel(date: string): string {
   margin-top: 1rem;
   border-top: 1px solid var(--border);
   padding: 1.25rem 0.75rem 0.5rem;
-  h2 {
-    font-size: 1rem;
-    margin: 0 0 1.25rem;
-    letter-spacing: -0.025em;
-  }
 }
 .legend-list {
   list-style: none;
