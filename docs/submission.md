@@ -109,7 +109,7 @@ access, and recovery without JavaScript. The "Back to Home" action starts a new
 document so SSR session validation cannot be skipped by the failed router state.
 
 The Schedule month picker adds compact native month/year selects with accessible
-labels, grouped previous/next controls,
+labels, circular previous/next controls surrounding This month,
 and a return to the API-derived current month. Five additional browser journeys
 cover direct jumps, leap years, URL/history/reload synchronization, quick combined
 selections during session validation, year bounds, keyboard access, reflow, and

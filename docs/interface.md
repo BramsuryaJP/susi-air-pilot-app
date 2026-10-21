@@ -51,8 +51,9 @@ decorative and adds no external requests or dependency.
 
 Schedule uses compact native Month and Year selects with accessible labels,
 custom decorative chevrons, and 44px minimum control heights. The joined selects
-and grouped previous/next buttons form the calendar header; "This month" is a
-separate action. Controls reflow into two rows on mobile. The header, date grid,
+form the calendar header, with separate circular previous/next buttons around
+"This month". The native selects use an inset focus outline that stays within
+each control while remaining visible for keyboard use. Controls reflow into two rows on mobile. The header, date grid,
 status key, and legend share one bordered panel, with a divider above the legend. The year options stay bounded around the selected
 year rather than rendering thousands of DOM nodes. The calendar, its API colors,
 and the legend below it retain all API information. The [calendar design rationale](calendar-design.md)

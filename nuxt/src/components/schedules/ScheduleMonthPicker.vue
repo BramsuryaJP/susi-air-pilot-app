@@ -98,6 +98,14 @@ function choose(month: string | null) {
       </button>
       <button
         type="button"
+        class="secondary-button current-month"
+        :disabled="!ready || draft === currentMonth"
+        @click="choose(currentMonth)"
+      >
+        This month
+      </button>
+      <button
+        type="button"
         class="month-button"
         aria-label="Next month"
         :disabled="!ready || !next"
@@ -108,14 +116,6 @@ function choose(month: string | null) {
         </svg>
       </button>
     </div>
-    <button
-      type="button"
-      class="secondary-button current-month"
-      :disabled="!ready || draft === currentMonth"
-      @click="choose(currentMonth)"
-    >
-      This month
-    </button>
     <p v-if="!ready" class="picker-note">
       Enable JavaScript to change the calendar month.
     </p>
@@ -125,7 +125,7 @@ function choose(month: string | null) {
 <style scoped lang="scss">
 .month-controls {
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
@@ -166,6 +166,10 @@ function choose(month: string | null) {
     &:disabled {
       cursor: default;
     }
+    &:focus {
+      outline: 2px solid var(--navy);
+      outline-offset: -2px;
+    }
   }
   svg {
     position: absolute;
@@ -190,8 +194,9 @@ function choose(month: string | null) {
 }
 .month-navigation {
   display: flex;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  align-items: center;
+  justify-self: end;
+  gap: 0.5rem;
 }
 .month-button {
   display: grid;
@@ -199,10 +204,10 @@ function choose(month: string | null) {
   width: 44px;
   height: 44px;
   padding: 0;
-  border: 0;
-  border-radius: 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 50%;
   color: var(--navy);
-  background: transparent;
+  background: var(--surface);
   cursor: pointer;
   &:hover:enabled {
     background: var(--background);
@@ -211,12 +216,8 @@ function choose(month: string | null) {
     color: var(--muted-on-background);
     cursor: default;
   }
-  + .month-button {
-    border-left: 1px solid var(--border);
-  }
 }
 .current-month {
-  justify-self: end;
   white-space: nowrap;
   font-size: 0.8rem;
   &:disabled {
@@ -237,6 +238,11 @@ function choose(month: string | null) {
   .month-selects {
     grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1fr) minmax(0, 0.65fr);
+  }
+  .month-navigation {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    justify-content: space-between;
   }
 }
 </style>
