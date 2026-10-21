@@ -6,6 +6,7 @@ import type {
 } from '../../../shared/types/flight-hours';
 
 const props = defineProps<{ summary: FlightSummary }>();
+const ready = ref(false);
 const plot = ref<HTMLDivElement | null>(null);
 const tooltip = ref<HTMLDivElement | null>(null);
 const interactionId = useId();
@@ -59,8 +60,9 @@ function inspectPointer(event: MouseEvent | PointerEvent) {
 function hoverPoint(event: PointerEvent) {
   if (event.pointerType !== 'touch') inspectPointer(event);
 }
-function leavePlot() {
-  if (inputMode.value === 'pointer') clearInspection();
+function leavePlot(event: PointerEvent) {
+  if (event.pointerType !== 'touch' && inputMode.value === 'pointer')
+    clearInspection();
 }
 function inspectKey(event: KeyboardEvent) {
   if (event.altKey || event.ctrlKey || event.metaKey) return;
@@ -109,6 +111,7 @@ watch(
 onMounted(() => {
   document.addEventListener('pointerdown', dismissOutside);
   document.addEventListener('keydown', dismissEscape);
+  ready.value = true;
 });
 onBeforeUnmount(() => {
   document.removeEventListener('pointerdown', dismissOutside);
@@ -180,7 +183,8 @@ const formatDate = (date: string) =>
           role="group"
           aria-label="Explore flight-hour values"
           :aria-describedby="helpId"
-          tabindex="0"
+          :tabindex="ready ? 0 : -1"
+          :aria-disabled="!ready"
           @focus="selectPoint(selectedIndex, 'keyboard')"
           @blur="clearInspection"
           @pointermove="hoverPoint"
@@ -463,6 +467,9 @@ const formatDate = (date: string) =>
   position: relative;
   border-radius: 8px;
   cursor: crosshair;
+  &[aria-disabled='true'] {
+    pointer-events: none;
+  }
 }
 .chart-plot {
   pointer-events: none;

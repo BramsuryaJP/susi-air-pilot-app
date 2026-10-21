@@ -162,3 +162,8 @@ stays inside the existing lazy chart component without a charting dependency.
 The additional interaction journeys run in their own browser-project invocation
 with fresh servers, preserving the production request/login rate limits while
 exercising every range at four widths.
+
+Chart inspection becomes focusable and pointer-enabled only after its client
+handlers mount. Until then the static SVG and native daily-value disclosure
+remain available. Tap selections ignore touch pointer-leave events, so contact
+ending after a tap does not dismiss the chosen date.

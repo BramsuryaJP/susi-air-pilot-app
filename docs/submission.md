@@ -152,4 +152,5 @@ builds in an isolated checkout when development servers are active.
 
 Two chart-inspection journeys verify exact API values at every range and four
 widths, tooltip containment, hovering the tooltip, dismissal, keyboard and tap
-selection, range resets, and above-scale values. Hover does not issue requests.
+selection, delayed hydration, touch pointer-leave ordering, range resets, and
+above-scale values. Hover does not issue requests.

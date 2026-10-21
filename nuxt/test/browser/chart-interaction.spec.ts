@@ -39,6 +39,7 @@ test('hover inspection preserves exact API values and stays within the plot at e
     for (const range of ['1w', '1m', '3m', '6m', '1y']) {
       await page.getByRole('button', { name: range, exact: true }).click();
       await expect(chart).toHaveAttribute('data-range', range);
+      await expect(plot).toHaveAttribute('tabindex', '0');
       await expect(tooltip).toHaveCount(0);
       await plot.scrollIntoViewIfNeeded();
       const bounds = (await plot.boundingBox())!;
@@ -101,11 +102,29 @@ test('chart inspection supports keyboard, touch, range resets and exact above-sc
   const response = await page.request.get('/api/flight-hours/summary?range=1m');
   const summary: FlightSummary = await response.json();
   summary.series[14]!.hours = summary.yMax + 12.3;
-  await page.goto('/');
+  let release: () => void = () => {};
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route('**/_nuxt/*.js', async (route) => {
+    await held;
+    await route.continue();
+  });
   const plot = page.getByRole('group', {
     name: 'Explore flight-hour values',
     exact: true,
   });
+  try {
+    await page.goto('/', { waitUntil: 'commit' });
+    await expect(plot).toHaveAttribute('tabindex', '-1');
+    await expect(plot).toHaveAttribute('aria-disabled', 'true');
+    release();
+    await expect(plot).toHaveAttribute('tabindex', '0');
+    await expect(plot).toHaveAttribute('aria-disabled', 'false');
+  } finally {
+    release();
+    await page.unrouteAll({ behavior: 'wait' });
+  }
   const tooltip = page.getByRole('tooltip');
   await page.keyboard.press('Tab');
   await plot.focus();
@@ -136,6 +155,7 @@ test('chart inspection supports keyboard, touch, range resets and exact above-sc
     '1m',
   );
   await expect(tooltip).toHaveCount(0);
+  await expect(plot).toHaveAttribute('tabindex', '0');
   await plot.focus();
   await expect(tooltip).toContainText(dateLabel(summary.series[7]!.date));
   await page.keyboard.press('End');
@@ -164,12 +184,16 @@ test('chart inspection supports keyboard, touch, range resets and exact above-sc
       name: 'Explore flight-hour values',
       exact: true,
     });
+    await expect(touchPlot).toHaveAttribute('tabindex', '0');
     await touchPlot.scrollIntoViewIfNeeded();
     const bounds = (await touchPlot.boundingBox())!;
     await mobile.touchscreen.tap(
       bounds.x + bounds.width * 0.98,
       bounds.y + bounds.height / 2,
     );
+    await expect(mobile.getByRole('tooltip')).toContainText('22 May 2026');
+    // Touch pointers leave after contact ends; keep the tapped date pinned.
+    await touchPlot.dispatchEvent('pointerleave', { pointerType: 'touch' });
     await expect(mobile.getByRole('tooltip')).toContainText('22 May 2026');
     await mobile
       .getByRole('heading', { name: 'Flight hours trend', exact: true })
