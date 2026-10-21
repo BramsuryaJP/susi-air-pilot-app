@@ -42,11 +42,13 @@ test('schedule calendar preserves API colors and counts, owns month requests, an
       .slice(1)
       .match(/../g)!
       .map((value: string) => parseInt(value, 16));
-    await expect(cell).toHaveCSS(
+    await expect(cell.locator('.duty-event')).toHaveCSS(
       'background-color',
       `rgb(${channels.join(', ')})`,
     );
     await expect(cell).toContainText(entry.base_name);
+    await expect(cell.locator('.duty-type')).toHaveText(entry.duty_type);
+    await expect(cell).toHaveCSS('background-color', 'rgb(255, 255, 255)');
     await expect(cell.locator('.duty-badge')).toHaveText(
       entry.isComplete ? '✓' : String(entry.remainingDuties),
     );
@@ -70,6 +72,26 @@ test('schedule calendar preserves API colors and counts, owns month requests, an
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
+    const calendarBounds = await calendar.boundingBox();
+    const legendBounds = await page
+      .getByRole('region', { name: 'Duty legend', exact: true })
+      .boundingBox();
+    expect(legendBounds!.y).toBeGreaterThan(
+      calendarBounds!.y + calendarBounds!.height,
+    );
+    await expect(
+      calendar.locator('[aria-current="date"] .today-label'),
+    ).toHaveText('Today');
+    for (const cell of await calendar
+      .locator('[data-date]:has(.duty-event)')
+      .all()) {
+      const day = (await cell.boundingBox())!;
+      const band = (await cell.locator('.duty-event').boundingBox())!;
+      expect(band.height).toBeLessThan(day.height / 2);
+      const date = (await cell.locator('.day-number').boundingBox())!;
+      const badge = (await cell.locator('.duty-badge').boundingBox())!;
+      expect(date.x + date.width).toBeLessThanOrEqual(badge.x);
+    }
     await page.screenshot({ path: testInfo.outputPath(name), fullPage: true });
   }
   const lastLegend = page
@@ -107,7 +129,7 @@ test('schedule calendar preserves API colors and counts, owns month requests, an
     'data-calendar-month',
     '2026-06',
   );
-  await expect(page.locator('[data-date="2026-06-04"]')).toHaveCSS(
+  await expect(page.locator('[data-date="2026-06-04"] .duty-event')).toHaveCSS(
     'background-color',
     'rgb(251, 165, 119)',
   );

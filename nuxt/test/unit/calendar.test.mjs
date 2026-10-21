@@ -48,3 +48,28 @@ test('date-cell text selects a readable foreground without changing supplied col
   assert.equal(calendarTextColor('#FBA577'), '#0e2138');
   assert.equal(calendarTextColor('#10B981'), '#0e2138');
 });
+
+test('duty text meets normal-text contrast even on mid-tone reds and gray', () => {
+  const light = (hex) => {
+    const values = [1, 3, 5].map((offset) => {
+      const value = parseInt(hex.slice(offset, offset + 2), 16) / 255;
+      return value <= 0.04045
+        ? value / 12.92
+        : ((value + 0.055) / 1.055) ** 2.4;
+    });
+    return values[0] * 0.2126 + values[1] * 0.7152 + values[2] * 0.0722;
+  };
+  for (const background of [
+    '#ef4444',
+    '#f43f5e',
+    '#808080',
+    '#ffffff',
+    '#000000',
+  ]) {
+    const foreground = calendarTextColor(background);
+    const ratio =
+      (Math.max(light(background), light(foreground)) + 0.05) /
+      (Math.min(light(background), light(foreground)) + 0.05);
+    assert.ok(ratio >= 4.5, `${foreground} on ${background}: ${ratio}`);
+  }
+});

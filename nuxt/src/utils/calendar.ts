@@ -58,5 +58,7 @@ export function calendarTextColor(background: string): string {
   const navy = luminance('#0e2138');
   const navyContrast =
     (Math.max(light, navy) + 0.05) / (Math.min(light, navy) + 0.05);
-  return 1.05 / (light + 0.05) > navyContrast ? '#ffffff' : '#0e2138';
+  const whiteContrast = 1.05 / (light + 0.05);
+  if (Math.max(whiteContrast, navyContrast) < 4.5) return '#000000';
+  return whiteContrast > navyContrast ? '#ffffff' : '#0e2138';
 }

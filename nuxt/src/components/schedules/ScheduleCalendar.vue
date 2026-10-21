@@ -69,20 +69,11 @@ function dayLabel(date: string): string {
                   :data-date="date"
                   :aria-label="dayLabel(date)"
                   :aria-current="date === schedule.today ? 'date' : undefined"
-                  :style="
-                    entries.has(date)
-                      ? {
-                          backgroundColor: entries.get(date)!.base_color,
-                          color: calendarTextColor(
-                            entries.get(date)!.base_color,
-                          ),
-                        }
-                      : undefined
-                  "
                 >
-                  <span class="day-number">{{ Number(date.slice(8)) }}</span>
-                  <template v-if="entries.has(date)">
+                  <span class="day-heading">
+                    <span class="day-number">{{ Number(date.slice(8)) }}</span>
                     <span
+                      v-if="entries.has(date)"
                       class="duty-badge"
                       :data-complete="entries.get(date)!.isComplete"
                       aria-hidden="true"
@@ -92,18 +83,36 @@ function dayLabel(date: string): string {
                           : entries.get(date)!.remainingDuties
                       }}</span
                     >
+                  </span>
+                  <span
+                    v-if="date === schedule.today"
+                    class="today-label"
+                    aria-hidden="true"
+                    >Today</span
+                  >
+                  <span
+                    v-if="entries.has(date)"
+                    class="duty-event"
+                    :style="{
+                      backgroundColor: entries.get(date)!.base_color,
+                      color: calendarTextColor(entries.get(date)!.base_color),
+                    }"
+                  >
+                    <span class="duty-type">{{
+                      entries.get(date)!.duty_type
+                    }}</span>
                     <span class="base-name">{{
                       entries.get(date)!.base_name
                     }}</span>
-                  </template>
+                  </span>
                 </NuxtLink>
               </td>
             </tr>
           </tbody>
         </table>
         <p class="calendar-key">
-          A tick means all duties are logged. Numbers show remaining duties. The
-          red outline marks today.
+          A tick means all duties are logged. Numbers show remaining duties.
+          Today is labelled and outlined.
         </p>
       </div>
       <p v-if="!schedule.schedules.length" class="empty-month" role="status">
@@ -160,15 +169,16 @@ function dayLabel(date: string): string {
   }
 }
 .day-link {
-  min-height: 94px;
+  min-height: 108px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  padding: 0.6rem;
-  border-radius: 10px;
+  padding: 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   color: var(--navy);
-  background: var(--background);
+  background: var(--surface);
   text-decoration: none;
   font-variant-numeric: tabular-nums;
   &[aria-current='date'] {
@@ -184,24 +194,51 @@ function dayLabel(date: string): string {
     z-index: 1;
   }
 }
+.day-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.1rem;
+}
 .day-number {
   font-weight: 700;
   font-size: 0.95rem;
+}
+.today-label {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: var(--danger-text);
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+.duty-event {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+  min-height: 30px;
+  padding: 0.3rem 0.4rem;
+  border-radius: 5px;
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+.duty-type {
+  font-weight: 800;
 }
 .base-name {
   font-size: 0.7rem;
   font-weight: 600;
 }
 .duty-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
   min-width: 20px;
   height: 20px;
   display: grid;
   place-items: center;
-  border-radius: 0 10px 0 7px;
-  background: #ffffffec;
+  border-radius: 5px;
+  background: var(--background);
   color: var(--navy);
   font-size: 0.7rem;
   font-weight: 700;
@@ -257,11 +294,8 @@ function dayLabel(date: string): string {
   border-radius: 3px;
 }
 @media (min-width: 960px) {
-  .schedule-body {
-    grid-template-columns: minmax(0, 1fr) 260px;
-  }
   .legend-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 @media (max-width: 640px) {
@@ -269,18 +303,29 @@ function dayLabel(date: string): string {
     gap: 1.25rem;
   }
   .day-link {
-    min-height: 78px;
-    padding: 0.45rem 0.3rem;
+    min-height: 96px;
+    padding: 0.35rem 0.2rem;
     border-radius: 8px;
   }
   .day-number {
     font-size: 0.85rem;
   }
   .duty-badge {
-    min-width: 17px;
-    height: 17px;
+    min-width: 14px;
+    height: 16px;
+    font-size: 0.6rem;
+  }
+  .duty-event {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.1rem;
+    min-height: 34px;
+    padding: 0.25rem 0.1rem;
     font-size: 0.65rem;
-    border-radius: 0 8px 0 6px;
+  }
+  .today-label {
+    font-size: 0.6rem;
+    top: 1.7rem;
   }
   .base-name {
     font-size: 0.65rem;
@@ -307,11 +352,11 @@ function dayLabel(date: string): string {
     padding-left: 0.2rem;
   }
   .day-number {
-    font-size: 0.8rem;
+    font-size: 0.72rem;
   }
   .duty-badge {
-    min-width: 16px;
-    height: 16px;
+    min-width: 12px;
+    height: 14px;
     font-size: 0.6rem;
   }
 }

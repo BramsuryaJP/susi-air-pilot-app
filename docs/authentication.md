@@ -129,7 +129,7 @@ npm run test:e2e
 ```
 
 The browser suite starts its own production servers on ports 4310 and 4311.
-The workspace and error-recovery projects run in separate invocations with fresh
+The workspace, error-recovery, and schedule-picker projects run in separate invocations with fresh
 servers, retaining production rate limits without exhausting a shared quota.
 It exercises disabled JavaScript, delayed hydration, bad credentials, repeated
 submit events, private cookie behavior, cross-origin writes, SSR reload and
