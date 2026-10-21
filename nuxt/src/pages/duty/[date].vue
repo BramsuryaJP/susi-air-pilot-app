@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import WorkspaceHeader from '../../components/navigation/WorkspaceHeader.vue';
 useHead({ title: 'Duty detail | Susi Air' });
 const route = useRoute();
 const date = typeof route.params.date === 'string' ? route.params.date : '';
@@ -20,10 +21,7 @@ const formatted = new Intl.DateTimeFormat('en-GB', {
 
 <template>
   <main id="main-content" class="workspace-shell duty-detail" tabindex="-1">
-    <header class="brand-header">
-      <BrandMark />
-      <span>Pilot workspace</span>
-    </header>
+    <WorkspaceHeader />
     <NuxtLink
       :to="{ path: '/schedule', query: { month: date.slice(0, 7) } }"
       :prefetch="false"

@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import ScheduleCalendar from '../components/schedules/ScheduleCalendar.vue';
+import WorkspaceHeader from '../components/navigation/WorkspaceHeader.vue';
 import type { MonthlySchedule } from '../../shared/types/schedules';
-import {
-  parseCalendarMonth,
-  shiftCalendarMonth,
-} from '../utils/calendar';
+import { parseCalendarMonth, shiftCalendarMonth } from '../utils/calendar';
 
 useHead({ title: 'Schedule | Susi Air' });
 const route = useRoute();
@@ -71,10 +69,7 @@ function move(month: string | null) {
 
 <template>
   <main id="main-content" class="workspace-shell schedule-shell" tabindex="-1">
-    <header class="brand-header">
-      <BrandMark />
-      <span>Pilot workspace</span>
-    </header>
+    <WorkspaceHeader />
     <header class="schedule-intro">
       <h1>Schedule</h1>
       <p class="muted">Your duty calendar and logbook status.</p>
@@ -130,17 +125,23 @@ function move(month: string | null) {
 
 <style scoped lang="scss">
 .schedule-shell {
-  max-width: 760px;
+  width: min(100% - 3rem, 1100px);
 }
 .schedule-intro {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
   margin: 1.75rem 0 1.5rem;
   h1 {
-    margin: 0.2rem 0 0.5rem;
-    font-size: 2rem;
+    margin: 0;
+    font-size: 1.65rem;
     letter-spacing: -0.04em;
   }
   p {
-    margin-bottom: 0;
+    margin: 0;
+    font-size: 0.85rem;
   }
 }
 .month-controls {
@@ -149,16 +150,22 @@ function move(month: string | null) {
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1rem;
+  padding: 0.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   h2 {
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     letter-spacing: -0.025em;
   }
 }
 .month-button {
   min-width: 44px;
   padding: 0;
-  font-size: 1.75rem;
+  border: 0;
+  background: transparent;
+  font-size: 1.65rem;
   line-height: 1;
 }
 .schedule-message {
@@ -170,5 +177,21 @@ function move(month: string | null) {
 }
 #schedule-error {
   color: var(--danger-text);
+}
+@media (min-width: 960px) {
+  .month-controls {
+    width: calc(100% - 260px - 1.5rem);
+  }
+}
+@media (max-width: 640px) {
+  .schedule-shell {
+    width: calc(100% - 2rem);
+  }
+  .schedule-intro {
+    margin: 1.25rem 0;
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
 }
 </style>

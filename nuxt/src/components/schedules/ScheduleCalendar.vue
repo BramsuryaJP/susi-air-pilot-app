@@ -39,92 +39,107 @@ function dayLabel(date: string): string {
 </script>
 
 <template>
-  <div class="calendar-card">
-    <table
-      class="calendar-grid"
-      :aria-label="monthLabel"
-      :data-calendar-month="`${schedule.year}-${String(schedule.month).padStart(2, '0')}`"
-    >
-      <thead>
-        <tr>
-          <th v-for="weekday in weekdays" :key="weekday" scope="col">
-            {{ weekday }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(week, index) in weeks" :key="index">
-          <td
-            v-for="(date, column) in week"
-            :key="date ?? `padding-${column}`"
-            :aria-hidden="!date || undefined"
-          >
-            <NuxtLink
-              v-if="date"
-              class="day-link"
-              :to="`/duty/${date}`"
-              :prefetch="false"
-              :data-date="date"
-              :aria-label="dayLabel(date)"
-              :aria-current="date === schedule.today ? 'date' : undefined"
-              :style="
-                entries.has(date)
-                  ? {
-                      backgroundColor: entries.get(date)!.base_color,
-                      color: calendarTextColor(entries.get(date)!.base_color),
-                    }
-                  : undefined
-              "
-            >
-              <span class="day-number">{{ Number(date.slice(8)) }}</span>
-              <template v-if="entries.has(date)">
-                <span
-                  class="duty-badge"
-                  :data-complete="entries.get(date)!.isComplete"
-                  aria-hidden="true"
-                  >{{
-                    entries.get(date)!.isComplete
-                      ? '✓'
-                      : entries.get(date)!.remainingDuties
-                  }}</span
-                >
-                <span class="base-name">{{
-                  entries.get(date)!.base_name
-                }}</span>
-              </template>
-            </NuxtLink>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <p class="calendar-key">
-      A tick means all duties are logged. Numbers show remaining duties.
-    </p>
-  </div>
-  <p v-if="!schedule.schedules.length" class="empty-month" role="status">
-    No duties scheduled for this month.
-  </p>
-  <section class="legend-panel" aria-labelledby="legend-title">
-    <h2 id="legend-title">Duty legend</h2>
-    <ul class="legend-list" aria-label="Duty legend">
-      <li v-for="entry in schedule.legend" :key="entry.code">
-        <span
-          class="legend-swatch"
-          :style="{ backgroundColor: entry.color }"
-          aria-hidden="true"
-        />
-        <span
-          ><strong>{{ entry.code }}</strong
-          >{{ entry.label }}</span
+  <div class="schedule-body">
+    <div class="calendar-main">
+      <div class="calendar-card">
+        <table
+          class="calendar-grid"
+          :aria-label="monthLabel"
+          :data-calendar-month="`${schedule.year}-${String(schedule.month).padStart(2, '0')}`"
         >
-      </li>
-    </ul>
-  </section>
+          <thead>
+            <tr>
+              <th v-for="weekday in weekdays" :key="weekday" scope="col">
+                {{ weekday }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(week, index) in weeks" :key="index">
+              <td
+                v-for="(date, column) in week"
+                :key="date ?? `padding-${column}`"
+                :aria-hidden="!date || undefined"
+              >
+                <NuxtLink
+                  v-if="date"
+                  class="day-link"
+                  :to="`/duty/${date}`"
+                  :prefetch="false"
+                  :data-date="date"
+                  :aria-label="dayLabel(date)"
+                  :aria-current="date === schedule.today ? 'date' : undefined"
+                  :style="
+                    entries.has(date)
+                      ? {
+                          backgroundColor: entries.get(date)!.base_color,
+                          color: calendarTextColor(
+                            entries.get(date)!.base_color,
+                          ),
+                        }
+                      : undefined
+                  "
+                >
+                  <span class="day-number">{{ Number(date.slice(8)) }}</span>
+                  <template v-if="entries.has(date)">
+                    <span
+                      class="duty-badge"
+                      :data-complete="entries.get(date)!.isComplete"
+                      aria-hidden="true"
+                      >{{
+                        entries.get(date)!.isComplete
+                          ? '✓'
+                          : entries.get(date)!.remainingDuties
+                      }}</span
+                    >
+                    <span class="base-name">{{
+                      entries.get(date)!.base_name
+                    }}</span>
+                  </template>
+                </NuxtLink>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="calendar-key">
+          A tick means all duties are logged. Numbers show remaining duties. The
+          red outline marks today.
+        </p>
+      </div>
+      <p v-if="!schedule.schedules.length" class="empty-month" role="status">
+        No duties scheduled for this month.
+      </p>
+    </div>
+    <section class="legend-panel" aria-labelledby="legend-title">
+      <h2 id="legend-title">Duty legend</h2>
+      <ul class="legend-list" aria-label="Duty legend">
+        <li v-for="entry in schedule.legend" :key="entry.code">
+          <span
+            class="legend-swatch"
+            :style="{ backgroundColor: entry.color }"
+            aria-hidden="true"
+          />
+          <span
+            ><strong>{{ entry.code }}</strong
+            >{{ entry.label }}</span
+          >
+        </li>
+      </ul>
+    </section>
+  </div>
 </template>
 
 <style scoped lang="scss">
+.schedule-body {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+.calendar-main {
+  min-width: 0;
+}
 .calendar-card {
-  padding: 0.75rem 0.4rem;
+  padding: 0.65rem 0.45rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -132,12 +147,12 @@ function dayLabel(date: string): string {
 .calendar-grid {
   width: 100%;
   table-layout: fixed;
-  border-spacing: 3px;
+  border-spacing: 4px;
   th {
-    padding: 0.5rem 0 0.8rem;
+    padding: 0.5rem 0 0.75rem;
     color: var(--muted);
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
   }
   td {
     padding: 0;
@@ -145,13 +160,13 @@ function dayLabel(date: string): string {
   }
 }
 .day-link {
-  min-height: 86px;
+  min-height: 94px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  padding: 0.5rem;
-  border-radius: 8px;
+  padding: 0.6rem;
+  border-radius: 10px;
   color: var(--navy);
   background: var(--background);
   text-decoration: none;
@@ -159,6 +174,9 @@ function dayLabel(date: string): string {
   &[aria-current='date'] {
     outline: 2px solid var(--red);
     outline-offset: -2px;
+  }
+  &:hover {
+    box-shadow: inset 0 0 0 2px #0e213860;
   }
   &:focus-visible {
     outline: 3px solid var(--navy);
@@ -178,11 +196,11 @@ function dayLabel(date: string): string {
   position: absolute;
   top: 0;
   right: 0;
-  min-width: 18px;
-  height: 18px;
+  min-width: 20px;
+  height: 20px;
   display: grid;
   place-items: center;
-  border-radius: 0 8px 0 6px;
+  border-radius: 0 10px 0 7px;
   background: #ffffffec;
   color: var(--navy);
   font-size: 0.7rem;
@@ -197,17 +215,18 @@ function dayLabel(date: string): string {
 .empty-month {
   margin: 1rem 0 0;
   color: var(--muted-on-background);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 .legend-panel {
-  margin-top: 1.5rem;
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 1.25rem;
   h2 {
     font-size: 1rem;
-    margin: 0 0 1rem;
+    margin: 0 0 1.25rem;
+    letter-spacing: -0.025em;
   }
 }
 .legend-list {
@@ -216,50 +235,84 @@ function dayLabel(date: string): string {
   margin: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 1.1rem 0.75rem;
   li {
     display: flex;
     align-items: flex-start;
-    gap: 0.6rem;
-    font-size: 0.8rem;
+    gap: 0.5rem;
+    font-size: 0.75rem;
     color: var(--muted);
   }
   strong {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--navy);
+    margin-bottom: 0.15rem;
   }
 }
 .legend-swatch {
-  flex: 0 0 12px;
-  height: 12px;
-  margin-top: 0.2rem;
+  flex: 0 0 10px;
+  height: 10px;
+  margin-top: 0.25rem;
   border-radius: 3px;
 }
+@media (min-width: 960px) {
+  .schedule-body {
+    grid-template-columns: minmax(0, 1fr) 260px;
+  }
+  .legend-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 @media (max-width: 640px) {
+  .schedule-body {
+    gap: 1.25rem;
+  }
   .day-link {
-    min-height: 72px;
-    padding: 0.4rem 0.25rem;
+    min-height: 78px;
+    padding: 0.45rem 0.3rem;
+    border-radius: 8px;
+  }
+  .day-number {
+    font-size: 0.85rem;
+  }
+  .duty-badge {
+    min-width: 17px;
+    height: 17px;
+    font-size: 0.65rem;
+    border-radius: 0 8px 0 6px;
+  }
+  .base-name {
+    font-size: 0.65rem;
+  }
+  .calendar-grid {
+    border-spacing: 3px;
+    th {
+      font-size: 0.65rem;
+    }
+  }
+  .calendar-card {
+    padding: 0.5rem 0.25rem;
+  }
+  .legend-panel {
+    padding: 1rem;
+  }
+  .legend-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+@media (max-width: 360px) {
+  .day-link {
+    padding-left: 0.2rem;
   }
   .day-number {
     font-size: 0.8rem;
   }
   .duty-badge {
-    min-width: 14px;
-    height: 14px;
+    min-width: 16px;
+    height: 16px;
     font-size: 0.6rem;
-  }
-  .base-name {
-    font-size: 0.6rem;
-  }
-  .calendar-grid {
-    border-spacing: 2px;
-    th {
-      font-size: 0.65rem;
-    }
-  }
-  .legend-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>

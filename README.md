@@ -8,8 +8,9 @@ branch for each feature.
 
 Authentication, flight hours, documents, schedules, and final brand styling
 are deployed from `main`, together with health and deployment checks. Both
-applications run as separate Vercel Hobby projects. The deployed application
-commit is `7e4081e`; documentation updates do not change its behavior.
+applications run as separate Vercel Hobby projects. Production follows `main`;
+check the [deployment history](https://github.com/BramsuryaJP/susi-air-pilot-app/deployments)
+for the currently deployed revision.
 See [submission review](docs/submission.md) for requirement coverage, verification,
 and the remaining reviewer-access step.
 

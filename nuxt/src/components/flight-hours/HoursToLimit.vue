@@ -87,50 +87,49 @@ watch(
         </p>
       </article>
     </div>
-    <div class="trend-panel" :aria-busy="status === 'pending'">
-      <div class="trend-heading">
-        <h3>Flight hours trend</h3>
-        <div class="range-toggle" role="group" aria-label="Rolling sum window">
-          <button
-            v-for="range in ranges"
-            :key="range"
-            :aria-pressed="flightHours.range === range"
-            @click="flightHours.range = range"
-          >
-            {{ range }}
-          </button>
-        </div>
+  </section>
+  <section
+    class="trend-panel"
+    aria-labelledby="trend-title"
+    :aria-busy="status === 'pending'"
+  >
+    <div class="trend-heading">
+      <h2 id="trend-title">Flight hours trend</h2>
+      <div class="range-toggle" role="group" aria-label="Rolling sum window">
+        <button
+          v-for="range in ranges"
+          :key="range"
+          :aria-pressed="flightHours.range === range"
+          @click="flightHours.range = range"
+        >
+          {{ range }}
+        </button>
       </div>
-      <div
-        v-if="error"
-        id="flight-hours-error"
-        class="flight-error"
-        role="alert"
-      >
-        <p>
-          {{
-            error.statusCode === 429
-              ? 'Too many requests. Try again in a minute.'
-              : 'Flight hours could not be loaded. Please try again.'
-          }}
-        </p>
-        <button class="secondary-button" @click="refresh()">Try again</button>
-      </div>
-      <div
-        v-else-if="status === 'pending'"
-        class="chart-placeholder"
-        role="status"
-      >
-        Loading flight hours…
-      </div>
-      <FlightHoursChart v-else-if="data" :summary="data" />
     </div>
+    <div v-if="error" id="flight-hours-error" class="flight-error" role="alert">
+      <p>
+        {{
+          error.statusCode === 429
+            ? 'Too many requests. Try again in a minute.'
+            : 'Flight hours could not be loaded. Please try again.'
+        }}
+      </p>
+      <button class="secondary-button" @click="refresh()">Try again</button>
+    </div>
+    <div
+      v-else-if="status === 'pending'"
+      class="chart-placeholder"
+      role="status"
+    >
+      Loading flight hours…
+    </div>
+    <FlightHoursChart v-else-if="data" :summary="data" />
   </section>
 </template>
 
 <style scoped lang="scss">
 .hours-section {
-  margin-top: 2rem;
+  min-width: 0;
 }
 .hours-heading {
   display: flex;
@@ -138,31 +137,31 @@ watch(
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.5rem 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.9rem;
   h2 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     letter-spacing: -0.025em;
   }
   > span {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 }
 .limit-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.75rem;
+  gap: 0.9rem;
 }
 .limit-card {
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.1rem;
-  box-shadow: var(--card-shadow);
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
   font-variant-numeric: tabular-nums;
   h3 {
-    margin: 0 0 0.8rem;
-    font-size: 0.85rem;
+    margin: 0 0 0.65rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--muted);
   }
@@ -172,15 +171,16 @@ watch(
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0 0.2rem;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.85rem;
   strong {
-    font-size: 1.7rem;
+    font-size: 1.8rem;
     font-weight: 800;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.045em;
+    line-height: 1.2;
   }
   > span {
     white-space: nowrap;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--muted);
   }
 }
@@ -202,6 +202,7 @@ watch(
   color: var(--muted);
 }
 .over-limit {
+  border-color: #e6375760;
   .limit-meter > span {
     background: var(--red);
   }
@@ -211,39 +212,42 @@ watch(
   }
 }
 .trend-panel {
-  min-height: 300px;
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: clamp(1rem, 3vw, 1.5rem);
-  margin-top: 1rem;
+  padding: 1.5rem;
 }
 .trend-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  h3 {
+  gap: 0.9rem;
+  h2 {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.05rem;
+    letter-spacing: -0.025em;
   }
 }
 .range-toggle {
   display: flex;
-  border: 1px solid var(--border);
-  padding: 3px;
+  background: var(--background);
+  padding: 4px;
   border-radius: 999px;
-  gap: 2px;
+  gap: 4px;
   button {
     border: 0;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 0.4rem 0.6rem;
+    display: grid;
+    place-items: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     background: transparent;
-    color: var(--muted);
-    border-radius: 999px;
-    font-size: 0.8rem;
+    color: var(--muted-on-background);
+    border-radius: 50%;
+    font-size: 0.75rem;
     &[aria-pressed='true'] {
       background: var(--navy);
       color: #fff;
@@ -252,7 +256,7 @@ watch(
   }
 }
 .chart-placeholder {
-  min-height: 260px;
+  min-height: 280px;
   display: grid;
   place-items: center;
   color: var(--muted);
@@ -266,8 +270,18 @@ watch(
 @media (max-width: 640px) {
   .limit-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
   }
   .limit-card {
+    padding: 0.9rem;
+  }
+  .card-value {
+    margin-bottom: 0.7rem;
+    strong {
+      font-size: 1.65rem;
+    }
+  }
+  .trend-panel {
     padding: 1rem;
   }
   .trend-heading {
@@ -277,9 +291,6 @@ watch(
   .range-toggle {
     width: 100%;
     justify-content: space-between;
-    button {
-      flex: 1;
-    }
   }
 }
 </style>

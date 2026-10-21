@@ -76,13 +76,13 @@ const inSchedule = computed(
   inset: auto 0 0;
   z-index: 10;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  max-width: 940px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 460px;
   margin: 0 auto;
   background: var(--surface);
   border: 1px solid var(--border);
   border-bottom: 0;
-  padding: 0.5rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom));
+  padding: 0.45rem 0.5rem calc(0.45rem + env(safe-area-inset-bottom));
   border-radius: 16px 16px 0 0;
   a,
   button {
@@ -90,10 +90,10 @@ const inSchedule = computed(
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.25rem;
+    gap: 0.2rem;
     min-height: 48px;
     border: 0;
-    border-radius: 8px;
+    border-radius: 10px;
     color: var(--muted);
     background: none;
     text-decoration: none;
@@ -104,8 +104,8 @@ const inSchedule = computed(
     opacity: 0.75;
   }
   svg {
-    width: 22px;
-    height: 22px;
+    width: 21px;
+    height: 21px;
   }
   a.active {
     background: var(--danger-surface);
@@ -114,6 +114,15 @@ const inSchedule = computed(
   }
   a:hover:not(.active) {
     background: var(--background);
+  }
+}
+@media (min-width: 768px) {
+  .bottom-navigation {
+    bottom: 1rem;
+    padding: 0.4rem;
+    border-bottom: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px #0e213812;
   }
 }
 </style>

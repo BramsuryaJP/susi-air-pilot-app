@@ -175,3 +175,79 @@ test('flight-hour dashboard uses real summaries, keeps the latest range, and sup
     ).toBe(400);
   }
 });
+
+test('chart labels stay readable and clear of the plot at every range and screen size', async ({
+  page,
+  context,
+  pilotState,
+}) => {
+  await context.addCookies(pilotState.cookies);
+  await page.goto('/');
+  const chart = page.getByTestId('flight-chart');
+  for (const width of [320, 390, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const range of ['1w', '1m', '3m', '6m', '1y']) {
+      await page.getByRole('button', { name: range, exact: true }).click();
+      await expect(chart).toHaveAttribute('data-range', range);
+      const plot = (await chart.boundingBox())!;
+      const limit = (await page.locator('.limit-label').boundingBox())!;
+      expect(limit.y + limit.height).toBeLessThan(plot.y);
+      const today = (await page.locator('.today-label').boundingBox())!;
+      expect(
+        Math.abs(today.x + today.width / 2 - (plot.x + plot.width / 2)),
+      ).toBeLessThan(2);
+      const labels = await page.locator('.date-label:visible').all();
+      let previousRight = plot.x;
+      for (const label of labels) {
+        const bounds = (await label.boundingBox())!;
+        expect(bounds.x).toBeGreaterThanOrEqual(previousRight - 1);
+        expect(bounds.x + bounds.width).toBeLessThanOrEqual(
+          plot.x + plot.width + 1,
+        );
+        expect(bounds.y).toBeGreaterThan(plot.y + plot.height);
+        expect(
+          await label.evaluate((element) =>
+            Number.parseFloat(getComputedStyle(element).fontSize),
+          ),
+        ).toBeGreaterThanOrEqual(11);
+        previousRight = bounds.x + bounds.width;
+      }
+      await expect(chart.locator('circle')).toHaveCount(15);
+    }
+  }
+});
+
+test('chart retains exact daily values when a projection exceeds the fixed scale', async ({
+  page,
+  context,
+  pilotState,
+}) => {
+  await context.addCookies(pilotState.cookies);
+  const summary = await (
+    await page.request.get('/api/flight-hours/summary?range=1m')
+  ).json();
+  const aboveScale = summary.yMax + 12.3;
+  summary.series[14].hours = aboveScale;
+  await page.goto('/');
+  await page.route('**/api/flight-hours/summary?range=1m', (route) =>
+    route.fulfill({ json: summary }),
+  );
+  await page.getByRole('button', { name: '1m', exact: true }).click();
+  const chart = page.getByTestId('flight-chart');
+  await expect(chart).toHaveAttribute('data-y-max', String(summary.yMax));
+  await expect(chart.locator('.overflow-point')).toHaveCount(1);
+  await expect(chart.locator('circle')).toHaveCount(15);
+  await page.getByText('View daily values', { exact: true }).click();
+  const rows = page
+    .getByRole('table', { name: 'Rolling flight-hour values' })
+    .getByRole('row');
+  await expect(rows).toHaveCount(16);
+  for (const [index, point] of summary.series.entries()) {
+    await expect(
+      rows
+        .nth(index + 1)
+        .getByRole('cell')
+        .first(),
+    ).toHaveText(point.hours.toFixed(1));
+  }
+});
