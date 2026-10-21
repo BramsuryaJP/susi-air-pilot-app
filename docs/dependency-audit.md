@@ -93,3 +93,13 @@ backend copy containing only the installed production dependency tree passed
 both standalone and captured-listener smoke checks. This verification also
 checks the combined Vercel header rules for pages and static assets. It does not
 turn the unchanged Nuxt source audit into a clean audit.
+
+## Lucide dependency verification
+
+The 21 October icon migration adds the official `@lucide/vue` package at
+version 1.61.0. It adds no additional runtime dependency tree beyond the
+existing Vue peer. A fresh source audit still reports the same 11 high affected
+entries, with no Lucide advisory. Both Node-server and Vercel builds bundle only
+the nine imported icons; the complete CommonJS catalog is excluded. The actual
+Vercel deployment artifact check passes with the existing production-only
+backend dependencies. These checks do not resolve the upstream findings above.

@@ -225,7 +225,8 @@ The main choices are:
 - The server adapter keeps tokens and the API address out of browser state.
   Private responses are not publicly cached; login is disabled until hydration.
 - Route chunks, dynamically imported chart/documents, a small SVG chart, and
-  local font/logo assets avoid an unnecessary chart or icon dependency.
+  local font/logo assets keep feature loading small. Static named Lucide imports
+  include only the UI icons used by each component.
 
 ## Scope, limitations, and submission
 
@@ -237,8 +238,8 @@ validation runs again, restoring the dashboard or redirecting to sign-in when
 the session is no longer valid. Other page errors use safe recovery copy without
 displaying internal diagnostics. Date links intentionally
 open "Detail page coming soon", as requested. The avatar is a local placeholder
-URL returned by the API. Styling uses small inline line icons rather than an icon
-package. No frontend pilot fixtures or database are needed.
+URL returned by the API. UI icons use Lucide's official Vue package through
+static named imports. No frontend pilot fixtures or database are needed.
 
 The application has been deployed and reviewed. The public repository can be
 reviewed without collaborator access. The brief requests the repository link

@@ -24,7 +24,7 @@ their original release references.
 | Sign-in, Home, and Schedule screens | Live API data through Nuxt's server adapter; no pilot JSON in frontend source; bad-credential, reload, logout, empty/error/retry journeys |
 | Bottom navigation | All four tabs work; Logbook and More open protected "Page unavailable" placeholders because their complete features are outside scope |
 | Module/controller/service/DTO separation and consistent errors | Feature modules, validated request DTOs, global validation pipe and exception filter; HTTP rejection tests |
-| Minimal mobile-first airline interface | Brief palette, official local Susi Air logo, local Plus Jakarta Sans, rounded cards, pill controls, inline line icons; responsive and keyboard browser checks plus screenshot review |
+| Minimal mobile-first airline interface | Brief palette, official local Susi Air logo, local Plus Jakarta Sans, rounded cards, pill controls, Lucide icons; responsive and keyboard browser checks plus screenshot review |
 | Live frontend and backend | Separate working Vercel Hobby deployments; backend provider deviation is disclosed below |
 | Setup, environment variables, choices, and future improvements | Root README and linked feature/deployment guides; no database setup needed |
 
@@ -58,8 +58,7 @@ is a separate manual step; no email has been sent.
   operational checks. All five brief pilot-data GET endpoints remain guarded;
   `/auth/login` is the only public brief endpoint.
 - **Presentation choices:** the pilot avatar is a local placeholder returned by
-  the backend. Navigation uses small inline SVG line icons rather than a named
-  icon package. Original duty colors and legend codes follow the supplied data,
+  the backend. Original duty colors and legend codes follow the supplied data,
   even where the brief's example names differ.
 - **Dependency findings:** the documented Nuxt source audit has unresolved
   upstream findings. Passing behavior checks do not mean a clean audit.

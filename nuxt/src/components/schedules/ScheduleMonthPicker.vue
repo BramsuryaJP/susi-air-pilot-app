@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronDown, ChevronLeft, ChevronRight } from '@lucide/vue';
 import { parseCalendarMonth, shiftCalendarMonth } from '../../utils/calendar';
 
 const props = defineProps<{ month: string; today: string }>();
@@ -68,9 +69,12 @@ function choose(month: string | null) {
             {{ option.label }}
           </option>
         </select>
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="m6 8 4 4 4-4" />
-        </svg>
+        <ChevronDown
+          :size="20"
+          :stroke-width="1.7"
+          aria-hidden="true"
+          focusable="false"
+        />
       </div>
       <div class="month-field year-field">
         <label class="field-label" for="schedule-year">Year</label>
@@ -79,9 +83,12 @@ function choose(month: string | null) {
             {{ year }}
           </option>
         </select>
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="m6 8 4 4 4-4" />
-        </svg>
+        <ChevronDown
+          :size="20"
+          :stroke-width="1.7"
+          aria-hidden="true"
+          focusable="false"
+        />
       </div>
     </div>
     <div class="month-navigation">
@@ -92,9 +99,12 @@ function choose(month: string | null) {
         :disabled="!ready || !previous"
         @click="choose(previous)"
       >
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="m12 5-5 5 5 5" />
-        </svg>
+        <ChevronLeft
+          :size="20"
+          :stroke-width="1.7"
+          aria-hidden="true"
+          focusable="false"
+        />
       </button>
       <button
         type="button"
@@ -111,9 +121,12 @@ function choose(month: string | null) {
         :disabled="!ready || !next"
         @click="choose(next)"
       >
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="m8 5 5 5-5 5" />
-        </svg>
+        <ChevronRight
+          :size="20"
+          :stroke-width="1.7"
+          aria-hidden="true"
+          focusable="false"
+        />
       </button>
     </div>
     <p v-if="!ready" class="picker-note">

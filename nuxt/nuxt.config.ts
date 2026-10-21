@@ -8,6 +8,8 @@ export default defineNuxtConfig({
   modules: ['@pinia/nuxt', '@nuxt/eslint'],
   css: ['~/assets/scss/main.scss'],
   typescript: { strict: true },
+  // Bundle named icons for SSR instead of copying Lucide's complete CJS catalog.
+  build: { transpile: ['@lucide/vue'] },
   runtimeConfig: {
     apiBase: 'http://127.0.0.1:3000',
     appOrigin: 'http://localhost:3001',

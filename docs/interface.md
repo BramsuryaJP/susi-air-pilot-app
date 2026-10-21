@@ -22,7 +22,8 @@ Navigation uses a compact floating bar on desktop and a bottom bar on narrow
 screens, with reserved scroll space. The polish uses component-scoped SCSS;
 authentication and API behavior are unchanged. A shared focus policy now
 updates the global stylesheet and all interactive controls, including sign-in. A shared header replaces repeated authenticated-page markup;
-route, chart, and document splitting remain in place without another package.
+route, chart, and document splitting remain in place. UI icons use Lucide's
+official Vue package with static named imports.
 
 A shared official logo sits on the navy header. Home puts the pilot's profile
 and total hours first, followed by limit cards, the trend, and document status.
@@ -79,8 +80,32 @@ One local font file covers interface text and bold, tabular numerical data.
 A single font preload matches the `@font-face` URL and uses anonymous CORS.
 `font-display: swap` keeps text visible while loading; system fonts cover
 unsupported characters. Explicit logo dimensions reserve its space. The
-browser makes no external asset requests. No font, icon, or chart package was
-added. Existing route, chart, and document code splitting is retained.
+browser makes no external asset requests. No font or chart package was added.
+Existing route, chart, and document code splitting is retained.
+
+## Lucide icons
+
+UI icons come from the official `@lucide/vue` package, pinned in the Nuxt
+lockfile. Navigation, month controls, document refresh, the daily-values
+chevron, and completed-duty checks use static named component imports so
+unused icons can be tree-shaken. There is no dynamic icon-name lookup, global
+icon registry, icon font, or external icon request. The chart and decorative
+flight-path illustration remain local SVG data rendering and artwork.
+Nuxt transpiles this dependency so the server build also bundles the selected
+ES module exports instead of shipping Lucide's complete CommonJS catalog.
+
+Icons render in server HTML. Decorative SVGs are hidden from assistive
+technology and cannot receive focus; controls retain their existing visible
+labels or accessible names. Calendar completion remains part of each date's
+accessible name, and incomplete duties retain their numeric counts. Existing
+control sizes, keyboard behavior, focus indicators, and mobile tap targets
+are preserved.
+
+The browser interface journey checks SSR rendering, decorative icon semantics,
+and labelled controls across Home, Schedule, and duty details at four widths.
+The calendar journey checks that completed entries use a check icon while
+incomplete entries retain the API's remaining-duty count. Production artifact
+inspection verifies that only the nine imported icons reach client chunks.
 
 ## Access and verification
 

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { CalendarDays, Ellipsis, House, NotebookText } from '@lucide/vue';
+
 const route = useRoute();
 const schedule = useSchedulesStore();
 const scheduleLink = computed(() => ({
@@ -17,47 +19,27 @@ const inSchedule = computed(
       :prefetch="false"
       :aria-current="route.name === 'index' ? 'page' : undefined"
       :class="{ active: route.name === 'index' }"
-      ><svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        aria-hidden="true"
-      >
-        <path d="m3 10 9-7 9 7v10H3zM9 20v-7h6v7" /></svg
-      ><span>Home</span></NuxtLink
     >
+      <House :stroke-width="1.7" aria-hidden="true" focusable="false" />
+      <span>Home</span>
+    </NuxtLink>
     <NuxtLink
       :to="scheduleLink"
       :prefetch="false"
       :aria-current="inSchedule ? 'page' : undefined"
       :class="{ active: inSchedule }"
-      ><svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        aria-hidden="true"
-      >
-        <rect x="3" y="5" width="18" height="16" rx="2" />
-        <path d="M7 2v6m10-6v6M3 11h18m-13 4h2m4 0h2" /></svg
-      ><span>Schedule</span></NuxtLink
     >
+      <CalendarDays :stroke-width="1.7" aria-hidden="true" focusable="false" />
+      <span>Schedule</span>
+    </NuxtLink>
     <NuxtLink
       to="/logbook"
       :prefetch="false"
       :aria-current="route.name === 'logbook' ? 'page' : undefined"
       :class="{ active: route.name === 'logbook' }"
     >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        aria-hidden="true"
-      >
-        <path d="M5 3h14v18H5zM9 7h6M9 11h6M9 15h4" /></svg
-      ><span>Logbook</span>
+      <NotebookText :stroke-width="1.7" aria-hidden="true" focusable="false" />
+      <span>Logbook</span>
     </NuxtLink>
     <NuxtLink
       to="/more"
@@ -65,17 +47,8 @@ const inSchedule = computed(
       :aria-current="route.name === 'more' ? 'page' : undefined"
       :class="{ active: route.name === 'more' }"
     >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        aria-hidden="true"
-      >
-        <circle cx="5" cy="12" r="1" />
-        <circle cx="12" cy="12" r="1" />
-        <circle cx="19" cy="12" r="1" /></svg
-      ><span>More</span>
+      <Ellipsis :stroke-width="1.7" aria-hidden="true" focusable="false" />
+      <span>More</span>
     </NuxtLink>
   </nav>
 </template>

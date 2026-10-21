@@ -74,7 +74,7 @@ export const useSessionStore = defineStore('session', () => {
 
   function signIn(input: LoginInput): Promise<void> {
     return mutateSession(() =>
-      request('/api/auth/login', {
+      request<{ authenticated: true }>('/api/auth/login', {
         method: 'POST',
         body: input,
         retry: 0,
@@ -84,7 +84,7 @@ export const useSessionStore = defineStore('session', () => {
 
   function signOut(): Promise<void> {
     return mutateSession(() =>
-      request('/api/auth/logout', { method: 'POST', retry: 0 }),
+      request<undefined>('/api/auth/logout', { method: 'POST', retry: 0 }),
     );
   }
 

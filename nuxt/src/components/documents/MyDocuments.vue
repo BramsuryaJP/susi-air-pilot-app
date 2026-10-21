@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RefreshCw } from '@lucide/vue';
 import type {
   DocumentStatus,
   PilotDocument,
@@ -60,17 +61,11 @@ watch(
         "
         @click="refresh()"
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.7"
+        <RefreshCw
+          :stroke-width="1.7"
           aria-hidden="true"
-        >
-          <path
-            d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 2M4 16l2 2a7 7 0 0 0 12-1"
-          />
-        </svg>
+          focusable="false"
+        />
         {{ status === 'pending' ? 'Refreshing' : 'Refresh' }}
       </button>
     </header>
