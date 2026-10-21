@@ -94,16 +94,12 @@ test('pilot interface loads local brand assets and remains usable across screen 
         ),
       ).toBe(true);
       if (path === '/') {
-        const today = await page.locator('.today-label').boundingBox();
-        const zero = await page
-          .locator('.chart-grid text')
-          .first()
-          .boundingBox();
-        const dates = await page.locator('.date-label').all();
-        for (const date of dates) {
-          const bounds = await date.boundingBox();
-          expect(bounds!.y + bounds!.height).toBeLessThan(today!.y);
-          expect(zero!.y + zero!.height).toBeLessThan(bounds!.y);
+        const plot = (await page.getByTestId('flight-chart').boundingBox())!;
+        const legend = (await page.locator('.chart-legend').boundingBox())!;
+        for (const date of await page.locator('.date-label:visible').all()) {
+          const bounds = (await date.boundingBox())!;
+          expect(bounds.y).toBeGreaterThan(plot.y + plot.height);
+          expect(bounds.y + bounds.height).toBeLessThan(legend.y);
         }
       }
       const name =
