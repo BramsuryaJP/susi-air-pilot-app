@@ -83,6 +83,15 @@ test('pilot interface loads local brand assets and remains usable across screen 
   for (const path of ['/', '/schedule', '/duty/2026-05-15']) {
     await page.goto(path);
     await expect(logo).toBeVisible();
+    if (path.startsWith('/duty')) {
+      const date = page.locator('time[datetime="2026-05-15"]');
+      await expect(date).toContainText('Friday');
+      await expect(date).toContainText('15');
+      await expect(date).toContainText('May 2026');
+      await expect(
+        page.getByRole('link', { name: 'Back to schedule', exact: true }),
+      ).toHaveAttribute('href', '/schedule?month=2026-05');
+    }
     expect(
       await logo.evaluate((image: HTMLImageElement) => image.naturalWidth),
     ).toBeGreaterThan(0);
@@ -101,6 +110,18 @@ test('pilot interface loads local brand assets and remains usable across screen 
           expect(bounds.y).toBeGreaterThan(plot.y + plot.height);
           expect(bounds.y + bounds.height).toBeLessThan(legend.y);
         }
+      }
+      if (path.startsWith('/duty')) {
+        const back = page.getByRole('link', {
+          name: 'Back to schedule',
+          exact: true,
+        });
+        const action = (await back.boundingBox())!;
+        const navigation = (await page
+          .getByRole('navigation', { name: 'Main navigation' })
+          .boundingBox())!;
+        expect(action.height).toBeGreaterThanOrEqual(44);
+        expect(action.y + action.height).toBeLessThan(navigation.y);
       }
       const name =
         path === '/' ? 'home' : path.startsWith('/duty') ? 'duty' : 'schedule';

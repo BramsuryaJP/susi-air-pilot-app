@@ -138,6 +138,9 @@ test('schedule calendar preserves API colors and counts, owns month requests, an
   await page.locator('[data-date="2026-06-04"]').focus();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL('/duty/2026-06-04');
+  await expect(page.locator('time[datetime="2026-06-04"]')).toContainText(
+    'Thursday',
+  );
   await expect(
     page.getByRole('heading', { name: 'Detail page coming soon', exact: true }),
   ).toBeVisible();
